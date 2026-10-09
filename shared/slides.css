@@ -1,0 +1,9 @@
+.reveal {
+  --r-heading-color: #38bdf8;
+  --r-link-color: #38bdf8;
+  --r-link-color-hover: #7dd3fc;
+}
+
+.reveal pre {
+  width: 95%;
+}
