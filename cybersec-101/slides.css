@@ -1,0 +1,170 @@
+.cybersec-101 .reveal {
+  font-size: 28px;
+  --r-heading1-size: 1.6em;
+  --r-heading2-size: 1.35em;
+}
+
+.cybersec-101 .reveal h1,
+.cybersec-101 .reveal h2 {
+  text-transform: none;
+}
+
+.cybersec-101 .reveal img {
+  display: block;
+  max-width: 96%;
+  max-height: 245px;
+  margin: 12px auto;
+  border-radius: 12px;
+}
+
+.cybersec-101 .reveal img[src$=".svg"] {
+  max-height: 285px;
+}
+
+.cybersec-101 .reveal small {
+  font-size: 0.52em;
+  line-height: 1.4;
+}
+
+.cybersec-101 .reveal table {
+  font-size: 0.8em;
+}
+
+.cybersec-101 .reveal li {
+  margin-bottom: 0.3em;
+}
+
+/* Kratek avtorski humor kot poudarek učne misli. */
+.cybersec-101 .reveal .humor {
+  margin: 0.7em auto 0;
+  padding: 0.45em 0.7em;
+  max-width: 90%;
+  border-left: 4px solid #fbbf24;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.08);
+  color: #fde68a;
+  font-size: 0.78em;
+  line-height: 1.35;
+  text-align: left;
+}
+
+.cybersec-101 .reveal .incident-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 2.5fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: center;
+  text-align: left;
+}
+
+.cybersec-101 .reveal .incident-overview figure {
+  margin: 0;
+}
+
+.cybersec-101 .reveal .incident-overview img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  margin: 0;
+  background: white;
+}
+
+.cybersec-101 .reveal .incident-overview figcaption {
+  margin-top: 6px;
+  font-size: 0.48em;
+  line-height: 1.35;
+  color: #cbd5e1;
+}
+
+.cybersec-101 .reveal .incident-summary {
+  font-size: 0.8em;
+  line-height: 1.35;
+}
+
+.cybersec-101 .reveal .incident-summary strong {
+  color: #7dd3fc;
+}
+
+/* Slike iz izvornega gradiva ob kratki vsebinski razlagi. */
+.cybersec-101 .reveal .illustrated-slide {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 28px;
+  align-items: center;
+  text-align: left;
+}
+
+.cybersec-101 .reveal .illustrated-copy {
+  font-size: 0.85em;
+  line-height: 1.35;
+}
+
+.cybersec-101 .reveal .illustrated-copy ul {
+  display: block;
+  margin: 0 0 0 1em;
+}
+
+.cybersec-101 .reveal .illustrated-slide figure {
+  margin: 0;
+  text-align: center;
+}
+
+.cybersec-101 .reveal .illustrated-slide img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 390px;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+.cybersec-101 .reveal .illustrated-slide figcaption {
+  margin-top: 8px;
+  font-size: 0.5em;
+  line-height: 1.3;
+  color: #cbd5e1;
+}
+
+.cybersec-101 .reveal .evidence-slide {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
+}
+
+.cybersec-101 .reveal .evidence-slide img {
+  max-height: 410px;
+}
+
+.cybersec-101 .reveal .breach-example {
+  margin: 12px auto;
+  max-width: 94%;
+}
+
+/* Prikaži glavo objave; seznam osebnih podatkov ostane zunaj izseka. */
+.cybersec-101 .reveal .screenshot-excerpt {
+  aspect-ratio: 1779 / 430;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.cybersec-101 .reveal .screenshot-excerpt img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+}
+
+.cybersec-101 .reveal .breach-example figcaption {
+  margin-top: 8px;
+  font-size: 0.5em;
+  line-height: 1.3;
+  color: #cbd5e1;
+}
+
+.cybersec-101 .reveal .incident-examples {
+  display: grid;
+  gap: 16px;
+}
+
+.cybersec-101 .reveal .incident-examples img {
+  max-height: 215px;
+}

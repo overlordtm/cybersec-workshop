@@ -33,6 +33,15 @@ only inside raw Markdown are not processed by Vite: put those in
 `public/cybersec-101/` or `public/cybersec-201/` and use a relative path such as
 `![Description](./diagram.png)` in that deck's Markdown.
 
+## Exercise pages
+
+`cybersec-101/vaje/VAJE.md` holds the participant instructions (no instructor
+solutions — those stay in `cybersec-101/EXERCISES.md`, which is not published).
+The `handout` Vite plugin (`shared/handout.js`) renders it into
+`cybersec-101/vaje/index.html` at build time and adds a QR code for every
+external link in each `##` section. When `SITE_URL` is set (the Pages workflow
+sets it), the page also shows a QR code of its own published URL.
+
 ## Production build
 
 ```sh
@@ -58,6 +67,7 @@ Published routes:
 ```text
 https://<owner>.github.io/<repository>/
 https://<owner>.github.io/<repository>/cybersec-101/
+https://<owner>.github.io/<repository>/cybersec-101/vaje/
 https://<owner>.github.io/<repository>/cybersec-201/
 ```
 

@@ -15,6 +15,8 @@
     "reveal.js": "^6.0.2"
   },
   "devDependencies": {
+    "marked": "^18.1.1",
+    "qrcode": "^1.5.4",
     "vite": "^8.3.4"
   }
 }

@@ -1,0 +1,187 @@
+:root {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --muted: #475569;
+  --border: #cbd5e1;
+  --surface: #f1f5f9;
+  --accent: #0369a1;
+  font-family: system-ui, sans-serif;
+  line-height: 1.55;
+  color: var(--fg);
+  background: var(--bg);
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --fg: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #334155;
+    --surface: #1e293b;
+    --accent: #38bdf8;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+main {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 4rem;
+}
+
+a {
+  color: var(--accent);
+}
+
+h1 {
+  margin: 0 0 0.75rem;
+  line-height: 1.2;
+}
+
+h2 {
+  margin: 0 0 1rem;
+  line-height: 1.25;
+}
+
+h2 .anchor {
+  color: inherit;
+  text-decoration: none;
+}
+
+h3 {
+  margin-top: 1.5rem;
+}
+
+code {
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+}
+
+header {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.page-qr {
+  flex: 0 0 11rem;
+}
+
+.toc {
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  background: var(--surface);
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+section {
+  padding-top: 2rem;
+  margin-top: 2rem;
+  border-top: 1px solid var(--border);
+  scroll-margin-top: 1rem;
+}
+
+table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+}
+
+td:empty::after {
+  content: '\00a0';
+}
+
+.qr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.qr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  color: inherit;
+  text-decoration: none;
+  break-inside: avoid;
+}
+
+.qr-card:hover,
+.qr-card:focus-visible {
+  border-color: var(--accent);
+}
+
+/* Scanners need dark modules on a light background, also in dark mode. */
+.qr-card svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.375rem;
+  background: #ffffff;
+}
+
+.qr-label {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.qr-url {
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 40rem) {
+  header {
+    flex-direction: column;
+  }
+
+  .page-qr {
+    display: none;
+  }
+
+  .qr-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media print {
+  :root {
+    --bg: #ffffff;
+    --fg: #000000;
+    --accent: #000000;
+  }
+
+  .toc,
+  .page-qr {
+    display: none;
+  }
+
+  section {
+    break-before: page;
+  }
+}
