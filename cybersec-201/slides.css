@@ -1,0 +1,59 @@
+.cybersec-201 .reveal {
+  font-size: 28px;
+  --r-heading1-size: 1.6em;
+  --r-heading2-size: 1.35em;
+  --r-heading3-size: 1em;
+}
+
+.cybersec-201 .reveal h1,
+.cybersec-201 .reveal h2,
+.cybersec-201 .reveal h3 {
+  text-transform: none;
+}
+
+.cybersec-201 .reveal h2 { margin-bottom: 0.8em; }
+.cybersec-201 .reveal p { line-height: 1.45; }
+.cybersec-201 .reveal small { font-size: 0.6em; }
+.cybersec-201 .reveal table { font-size: 0.82em; }
+.cybersec-201 .reveal td,
+.cybersec-201 .reveal th { padding: 0.55em 0.7em; }
+.cybersec-201 .reveal img {
+  display: block;
+  width: 94%;
+  max-height: 360px;
+  object-fit: contain;
+  margin: 18px auto;
+  border-radius: 16px;
+}
+
+.cybersec-201 .cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 28px 0;
+  text-align: left;
+}
+.cybersec-201 .card {
+  padding: 22px 20px;
+  border: 1px solid #37516e;
+  border-top: 3px solid #38bdf8;
+  border-radius: 12px;
+  background: #142235;
+}
+.cybersec-201 .card:nth-child(2) { border-top-color: #6ee7b7; }
+.cybersec-201 .card:nth-child(3) { border-top-color: #fcd34d; }
+.cybersec-201 .reveal .card h3 { font-size: 0.92em; margin: 0 0 14px; overflow-wrap: anywhere; }
+.cybersec-201 .reveal .card p { font-size: 0.83em; margin: 0; line-height: 1.5; }
+.cybersec-201 .example {
+  margin: 24px auto;
+  padding: 24px 28px;
+  max-width: 88%;
+  border: 1px solid #37516e;
+  border-radius: 14px;
+  background: #101e32;
+  text-align: left;
+}
+.cybersec-201 .example-label { color: #94a3b8; font-size: 0.52em; letter-spacing: 0.1em; margin-bottom: 18px; }
+.cybersec-201 .reveal .example pre { width: 100%; margin: 0; box-shadow: none; font-size: 0.74em; }
+.cybersec-201 .reveal .example code { padding: 0; background: transparent; color: #dbeafe; line-height: 1.65; max-height: 340px; }
+.cybersec-201 .eyebrow { color: #6ee7b7; font-size: 0.65em; letter-spacing: 0.16em; }

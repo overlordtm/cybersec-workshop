@@ -23,27 +23,45 @@ Vse tri predstavitve izvedemo pred praktičnim delom. Vaje so na ločeni strani 
 
 ## Prosojnice po vrsti
 
-Osnutek sledi slogu cybersec-101: kratke alineje, jasen poudarek in govorčeve opombe z razlago ter prikazi. Podrobnosti ostanejo v opombah in navodilih. Naslovi ustrezajo datoteki `slides.md`.
+Predstavitev vsebuje 35 prosojnic: štiri uvodne, deset za prvi sklop, enajst za drugi, devet za tretji ter eno sklepno. Več prosojnic omogoča postopno razlago posameznih pojmov; čas predstavitve ostaja 36 minut s kratkimi prikazi. Devet avtorskih shem prikazuje poti skozi lab, povezovanje sledi, DNS, storitve, segmentacijo, HTTP, Base64 in verigo razkritij. Ponazoritve izpisov so izrecno označene; niso posnetki živega laboratorija. Pisava in velikosti naslovov sledijo cybersec-101.
 
-| Št. | Naslov | Namen |
+| Št. | Naslov | Namen in prikaz |
 | --- | --- | --- |
-| 1 | Cybersec-201: Uvod v kibernetske operacije za radovedne | Predstavitev zgodbe ACME in cilja delavnice. |
-| 2 | Eno podjetje, trije pogledi | Trije sklopi pred skupnim praktičnim blokom. |
-| 3 | Naše učno okolje | Prijava v pripravljeni Kali, Firefox, terminal in dovoljene tarče. |
-| 4 | 1. sklop: Javno dostopne informacije | OSINT, javne objave in metapodatki. |
-| 5 | Iskalniki za infrastrukturo | Shodan, Censys, SecurityTrails in crt.sh; en stavek o vsakem. |
-| 6 | Iskalniki za razkritja in zgodovino | DeHashed, IntelX, HIBP, VirusTotal in Wayback Machine; en stavek o vsakem. |
-| 7 | Od sledi do ugotovitve | Viri, čas opažanja, povezovanje in omejitve sklepanja. |
-| 8 | 2. sklop: Od naslova do storitve | IP, podomrežje, vrata in protokol na primeru ACME. |
-| 9 | Ista vtičnica, drugačna dosegljivost | DMZ, LAN, IoT in razlika med tremi scenariji. |
-| 10 | Nmap: kaj odgovarja? | Kratek prikaz pripravljenega izpisa odkrivanja in storitev. |
-| 11 | Greenbone: od pregleda do poročila | Štiriminutna demonstracija končanega poročila in ene ugotovitve. |
-| 12 | Različica → CVE → preverjanje | Razlika med zaznano različico in potrjeno ranljivostjo. |
-| 13 | 3. sklop: Kako razmišlja preizkuševalec | Zaporedje preizkušanja, povezana razkritja in obrambni ukrepi. |
-| 14 | Kaj potuje v spletni zahtevi? | Kratek prikaz lastne zahteve v Firefoxu na Juice Shop. |
-| 15 | Kodiranje ni šifriranje | Base64, kodiranje URL in kratek prikaz CyberChef. |
-| 16 | Piškotek predstavlja sejo | Namen in omejitve zastavic piškotkov. |
-| 17 | Od ugotovitve do zaščite | Oblika zapisa ugotovitve in povezava z obrambo. |
+| 1 | Cybersec-201 | ACME je izmišljeno podjetje s pripravljeno infrastrukturo. |
+| 2 | Eno podjetje, trije pogledi | Vse tri predstavitve pred praktičnim blokom. |
+| 3 | Kali je že pripravljen | Pokaži prijavo na https://lab.digilab-g.rtfm.si/, Firefox in terminal. |
+| 4 | Dogovor o preverjanju | Pojasni razliko med iskanjem že indeksiranih podatkov in aktivnim pregledom strežnika. |
+| 5 | 1. sklop · Digitalne sledi | Za celoten prvi sklop osem minut. |
+| 6 | Kaj izda spletna stran? | Na primeru ACME omeni javne kontakte in povezavo do trgovine. |
+| 7 | Metapodatki: podatki o podatkih | Primer je ponazoritev, ne zajem dejanske datoteke. |
+| 8 | Isto ime še ne pomeni iste osebe | Psevdonim se lahko pojavi na več družbenih omrežjih, ne da bi pripadal isti osebi. |
+| 9 | Iskanje z manj šuma | Operatorji pomagajo omejiti rezultate. |
+| 10 | Iskalniki za infrastrukturo | Vsako orodje predstavi z enim stavkom, brez treh dodatnih prikazov. |
+| 11 | Kako beremo zapis v Shodanu? | Na pripravljenem dejanskem zapisu lahko pokažeš iste štiri elemente. |
+| 12 | Razkritja in izpostavljeni računi | Orodja samo omenimo. |
+| 13 | Certifikati, povezave in zgodovina | Omeni, da zgodovinski certifikat ne potrjuje trenutno delujoče storitve. |
+| 14 | Znano ime ≠ dosegljiva naprava | Zaključi OSINT: ločimo odkrito ime, podatek o naslovu in preizkušeno storitev. |
+| 15 | 2. sklop · Od omrežja do storitve | Dvanajst minut za drugi sklop, od tega štiri za demonstracijo Greenbone. |
+| 16 | Naslov IP in podomrežje | /24 poenostavljeno predstavi kot skupino naslovov z istimi prvimi tremi deli. |
+| 17 | Vrata so vstop do storitve | Shema je splošna ponazoritev, ne izpis dejanskih vrat www. |
+| 18 | Zakaj DMZ, LAN in IoT? | VLAN loči omrežja, pravila požarnega zidu pa določajo prehode. |
+| 19 | Segmentacijo določajo dovoljene poti | Ne gre le za blokiranje interneta. |
+| 20 | Ista vtičnica, tri stanja | Scenarij velja globalno za vse. |
+| 21 | Nmap: tri različna vprašanja | Odkrivanje gostiteljev samo zase ni dovolj. |
+| 22 | Kako preberemo rezultat? | Izpis je ponazoritev vedenja, opisanega v README, ne sveža meritev. |
+| 23 | Greenbone sestavi širši pregled | Za naslednji dve prosojnici in preklop v Greenbone skupaj štiri minute. |
+| 24 | V poročilu odpremo eno ugotovitev | Pokaži dejansko poročilo, CVSS oziroma prikaz resnosti in Quality of Detection. |
+| 25 | Različica → CVE → preverjanje | Apache v labu privzeto zavrača dostop zunaj DocumentRoot. |
+| 26 | 3. sklop · Razmišljanje preizkuševalca | Enajst minut za tretji sklop. |
+| 27 | Kaj se zgodi po kliku? | Zgornja puščica predstavlja zahtevo, spodnja odgovor. |
+| 28 | Zahteva pod povečevalnim steklom | Razloži štiri dele na kratko. |
+| 29 | Odgovor pove, kaj se je zgodilo | Status 200 sam zase ne dokazuje uspešne prijave; aplikacija lahko vrne sporočilo o napaki znotraj uspešnega odziva HTTP. |
+| 30 | Firefox pokaže lastni promet | Odpri F12 → Network v Firefoxu na shop.acme.lab. |
+| 31 | Kodiranje ni šifriranje | Prikazani učni niz se dekodira v ucenec:ucno. |
+| 32 | CyberChef: sestavimo pretvorbo | Kratek prikaz lokalnega CyberChef na Kali. |
+| 33 | HTTP Basic in zaščita prenosa | Poveži z učnim intranetom, ne razkrivaj vseh odgovorov vaj. |
+| 34 | Piškotek lahko predstavlja sejo | Niso vsi piškotki prijavni. |
+| 35 | Od dokaza do izboljšave | Zaključi predstavitev. |
 
 ## Praktični del po vseh treh sklopih
 
