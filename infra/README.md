@@ -57,7 +57,7 @@ on that vnet and routes between segments past both firewalls. The host has an IP
 vnets (IPv4 and IPv6), so the lab cannot reach SSH or the web UI of the host.
 
 The host has routes to 10.20.0.0/16, 172.20.0.0/16 and 198.51.100.0/24 via LAB-GW, for
-management only (LAB-GW allows the host to reach the ACME-FW GUI/SSH and nothing else).
+management only (LAB-GW allows the host to reach the ACME-FW GUI/SSH and Greenbone SSH).
 
 ## Egress and the Hetzner abuse risk
 
@@ -69,7 +69,8 @@ Hetzner sends abuse reports when scanning traffic leaves the server. Layers:
    (`infra/host/lab-nat.sh`).
 3. Kali and ACME servers reach the internet only through **Squid on LAB-GW** (port 3128,
    ports 80/443 only, **domain allowlist**: Kali mirrors, GitHub, PyPI, Debian, Docker Hub,
-   CVE/NVD/Exploit-DB/OWASP). Scanners that do not use the proxy cannot leave the lab.
+   Greenbone's image registry, CVE/NVD/Exploit-DB/OWASP). Scanners that do not use the
+   proxy cannot leave the lab.
 4. WireGuard is a **split tunnel**: clients get only 10.20.100.1, 198.51.100.0/24 and
    172.20.0.0/16. Their own traffic never goes through the server.
 
@@ -79,7 +80,7 @@ Hetzner sends abuse reports when scanning traffic leaves the server. Layers:
 
 | From → To | ACME (fakenet, 172.20/16) | LAB-GW | lab | internet |
 | --- | --- | --- | --- | --- |
-| lab (Kali, Guacamole) | public IPs; internal ranges only in `visitor`/`flat` | DNS, Squid, ping | (L2, see below) | Squid allowlist |
+| lab (Kali, Guacamole, Greenbone) | public IPs; internal ranges only in `visitor`/`flat` | DNS, Squid, ping | (L2, see below) | Squid allowlist |
 | WireGuard clients | public IPs; internal ranges only in `visitor`/`flat` | DNS, ping | ✗ | ✗ |
 | fakenet (ACME) | — | DNS; Squid from 198.51.100.8/29 | ✗ | Squid allowlist |
 | WAN | — | 80/443/51820 public; 22/8443 from host | ✗ | — |
@@ -135,7 +136,7 @@ are not affected. `./lab.sh up` keeps the current mode; `./lab.sh reset` returns
 
 ### Which subnets are reachable
 
-From Kali (10.20.0.0/24) and WireGuard (10.20.100.0/24):
+From Kali and Greenbone (10.20.0.0/24), and WireGuard (10.20.100.0/24):
 
 | Destination | `internet` | `visitor` | `flat` |
 | --- | --- | --- | --- |
@@ -258,10 +259,65 @@ OpenVPN is not set up; Guacamole over 443 covers networks that block UDP.
 | 100 | kali-tmpl (template) | VM | lab | 2 | 3 GB |
 | 110 | lab-gw (OPNsense 26.7) | VM | vmbr1, lab, fakenet | 2 | 2 GB |
 | 111 | guacamole | LXC + Docker | lab | 2 | 2 GB |
-| 112 | greenbone (planned) | VM | lab | 4 | 8 GB |
+| 112 | greenbone (Debian 13 + Community Containers, 64 GB disk) | VM | lab | 4 | 8 GB |
 | 120 | acme-fw (OPNsense 26.7) | VM | fakenet, acmedmz, acmelan, acmeiot | 2 | 2 GB |
 | 131–153 | ACME servers | LXC | acme* | 1 | 0.1–1 GB each (≈3 GB total) |
 | 201–215 | kali-01..15 (linked clones) | VM | lab | 2 | 3 GB |
+
+## Greenbone vulnerability scanner
+
+`./lab.sh up` also creates VM 112: Debian 13, 4 vCPU, 8 GB RAM and a 64 GB disk,
+with **one NIC on `lab`, 10.20.0.11/24, gateway/DNS 10.20.0.1**. Ansible installs
+Docker and the [official Greenbone Community Containers](https://greenbone.github.io/docs/latest/22.4/container/).
+The vendored `greenbone/compose.yaml` binds the UI to the lab IP; the override sets
+the UI hostname and a Docker subnet that does not overlap ACME. Container traffic
+is masqueraded by Docker to 10.20.0.11, so scans traverse LAB-GW and ACME-FW exactly
+as Kali scans do. No change to `scenario.py` is needed.
+
+From a hosted Kali browser, open **https://10.20.0.11/** and accept the generated
+self-signed certificate. Login: `admin`, password in `infra/secrets/greenbone-admin.pass`
+on your laptop. Treat this as an instructor account; create separate Greenbone users
+in the UI if participants need their own scans. Kali's PVE firewall allows only TCP
+443 to this host. Greenbone SSH is restricted to the PVE host, and its UI is not
+published through Caddy or made accessible to WireGuard clients.
+
+Images and feed data download over HTTPS through the existing Squid proxy, using
+the added `registry.community.greenbone.net` allowlist entry. Direct internet egress
+stays blocked; rsync feed access is unnecessary. First provisioning can take hours
+and needs several GB of downloads. Once it completes, check **Administration → Feed
+Status** and **Configuration → Scan Configs** (the `Full and fast` config should be
+available) before scanning. A running UI alone does not mean the feeds are ready.
+The VM adds 8 GB of reserved RAM; allow room for it when choosing how many of the
+3 GB Kali VMs to run on the 64 GB host.
+
+For a scenario comparison, use explicit IP targets: public servers
+`198.51.100.11–15`, DMZ `172.20.10.11–15`, LAN `172.20.20.10–12,172.20.20.20`, and
+IoT `172.20.30.10–12`. Use a TCP port list that includes the demonstration services
+(e.g. 22, 53, 80, 139, 443, 445, 502, 554, 9100), and TCP-based alive tests or
+**Consider Alive** when comparing filtered hosts. Stop active scans before switching
+with `./lab.sh scenario internet|visitor|flat`, then run a fresh scan and label its
+report with the mode. The expected reachability is the same as the table above.
+Reports already saved do not change, and existing firewall states can survive a switch.
+
+The scanner's Docker volumes retain users, tasks, reports and feeds across `up`,
+reboots and `reset`. It is deliberately excluded from the `clean` snapshots so
+scenario reports remain available for comparison. `down` destroys its VM and data.
+Normal `up` runs reuse installed images; the upstream images use rolling tags.
+Update services and feeds explicitly during maintenance, with no scans running:
+
+```sh
+ssh root@pve.digilab-g.rtfm.si
+ssh greenbone
+cd /opt/greenbone
+docker compose ps
+docker compose pull
+docker compose up -d
+docker compose logs --tail=100 gvmd ospd-openvas
+```
+
+Wait for feed import to finish again after updating. When upgrading the stack,
+review the [current upstream Compose file](https://greenbone.github.io/docs/latest/_static/compose.yaml)
+against the vendored copy as well, preserving the lab bindings and override.
 
 ## Setup and teardown
 
@@ -330,14 +386,15 @@ OpenTofu's `kali_count` controls only hosted VMs and must match the CSV's active
 hosted accounts; `lab.sh up` keeps these in sync.
 
 `./lab.sh up` from zero takes about 25 minutes with an existing Kali template, plus 30–60
-minutes when the template has to be built. It runs, in order:
+minutes when the template has to be built and potentially hours for Greenbone's initial
+feed setup. It runs, in order:
 
 | Step | Tool | What |
 | --- | --- | --- |
 | 1 | `guacamole/gen-users.py` | participants and passwords (`secrets/participants.csv`, kept on re-runs) |
 | 2 | `ansible/host.yml` | vmbr1 + NAT/egress rules, host firewall lines, helper tools, SSH key, API token for OpenTofu, OPNsense nano image (checksum + signature verified, unpacked into the import storage) |
-| 3 | `tofu apply` | SDN zone and vnets, Debian 13 LXC template download, LAB-GW and ACME-FW VMs, Guacamole and ACME containers, Kali firewall group (Kali clones only if the template exists) |
-| 4 | `ansible/site.yml` | `keyctl` for the Docker containers (only `root@pam` may set it, not an API token), OPNsense bootstrap over the serial console, firmware + plugins, full config over the API (`labgw.py`, `acmefw.py`), WireGuard configs, Guacamole, ACME servers, `clean` snapshots |
+| 3 | `tofu apply` | SDN zone and vnets, Debian 13 LXC template and scanner cloud image, LAB-GW/ACME-FW/Greenbone VMs, Guacamole and ACME containers, Kali firewall group (Kali clones only if the template exists) |
+| 4 | `ansible/site.yml` | `keyctl` for the Docker containers (only `root@pam` may set it, not an API token), OPNsense bootstrap over the serial console, firmware + plugins, full config over the API (`labgw.py`, `acmefw.py`), WireGuard configs, Guacamole, Greenbone, ACME servers, `clean` snapshots (excluding Greenbone) |
 | 5 | `ansible/kali-template.yml` | only if VM 100 is missing: build the Kali template from Kali's QEMU image |
 | 6 | `tofu apply` | Kali clones |
 

@@ -61,6 +61,9 @@
     - name: Guacamole
       ansible.builtin.import_tasks: tasks/guacamole.yml
 
+    - name: Greenbone
+      ansible.builtin.import_tasks: tasks/greenbone.yml
+
     - name: ACME servers
       ansible.builtin.command: sh {{ lab_dir }}/acme/provision.sh
       register: acme

@@ -11,6 +11,15 @@ resource "proxmox_virtual_environment_cluster_firewall_security_group" "kali" {
   comment = "Kali workstations: no Kali-to-Kali traffic"
 
   rule {
+    type    = "out"
+    action  = "ACCEPT"
+    dest    = "10.20.0.11"
+    proto   = "tcp"
+    dport   = "443"
+    comment = "Greenbone web UI"
+  }
+
+  rule {
     type    = "in"
     action  = "ACCEPT"
     source  = "10.20.0.10"

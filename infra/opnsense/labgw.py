@@ -58,6 +58,7 @@ api.rules([
     (10, "wan", "pass", "TCP", "172.31.255.1", "(self)", "mgmt_ports", "Management from PVE host"),
     (11, "wan", "pass", "ICMP", "172.31.255.1", "any", "", "PVE host: ping"),
     (12, "wan", "pass", "TCP", "172.31.255.1", "acme_fw", "mgmt_ports", "PVE host: manage ACME-FW"),
+    (13, "wan", "pass", "TCP", "172.31.255.1", "10.20.0.11", "22", "PVE host: manage Greenbone"),
     (20, "wan", "pass", "TCP", "any", "(self)", "web_ports", "Public: Caddy (Guacamole)"),
     (30, "wan", "pass", "UDP", "any", "(self)", WG_PORT, "Public: WireGuard"),
     (100, "lan", "pass", "TCP/UDP", "lan", "(self)", "53", "LAB: DNS"),
@@ -98,6 +99,8 @@ ALLOW = [
     "pypi.org", "pythonhosted.org", "rubygems.org",
     # ACME servers: Debian and Docker images
     "deb.debian.org", "security.debian.org", "archive.debian.org", "docker.io", "docker.com",
+    # Greenbone services and feed data are both distributed as HTTPS images.
+    "registry.community.greenbone.net",
     # References for the exercises (CVE lookup, docs)
     "nvd.nist.gov", "cve.org", "cve.mitre.org", "cvedetails.com", "exploit-db.com",
     "owasp.org", "gchq.github.io",

@@ -1,0 +1,11 @@
+services:
+  gvm-config:
+    environment:
+      NGINX_HOST: "10.20.0.11"
+
+networks:
+  default:
+    ipam:
+      config:
+        # Explicitly avoid ACME's 172.20.x.x networks.
+        - subnet: 172.28.112.0/24

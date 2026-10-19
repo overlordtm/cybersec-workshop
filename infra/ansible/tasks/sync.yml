@@ -5,4 +5,4 @@
     dest: "{{ lab_dir }}/"
     delete: true
     rsync_opts: ["--exclude=__pycache__"]
-  loop: [host, opnsense, acme, guacamole, kali]
+  loop: [host, opnsense, acme, guacamole, kali, greenbone]

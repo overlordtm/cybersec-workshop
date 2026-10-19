@@ -1,0 +1,39 @@
+# Manage the VM through SSH from PVE; no extra NIC or internet NAT for scans.
+- name: Greenbone - administrator password
+  ansible.builtin.shell: |
+    umask 077
+    [ -s {{ secrets }}/greenbone-admin.pass ] || openssl rand -hex 20 > {{ secrets }}/greenbone-admin.pass
+  delegate_to: localhost
+  changed_when: false
+  no_log: true
+
+- name: Greenbone - password on the host
+  ansible.builtin.copy:
+    src: "{{ secrets }}/greenbone-admin.pass"
+    dest: "{{ lab_dir }}/secrets/greenbone-admin.pass"
+    mode: "0600"
+  no_log: true
+
+- name: Greenbone - wait for cloud-init SSH
+  ansible.builtin.command: ssh -o BatchMode=yes greenbone true
+  register: greenbone_ssh
+  until: greenbone_ssh.rc == 0
+  retries: 30
+  delay: 10
+  changed_when: false
+
+- name: Greenbone - configuration files
+  ansible.builtin.shell: |
+    set -eu
+    ssh greenbone 'mkdir -p /opt/greenbone && chmod 700 /opt/greenbone'
+    scp {{ lab_dir }}/greenbone/compose*.yaml {{ lab_dir }}/greenbone/provision.sh greenbone:/opt/greenbone/
+  changed_when: false
+
+- name: Greenbone - install and start (feeds may take hours to import)
+  ansible.builtin.shell: |
+    ssh greenbone 'sh /opt/greenbone/provision.sh' < {{ lab_dir }}/secrets/greenbone-admin.pass
+  async: 10800
+  poll: 30
+  changed_when: false
+  # The password travels over stdin, not in the command or its output. Keep
+  # provisioning diagnostics visible; only password generation/copy need no_log.
