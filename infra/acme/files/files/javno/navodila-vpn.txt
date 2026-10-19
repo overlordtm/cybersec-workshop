@@ -1,0 +1,7 @@
+Navodila za oddaljeni dostop (za zaposlene)
+
+1. Povezite se na vpn.acme.lab s SSH.
+2. Uporabnisko ime je ime.priimek (npr. peter.horvat).
+3. Zacetno geslo vam posreduje informatika. Prosimo, da ga ob prvi prijavi zamenjate.
+
+Vprasanja: peter.horvat@acme.lab

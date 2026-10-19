@@ -1,0 +1,6 @@
+<?php
+// Stara konfiguracija spletne strani (2019)
+define('DB_HOST', 'intranet.acme.lab');
+define('DB_USER', 'acme_web');
+define('DB_PASS', 'Poletje2019!');
+define('ADMIN_EMAIL', 'peter.horvat@acme.lab');

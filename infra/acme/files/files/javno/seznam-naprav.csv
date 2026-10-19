@@ -1,0 +1,5 @@
+naprava,lokacija,ip,opomba
+kamera vhod,recepcija,172.20.30.10,privzeto geslo - zamenjati!
+tiskalnik,1. nadstropje,172.20.30.11,
+klima,streha,172.20.30.12,upravlja zunanji serviser
+nas,serverska soba,172.20.20.12,varnostne kopije

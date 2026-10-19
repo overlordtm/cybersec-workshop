@@ -1,0 +1,12 @@
+#!/bin/sh
+# Minimal OPNsense API client.  Usage: opn HOST GET|POST /api/path ['{"json":1}']
+# Credentials: /root/.config/opn/HOST (two lines: key, secret), URL from line 3.
+set -e
+cfg=/root/.config/opn/$1
+key=$(sed -n 1p "$cfg"); secret=$(sed -n 2p "$cfg"); url=$(sed -n 3p "$cfg")
+if [ "$2" = POST ]; then
+    curl -sk -u "$key:$secret" -X POST -H 'Content-Type: application/json' -d "${4:-{\}}" "$url$3"
+else
+    curl -sk -u "$key:$secret" "$url$3"
+fi
+echo
