@@ -9,6 +9,7 @@
 #   ./lab.sh start|stop [N ...]   start/stop Kali clones (all, or by number)
 #   ./lab.sh scenario internet|visitor|flat|status   switch what participants can reach
 #   ./lab.sh credentials   export encrypted credentials for the exercise site
+#   ./lab.sh claim-pdf     print active claim codes as cut-out A4 slips
 #   ./lab.sh status        what exists and what is running
 set -eu
 cd "$(dirname "$0")"
@@ -73,11 +74,14 @@ scenario)
 credentials)
     "${CREDENTIALS_PYTHON:-python3}" -I export-credentials.py "$@"
     ;;
+claim-pdf)
+    "${CREDENTIALS_PYTHON:-python3}" -I print-claim-codes.py "$@"
+    ;;
 status)
     tofu_ output
     ssh -o BatchMode=yes $PVE 'qm list | grep -E "VMID|kali|gw|fw"; pct list' 2>/dev/null
     ;;
 *)
-    sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
     ;;
 esac
