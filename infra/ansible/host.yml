@@ -1,0 +1,161 @@
+# PVE host layer: transit bridge vmbr1 with NAT/egress rules, host firewall lines for the lab,
+# helper tools, SSH key for lab machines and the API token for OpenTofu. Idempotent.
+- name: PVE host
+  hosts: pve
+  tasks:
+    - name: NAT and egress script
+      ansible.builtin.copy:
+        src: "{{ infra }}/host/lab-nat.sh"
+        dest: /etc/network/lab-nat.sh
+        mode: "0755"
+
+    - name: Remove the hand-made vmbr1 stanza (migration to the managed block)
+      ansible.builtin.replace:
+        path: /etc/network/interfaces
+        regexp: '(?s)\n# Lab transit: host <-> LAB-GW.*?post-down /etc/network/lab-nat.sh down\n'
+        replace: "\n"
+
+    - name: Transit bridge vmbr1
+      ansible.builtin.blockinfile:
+        path: /etc/network/interfaces
+        marker: "# {mark} lab transit (managed by infra/ansible/host.yml)"
+        insertbefore: '^source /etc/network/interfaces.d'
+        block: |
+          auto vmbr1
+          iface vmbr1 inet static
+          	address 172.31.255.1/30
+          	bridge-ports none
+          	bridge-stp off
+          	bridge-fd 0
+          	ip-forward on
+          	post-up /etc/network/lab-nat.sh up
+          	post-up ip route replace 198.51.100.0/24 via 172.31.255.2
+          	post-up ip route replace 172.20.0.0/16 via 172.31.255.2
+          	post-up ip route replace 10.20.0.0/16 via 172.31.255.2
+          	post-down /etc/network/lab-nat.sh down
+      register: vmbr1
+
+    - name: Apply network configuration
+      ansible.builtin.command: ifreload -a
+      when: vmbr1.changed
+
+    - name: NAT rules and routes are in place
+      ansible.builtin.shell: |
+        /etc/network/lab-nat.sh up
+        for net in 198.51.100.0/24 172.20.0.0/16 10.20.0.0/16; do ip route replace $net via 172.31.255.2; done
+      changed_when: false
+
+    - name: Remove hand-made host firewall lines (migration)
+      ansible.builtin.lineinfile:
+        path: /etc/pve/firewall/cluster.fw
+        regexp: '# lab: no access to host$'
+        state: absent
+        unsafe_writes: true
+
+    - name: Host firewall - the lab must not reach the host (before the SSH/GUI accept rules)
+      ansible.builtin.blockinfile:
+        path: /etc/pve/firewall/cluster.fw
+        marker: "# {mark} lab (managed by infra/ansible/host.yml)"
+        insertafter: '^\[RULES\]'
+        unsafe_writes: true
+        block: |
+          IN DROP -i vmbr1 -log nolog
+          IN DROP -i lab -log nolog
+          IN DROP -i fakenet -log nolog
+          IN DROP -i acmedmz -log nolog
+          IN DROP -i acmelan -log nolog
+          IN DROP -i acmeiot -log nolog
+
+    - name: Helper tools
+      ansible.builtin.copy:
+        src: "{{ infra }}/host/{{ item.src }}"
+        dest: "/usr/local/bin/{{ item.dest }}"
+        mode: "0755"
+      loop:
+        - { src: serial-relay.py, dest: serial-relay }
+        - { src: opn, dest: opn }
+
+    - name: SSH key for lab machines
+      ansible.builtin.command: ssh-keygen -q -t ed25519 -N "" -C pve-lab -f /root/.ssh/lab_ed25519
+      args:
+        creates: /root/.ssh/lab_ed25519
+
+    - name: Public key to secrets (used by OpenTofu and the OPNsense bootstrap)
+      ansible.builtin.fetch:
+        src: /root/.ssh/lab_ed25519.pub
+        dest: "{{ secrets }}/pve-lab.pub"
+        flat: true
+
+    - name: Remove hand-made SSH client entries (migration)
+      ansible.builtin.replace:
+        path: /root/.ssh/config
+        regexp: '(?m)^Host (lab-gw|acme-fw)\n  HostName .*\n  User root\n  IdentityFile .*\n  StrictHostKeyChecking accept-new\n'
+        replace: ""
+
+    - name: SSH client entries for the firewalls
+      ansible.builtin.blockinfile:
+        path: /root/.ssh/config
+        create: true
+        mode: "0600"
+        marker: "# {mark} lab (managed by infra/ansible/host.yml)"
+        block: |
+          Host lab-gw
+            HostName 172.31.255.2
+          Host acme-fw
+            HostName 198.51.100.10
+          Host lab-gw acme-fw
+            User root
+            IdentityFile /root/.ssh/lab_ed25519
+            StrictHostKeyChecking accept-new
+            UserKnownHostsFile /root/.ssh/known_hosts_lab
+            ConnectTimeout 10
+
+    - name: OpenTofu imports the OPNsense nano image from here
+      ansible.builtin.shell: |
+        set -e
+        V={{ opnsense_version }}; NAME=OPNsense-$V-nano-amd64
+        DEST=/var/lib/vz/import/$NAME.raw
+        [ -f "$DEST" ] && exit 0
+        mkdir -p /var/lib/vz/import; T=$(mktemp -d); cd "$T"
+        B=https://pkg.opnsense.org/releases/$V
+        for f in $NAME.img.bz2 $NAME.img.sig OPNsense-$V.pub OPNsense-$V-checksums-amd64.sha256; do curl -sSfO $B/$f; done
+        grep "($NAME.img.bz2)" OPNsense-$V-checksums-amd64.sha256 | sed -E 's/^SHA256 \((.*)\) = (.*)$/\2  \1/' | sha256sum -c --quiet
+        bunzip2 $NAME.img.bz2
+        openssl base64 -d -in $NAME.img.sig -out sig.bin
+        openssl dgst -sha256 -verify OPNsense-$V.pub -signature sig.bin $NAME.img >/dev/null
+        mv $NAME.img "$DEST"; cd /; rm -rf "$T"
+        echo DOWNLOADED
+      register: opnsense_image
+      changed_when: "'DOWNLOADED' in opnsense_image.stdout"
+
+    - name: Lab directory
+      ansible.builtin.file:
+        path: "{{ lab_dir }}"
+        state: directory
+        mode: "0700"
+
+    # --- API token for OpenTofu (secret only shown once, so recreate it if the local copy is gone)
+    - name: Local token file
+      ansible.builtin.stat:
+        path: "{{ secrets }}/pve-token"
+      delegate_to: localhost
+      register: token_file
+
+    - name: Create API token root@pam!tofu
+      when: not token_file.stat.exists
+      block:
+        - name: Remove old token
+          ansible.builtin.command: pveum user token remove root@pam tofu
+          failed_when: false
+        - name: Add token
+          ansible.builtin.command: pveum user token add root@pam tofu --privsep 0 --comment "OpenTofu (infra/tofu)" --output-format json
+          register: token
+        - name: Save token
+          ansible.builtin.copy:
+            content: "root@pam!tofu={{ (token.stdout | from_json).value }}\n"
+            dest: "{{ secrets }}/pve-token"
+            mode: "0600"
+          delegate_to: localhost
+
+    - name: Copy scripts
+      ansible.builtin.import_tasks: tasks/sync.yml

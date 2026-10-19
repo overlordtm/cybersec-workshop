@@ -1,0 +1,8 @@
+# Copy the scripts to the host (never the secrets)
+- name: Copy lab scripts to {{ lab_dir }}
+  ansible.posix.synchronize:
+    src: "{{ infra }}/{{ item }}"
+    dest: "{{ lab_dir }}/"
+    delete: true
+    rsync_opts: ["--exclude=__pycache__"]
+  loop: [host, opnsense, acme, guacamole, kali]

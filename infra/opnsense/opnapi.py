@@ -75,4 +75,9 @@ class Opn:
             "name": name, "interface": interface, "ipprotocol": "inet", "gateway": address,
             "defaultgw": "1" if default else "0", "monitor_disable": "1", "descr": descr}})
         self.call("/api/routing/settings/reconfigure", {})
-        time.sleep(5)  # reconfigure is asynchronous; routes reject the gateway until it is done
+        # reconfigure is asynchronous; routes reject the gateway until it shows up as an option
+        for _ in range(60):
+            if name in self.call("/api/routes/routes/getroute")["route"]["gateway"]:
+                return
+            time.sleep(2)
+        sys.exit(f"{self.name}: gateway {name} did not become available")

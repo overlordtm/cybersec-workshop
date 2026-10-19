@@ -1,0 +1,63 @@
+# Bootstrap (first time only), update and configure one OPNsense router. Loop var: r
+- name: "{{ r.name }}: credentials"
+  ansible.builtin.shell: |
+    cd {{ secrets }}
+    [ -s {{ r.prefix }}-root.pass ] || openssl rand -base64 18 | tr -d '/+=' | head -c 20 > {{ r.prefix }}-root.pass
+    [ -s {{ r.prefix }}-api.key ] || openssl rand -hex 40 > {{ r.prefix }}-api.key
+    [ -s {{ r.prefix }}-api.secret ] || openssl rand -hex 40 > {{ r.prefix }}-api.secret
+    chmod 600 {{ r.prefix }}-*
+  delegate_to: localhost
+  changed_when: false
+
+- name: "{{ r.name }}: API credentials on the host"
+  ansible.builtin.copy:
+    content: |
+      {{ lookup('file', secrets + '/' + r.prefix + '-api.key') }}
+      {{ lookup('file', secrets + '/' + r.prefix + '-api.secret') }}
+      {{ r.url }}
+    dest: "/root/.config/opn/{{ r.name }}"
+    mode: "0600"
+
+- name: "{{ r.name }}: already bootstrapped?"
+  ansible.builtin.command: ssh -o BatchMode=yes {{ r.name }} true
+  register: reachable
+  failed_when: false
+  changed_when: false
+
+- name: "{{ r.name }}: bootstrap over the serial console"
+  when: reachable.rc != 0
+  block:
+    - name: "{{ r.name }}: bootstrap config.xml"
+      ansible.builtin.command: >
+        python3 -I {{ infra }}/opnsense/bootstrap.py {{ r.profile }}
+        {{ infra }}/opnsense/config-26.7-default.xml {{ secrets }}/{{ r.name }}-boot.xml {{ secrets }}
+      delegate_to: localhost
+    - name: "{{ r.name }}: copy config"
+      ansible.builtin.copy:
+        src: "{{ secrets }}/{{ r.name }}-boot.xml"
+        dest: "{{ lab_dir }}/{{ r.name }}-boot.xml"
+        mode: "0600"
+    - name: "{{ r.name }}: inject config and boot"
+      ansible.builtin.command: sh {{ lab_dir }}/opnsense/bootstrap-vm.sh {{ r.vmid }} {{ lab_dir }}/{{ r.name }}-boot.xml {{ r.name }}
+    - name: "{{ r.name }}: remove config copy"
+      ansible.builtin.file:
+        path: "{{ lab_dir }}/{{ r.name }}-boot.xml"
+        state: absent
+    - name: "{{ r.name }}: wait for SSH"
+      ansible.builtin.command: ssh -o BatchMode=yes {{ r.name }} true
+      register: ssh_up
+      until: ssh_up.rc == 0
+      retries: 30
+      delay: 10
+      changed_when: false
+
+- name: "{{ r.name }}: firmware and plugins"
+  ansible.builtin.command: sh {{ lab_dir }}/opnsense/firmware.sh {{ r.name }} {{ r.plugins | join(' ') }}
+  register: fw
+  changed_when: "'installed' in fw.stdout or 'rebooting' in fw.stdout"
+
+- name: "{{ r.name }}: configuration"
+  ansible.builtin.command: python3 -I {{ lab_dir }}/opnsense/{{ r.script }}
+  args:
+    chdir: /
+  changed_when: false

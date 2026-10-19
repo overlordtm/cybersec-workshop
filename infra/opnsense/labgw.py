@@ -61,10 +61,6 @@ api.rules([
     (210, "opt1", "pass", "TCP", "acme_public", "(self)", "3128", "FAKENET: ACME-FW web proxy"),
     (220, "opt1", "pass", "ICMP", "opt1", "(self)", "", "FAKENET: ping gateway"),
     (299, "opt1", "block", "any", "any", "any", "", "FAKENET: default deny"),
-    (300, "wireguard", "pass", "TCP/UDP", f"{WG_NET}.0/24", WG_SERVER_IP, "53", "VPN: DNS"),
-    (310, "wireguard", "pass", "ICMP", f"{WG_NET}.0/24", WG_SERVER_IP, "", "VPN: ping gateway"),
-    (320, "wireguard", "pass", "any", f"{WG_NET}.0/24", "acme_nets", "", "VPN: to ACME"),
-    (399, "wireguard", "block", "any", "any", "any", "", "VPN: default deny"),
 ])
 
 # --- DHCP on LAB. Kali clones get MAC bc:24:11:20:00:NN (set by infra/kali/clones.sh).
@@ -88,7 +84,7 @@ api.call("/api/unbound/service/reconfigure", {})
 # --- Squid: allowlist only (blacklist "." blocks everything, whitelist overrides it)
 ALLOW = [
     # Kali and tooling
-    "kali.org", "kali.download", "github.com", "githubusercontent.com", "github.io",
+    "kali.org", "kali.download", "github.com", "githubusercontent.com", "github.io", "githubassets.com",
     "pypi.org", "pythonhosted.org", "rubygems.org",
     # ACME servers: Debian and Docker images
     "deb.debian.org", "security.debian.org", "archive.debian.org", "docker.io", "docker.com",
@@ -129,9 +125,18 @@ peers = [api.upsert("wireguard/client", "Client", "name", name, {"client": {
 
 server = {"enabled": "1", "name": "wg-lab", "port": WG_PORT, "tunneladdress": f"{WG_SERVER_IP}/24",
           "disableroutes": "1", "peers": ",".join(peers)}
-if not any(r["name"] == "wg-lab" for r in api.rows("/api/wireguard/server/searchServer")):
-    kp = api.call("/api/wireguard/server/keyPair")
-    server.update(privkey=kp["privkey"], pubkey=kp["pubkey"])
+# The server key is kept with the client keys, so a rebuilt LAB-GW keeps the same client configs
+if "_server" not in keys:
+    existing = [r for r in api.rows("/api/wireguard/server/searchServer") if r["name"] == "wg-lab"]
+    if existing:
+        cur = api.call(f"/api/wireguard/server/getServer/{existing[0]['uuid']}")["server"]
+        keys["_server"] = {"priv": cur["privkey"], "pub": cur["pubkey"]}
+    else:
+        kp = api.call("/api/wireguard/server/keyPair")
+        keys["_server"] = {"priv": kp["privkey"], "pub": kp["pubkey"]}
+    with secret_file(KEYS) as f:
+        json.dump(keys, f, indent=1)
+server.update(privkey=keys["_server"]["priv"], pubkey=keys["_server"]["pub"])
 api.upsert("wireguard/server", "Server", "name", "wg-lab", {"server": server})
 api.saved("/api/wireguard/general/set", {"general": {"enabled": "1"}})
 api.call("/api/wireguard/service/reconfigure", {})
@@ -144,6 +149,14 @@ for name in PARTICIPANTS:
                 f"Address = {peer_ip(name)}/32\nDNS = {WG_SERVER_IP}\n\n"
                 f"[Peer]\nPublicKey = {server_pub}\nEndpoint = {PUBLIC_NAME}:{WG_PORT}\n"
                 f"AllowedIPs = {WG_SERVER_IP}/32, 198.51.100.0/24, 172.20.0.0/16\nPersistentKeepalive = 25\n")
+
+# Rules on the WireGuard interface group (exists only once WireGuard is enabled)
+api.rules([
+    (300, "wireguard", "pass", "TCP/UDP", f"{WG_NET}.0/24", WG_SERVER_IP, "53", "VPN: DNS"),
+    (310, "wireguard", "pass", "ICMP", f"{WG_NET}.0/24", WG_SERVER_IP, "", "VPN: ping gateway"),
+    (320, "wireguard", "pass", "any", f"{WG_NET}.0/24", "acme_nets", "", "VPN: to ACME"),
+    (399, "wireguard", "block", "any", "any", "any", "", "VPN: default deny"),
+])
 
 # --- Caddy: public HTTPS (Let's Encrypt) -> Guacamole
 api.saved("/api/caddy/General/set", {"caddy": {"general": {"enabled": "1"}}})

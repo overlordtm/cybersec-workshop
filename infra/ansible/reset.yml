@@ -1,0 +1,11 @@
+# Roll the firewalls, Guacamole and ACME back to the "clean" snapshot (between workshops).
+# Kali clones are recreated by lab.sh (tofu apply -replace).
+- name: Reset to clean
+  hosts: pve
+  tasks:
+    - name: Roll back VMs
+      ansible.builtin.shell: qm rollback {{ item }} clean --start 1
+      loop: "{{ snapshot_vms }}"
+    - name: Roll back containers
+      ansible.builtin.shell: pct rollback {{ item }} clean --start 1
+      loop: "{{ snapshot_cts }}"

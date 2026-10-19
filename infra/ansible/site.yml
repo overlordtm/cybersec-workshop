@@ -1,0 +1,78 @@
+# Configure everything OpenTofu created: both firewalls, Guacamole, ACME servers, snapshots.
+# Idempotent; safe to re-run. Run after `tofu apply`.
+- name: Lab configuration
+  hosts: pve
+  tasks:
+    - name: Copy scripts
+      ansible.builtin.import_tasks: tasks/sync.yml
+
+    - name: Participants (Guacamole users, Kali passwords, WireGuard peers)
+      ansible.builtin.command: python3 -I {{ infra }}/guacamole/gen-users.py {{ secrets }} {{ secrets }}/guacamole-home {{ kali_count | default(15) }}
+      delegate_to: localhost
+      changed_when: false
+
+    - name: Participants on the host
+      ansible.builtin.copy:
+        src: "{{ secrets }}/participants.csv"
+        dest: "{{ lab_dir }}/participants.csv"
+        mode: "0600"
+
+    - name: Docker containers need keyctl (only root@pam may set it, so not OpenTofu)
+      ansible.builtin.shell: |
+        pct config {{ item }} | grep -q '^features:.*keyctl=1' && exit 0
+        pct set {{ item }} --features nesting=1,keyctl=1 && pct reboot {{ item }} && echo CHANGED
+      loop: "{{ [111] + (lookup('file', infra + '/acme/hosts.csv') | community.general.from_csv | selectattr('docker', 'eq', 'yes') | map(attribute='id') | list) }}"
+      register: keyctl
+      changed_when: "'CHANGED' in keyctl.stdout"
+
+    - name: Key store on the host
+      ansible.builtin.file:
+        path: "{{ lab_dir }}/secrets"
+        state: directory
+        mode: "0700"
+
+    - name: WireGuard keys (local secrets/ is the master copy)
+      ansible.builtin.copy:
+        src: "{{ secrets }}/wg-keys.json"
+        dest: "{{ lab_dir }}/secrets/wg-keys.json"
+        mode: "0600"
+      when: lookup('ansible.builtin.fileglob', secrets + '/wg-keys.json') | length > 0
+
+    - name: Firewalls
+      ansible.builtin.include_tasks: tasks/router.yml
+      loop: "{{ routers }}"
+      loop_control:
+        loop_var: r
+        label: "{{ r.name }}"
+
+    - name: WireGuard keys back to secrets
+      ansible.builtin.fetch:
+        src: "{{ lab_dir }}/secrets/wg-keys.json"
+        dest: "{{ secrets }}/wg-keys.json"
+        flat: true
+
+    - name: WireGuard client configs to secrets
+      ansible.posix.synchronize:
+        mode: pull
+        src: "{{ lab_dir }}/secrets/wireguard/"
+        dest: "{{ secrets }}/wireguard/"
+
+    - name: Guacamole
+      ansible.builtin.import_tasks: tasks/guacamole.yml
+
+    - name: ACME servers
+      ansible.builtin.command: sh {{ lab_dir }}/acme/provision.sh
+      register: acme
+      changed_when: "'provisioned' in acme.stdout.replace('already provisioned', '')"
+      async: 5400
+      poll: 30
+
+    - name: Snapshot "clean" (VMs)
+      ansible.builtin.shell: qm listsnapshot {{ item }} | grep -q ' clean ' || qm snapshot {{ item }} clean --description "lab.sh up $(date +%F)"
+      loop: "{{ snapshot_vms }}"
+      changed_when: false
+
+    - name: Snapshot "clean" (containers)
+      ansible.builtin.shell: pct listsnapshot {{ item }} | grep -q ' clean ' || pct snapshot {{ item }} clean --description "lab.sh up $(date +%F)"
+      loop: "{{ snapshot_cts }}"
+      changed_when: false

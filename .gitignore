@@ -5,3 +5,7 @@ dist/
 *.pdf
 # Lab credentials, VPN keys
 infra/secrets/
+# OpenTofu state and providers
+infra/tofu/.terraform/
+infra/tofu/terraform.tfstate*
+infra/tofu/.terraform.lock.hcl.bak

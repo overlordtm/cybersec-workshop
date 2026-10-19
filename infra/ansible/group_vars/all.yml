@@ -1,0 +1,15 @@
+infra: "{{ playbook_dir }}/.."
+secrets: "{{ infra }}/secrets"
+lab_dir: /root/lab
+public_name: lab.digilab-g.rtfm.si
+opnsense_version: "26.7"
+
+routers:
+  - { name: lab-gw, vmid: 110, profile: lab-gw, prefix: labgw, url: "https://172.31.255.2:8443",
+      plugins: [os-squid, os-caddy], script: labgw.py }
+  - { name: acme-fw, vmid: 120, profile: acme-fw, prefix: acmefw, url: "https://198.51.100.10:8443",
+      plugins: [], script: acmefw.py }
+
+# Everything that gets a "clean" snapshot (lab.sh reset rolls back to it)
+snapshot_vms: [110, 120]
+snapshot_cts: [111, 131, 132, 133, 134, 135, 141, 142, 143, 144, 151, 152, 153]

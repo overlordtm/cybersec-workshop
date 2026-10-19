@@ -156,36 +156,85 @@ OpenVPN is not set up; Guacamole over 443 covers networks that block UDP.
 | 131–153 | ACME servers | LXC | acme* | 1 | 0.1–1 GB each (≈3 GB total) |
 | 201–215 | kali-01..15 (linked clones) | VM | lab | 2 | 3 GB |
 
-## Repository layout and how to rebuild
+## Setup and teardown
 
-Everything runs on the PVE host from `/root/lab` (copies of these files). Secrets
-(`infra/secrets/`, git-ignored) hold OPNsense root passwords and API keys, participant
-passwords and WireGuard configs.
+Everything is driven from your laptop with `infra/lab.sh`:
+**OpenTofu** creates the Proxmox resources, **Ansible** configures the host and what runs inside
+the machines (it reuses the scripts in `host/`, `opnsense/`, `acme/`, `guacamole/`, `kali/`).
+
+Requirements on the laptop: `tofu` (≥ 1.8), `ansible` with `ansible.posix`, `python3`,
+`openssl`, `rsync`, and SSH access as `root@pve.digilab-g.rtfm.si` (key in your agent).
+
+```sh
+cd infra
+./lab.sh up          # build or update everything (15 Kali workstations)
+./lab.sh up 20       # ... with 20 Kali workstations (remembered in secrets/kali-count)
+./lab.sh start       # start all Kali clones before the workshop (stop: ./lab.sh stop)
+./lab.sh start 3 4   # start kali-03 and kali-04 only
+./lab.sh status
+
+./lab.sh reset       # between workshops: firewalls, Guacamole and ACME back to "clean",
+                     # fresh Kali clones (participants keep their passwords)
+./lab.sh kalis       # fresh Kali clones only
+
+./lab.sh down        # destroy all lab VMs/containers/networks (keeps Kali template + host layer)
+./lab.sh down --all  # also remove Kali template, vmbr1/NAT, host firewall lines, API token
+```
+
+`./lab.sh up` from zero takes about 25 minutes with an existing Kali template, plus 30–60
+minutes when the template has to be built. It runs, in order:
+
+| Step | Tool | What |
+| --- | --- | --- |
+| 1 | `guacamole/gen-users.py` | participants and passwords (`secrets/participants.csv`, kept on re-runs) |
+| 2 | `ansible/host.yml` | vmbr1 + NAT/egress rules, host firewall lines, helper tools, SSH key, API token for OpenTofu, OPNsense nano image (checksum + signature verified, unpacked into the import storage) |
+| 3 | `tofu apply` | SDN zone and vnets, Debian 13 LXC template download, LAB-GW and ACME-FW VMs, Guacamole and ACME containers, Kali firewall group (Kali clones only if the template exists) |
+| 4 | `ansible/site.yml` | `keyctl` for the Docker containers (only `root@pam` may set it, not an API token), OPNsense bootstrap over the serial console, firmware + plugins, full config over the API (`labgw.py`, `acmefw.py`), WireGuard configs, Guacamole, ACME servers, `clean` snapshots |
+| 5 | `ansible/kali-template.yml` | only if VM 100 is missing: build the Kali template from Kali's QEMU image |
+| 6 | `tofu apply` | Kali clones |
+
+All steps are idempotent: re-running `./lab.sh up` after a change only applies the change.
+Typical changes:
+
+| Change | Where | Then |
+| --- | --- | --- |
+| Firewall rules, Squid allowlist, WireGuard | `opnsense/labgw.py`, `opnsense/acmefw.py` | `./lab.sh up` |
+| ACME service | `acme/hosts/NAME.sh`, `acme/files/NAME/` | `ssh root@pve 'FORCE=1 sh /root/lab/acme/provision.sh NAME'` after `./lab.sh up` (or recreate: `tofu -chdir=tofu apply -replace='proxmox_virtual_environment_container.ct["NAME"]'`, then `./lab.sh up`) |
+| New ACME host | `acme/hosts.csv` + `acme/hosts/NAME.sh`; add the ID to `snapshot_cts` in `ansible/group_vars/all.yml` | `./lab.sh up` |
+| More participants | `./lab.sh up N` | |
+
+OpenTofu state is local (`infra/tofu/terraform.tfstate`, git-ignored). Keep it: without it
+OpenTofu no longer knows what it created. The API token is in `secrets/pve-token`.
+
+### Secrets (`infra/secrets/`, git-ignored)
+
+| File | Content |
+| --- | --- |
+| `participants.csv` | `n,user,password` – Guacamole login = Kali password; `admin` sees all Kalis |
+| `wireguard/udelezenecNN.conf` | WireGuard client configs |
+| `labgw-*`, `acmefw-*` | OPNsense root passwords and API keys |
+| `pve-token`, `pve-lab.pub` | OpenTofu API token, the host's SSH key for lab machines |
+
+### Repository layout
 
 | Path | What it does |
 | --- | --- |
-| `host/lab-nat.sh`, `host/interfaces.vmbr1` | transit bridge, DNAT/SNAT, egress drops (hooked into `vmbr1`) |
-| `host/serial-relay.py` | VM serial console ↔ log file + FIFO (used to bootstrap OPNsense) |
-| `host/opn` | tiny OPNsense API client for the shell |
-| `opnsense/bootstrap.py` | turns a stock `config.xml` into a reachable bootstrap config (profiles `lab-gw`, `acme-fw`) |
-| `opnsense/install.sh` | creates an OPNsense VM from the nano image and injects the bootstrap config |
-| `opnsense/labgw.py`, `opnsense/acmefw.py` | full firewall configuration over the API (idempotent) |
-| `guacamole/` | Docker Compose file and user generator |
-| `kali/prepare-template.sh`, `kali/clones.sh` | template preparation (inside the VM) and clones |
-| `acme/deploy.sh`, `acme/hosts.tsv`, `acme/hosts/`, `acme/files/` | ACME servers |
+| `lab.sh` | entry point (see above) |
+| `tofu/` | OpenTofu: `network.tf`, `images.tf`, `routers.tf`, `containers.tf`, `kali.tf` |
+| `ansible/` | `host.yml`, `site.yml`, `kali-template.yml`, `reset.yml`, `teardown-host.yml` |
+| `host/` | `lab-nat.sh` (NAT and egress drops on vmbr1), `serial-relay.py`, `opn` (shell API client) |
+| `opnsense/` | `bootstrap.py` + `config-26.7-default.xml` (bootstrap config), `bootstrap-vm.sh` (serial injection), `firmware.sh`, `labgw.py`, `acmefw.py`, `scenario.py`, `opnapi.py` |
+| `guacamole/` | Docker Compose file, `gen-users.py` |
+| `kali/` | `build-template.sh` (from Kali's QEMU image), `prepare-template.sh` (inside the VM) |
+| `acme/` | `hosts.csv`, `provision.sh`, `hosts/NAME.sh`, `files/NAME/` |
 
-Order: host network → SDN vnets → `install.sh` + `labgw.py` → Guacamole → Kali template →
-`install.sh` + `acmefw.py` → `acme/deploy.sh` → `kali/clones.sh` → snapshot `clean`.
+### Management access
 
-Management GUIs (from your laptop):
-`ssh -L 8443:172.31.255.2:8443 -L 8444:198.51.100.10:8443 root@pve.digilab-g.rtfm.si`,
-then `https://localhost:8443` (LAB-GW) and `https://localhost:8444` (ACME-FW).
+```sh
+ssh -L 8443:172.31.255.2:8443 -L 8444:198.51.100.10:8443 root@pve.digilab-g.rtfm.si
+```
+LAB-GW: `https://localhost:8443`, ACME-FW: `https://localhost:8444` (user `root`, passwords
+in `secrets/`). From the host: `ssh lab-gw`, `ssh acme-fw`, `opn lab-gw GET /api/...`.
 
-## Operations
-
-- **Clean state:** snapshot ACME containers and both firewalls as `clean`; roll back between workshops.
-- **Kali:** recreate clones before each workshop with `kali/clones.sh 1 15`.
-- **New participants:** `guacamole/gen-users.py` (keeps existing passwords), copy
-  `participants.csv` to `/root/lab/`, rerun `labgw.py` (WireGuard peers), redeploy Guacamole's
-  `user-mapping.xml`, run `clones.sh`.
-- **Later:** wrap the Proxmox layer in OpenTofu (`bpg/proxmox`) and call these scripts from it.
+Scenario switches during the workshop (on the host):
+`python3 /root/lab/opnsense/scenario.py visitor on|off`, `... flat on|off`, `... status`.

@@ -1,0 +1,39 @@
+# Remove the host layer (only for `lab.sh down --all`): Kali template, vmbr1 and NAT,
+# host firewall lines, routes, OpenTofu token, /root/lab.
+- name: Remove host layer
+  hosts: pve
+  vars:
+    kali_template_id: 100
+  tasks:
+    - name: Kali template
+      ansible.builtin.shell: qm status {{ kali_template_id }} >/dev/null 2>&1 && qm destroy {{ kali_template_id }} --purge 1 || true
+    - name: Transit bridge block
+      ansible.builtin.blockinfile:
+        path: /etc/network/interfaces
+        marker: "# {mark} lab transit (managed by infra/ansible/host.yml)"
+        state: absent
+      register: vmbr1
+    - name: Bring vmbr1 down
+      ansible.builtin.shell: |
+        /etc/network/lab-nat.sh down || true
+        ifreload -a; ip link del vmbr1 2>/dev/null || true
+      when: vmbr1.changed
+    - name: Host firewall lines
+      ansible.builtin.blockinfile:
+        path: /etc/pve/firewall/cluster.fw
+        marker: "# {mark} lab (managed by infra/ansible/host.yml)"
+        state: absent
+        unsafe_writes: true
+    - name: API token
+      ansible.builtin.command: pveum user token remove root@pam tofu
+      failed_when: false
+    - name: Local token copy
+      ansible.builtin.file:
+        path: "{{ secrets }}/pve-token"
+        state: absent
+      delegate_to: localhost
+    - name: Lab directory and serial logs
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop: ["{{ lab_dir }}", /root/serial]
