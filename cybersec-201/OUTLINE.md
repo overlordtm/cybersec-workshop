@@ -2,79 +2,72 @@
 
 ## Kratek povzetek
 
-Delavnica je namenjena radovednim udeležencem brez poklicnega znanja informatike, tehnično spretnejšim uporabnikom in operativnim ekipam. Prvi sklop bo predstavil zbiranje javno dostopnih informacij in raziskovanje digitalnih sledi. Drugi sklop bo povezal osnove omrežij, segmentacijo in pregled izpostavljenih storitev. V tretjem sklopu bodo udeleženci v pripravljenem učnem okolju spoznali Kali Linux, dekodiranje podatkov in pregled spletnih zahtev ter ugotovitve povezali z obrambo. Delavnica traja 150 minut, od tega 55 minut predstavitve in 95 minut praktičnega dela.
+Delavnica je namenjena radovednim udeležencem brez poklicnega znanja informatike, tehnično spretnejšim uporabnikom in operativnim ekipam. Prvi sklop bo predstavil zbiranje javno dostopnih informacij in raziskovanje digitalnih sledi. Drugi sklop bo povezal osnove omrežij, segmentacijo in pregled izpostavljenih storitev. V tretjem sklopu bodo udeleženci v pripravljenem učnem okolju spoznali Kali Linux, dekodiranje podatkov in pregled spletnih zahtev ter ugotovitve povezali z obrambo. Delavnica traja 150 minut, od tega 36 minut predstavitve in 114 minut praktičnega dela.
 
 ## Načrt izvedbe
 
-| Sklop | Predstavitev | Praktično delo | Skupaj |
-| --- | --- | --- | --- |
-| 1. Javno dostopne informacije in digitalne sledi | 20 minut | 30 minut | 50 minut |
-| 2. Segmentacija omrežij in pregled ranljivosti | 20 minut | 30 minut | 50 minut |
-| 3. Kali Linux in razmišljanje napadalca | 15 minut | 35 minut | 50 minut |
-| **Skupaj** | **55 minut** | **95 minut** | **150 minut** |
+Vse tri predstavitve izvedemo pred praktičnim delom. Vaje so na ločeni strani `vaje/`; prosojnice ne vsebujejo nalog. Udeleženec v vsakem sklopu izbere eno od treh težavnosti, ob hitrem napredku pa lahko nadaljuje z drugo. Devet vaj ni obvezen zaporedni seznam.
 
-Uvod je vključen v predstavitev prvega sklopa, zaključek pa v predstavitev tretjega. Čas praktičnega dela se razdeli med tri vaje posameznega sklopa. Spodnji opisi določajo namen prosojnic; končno besedilo, prikazi orodij, primeri in rešitve se pripravijo pozneje. Datoteka `slides.md` vsebuje enake naslove v enakem vrstnem redu, brez vsebine.
+| Del | Predstavitev | Praktično delo in pogovor | Skupaj |
+| --- | --- | --- | --- |
+| Uvod in orientacija v Kali | 5 minut | — | 5 minut |
+| 1. Javno dostopne informacije in digitalne sledi | 8 minut | — | 8 minut |
+| 2. Segmentacija omrežij in pregled ranljivosti | 12 minut | — | 12 minut |
+| 3. Kali Linux in razmišljanje napadalca | 11 minut | — | 11 minut |
+| Praktični krog 1: digitalne sledi | — | 30 minut | 30 minut |
+| Praktični krog 2: omrežje in segmentacija | — | 35 minut | 35 minut |
+| Praktični krog 3: zahteve in preverjanje | — | 35 minut | 35 minut |
+| Dokončanje zapisov in rezerva | — | 4 minute | 4 minute |
+| Skupni pogovor in zaključek | — | 10 minut | 10 minut |
+| **Skupaj** | **36 minut** | **114 minut** | **150 minut** |
 
 ## Prosojnice po vrsti
 
-### 1. sklop: Javno dostopne informacije in digitalne sledi
+Osnutek sledi slogu cybersec-101: kratke alineje, jasen poudarek in govorčeve opombe z razlago ter prikazi. Podrobnosti ostanejo v opombah in navodilih. Naslovi ustrezajo datoteki `slides.md`.
 
-| Št. | Naslov prosojnice | Kaj bo prosojnica vsebovala |
+| Št. | Naslov | Namen |
 | --- | --- | --- |
-| 1 | Cybersec-201: Uvod v kibernetske operacije za radovedne | Naslov delavnice ter prostor za ime izvajalca in datum. |
-| 2 | Cilji delavnice in priprava okolja | Predstavitev ciljne skupine in priprave prenosnika z VirtualBox ali VMware oziroma dostopom do vaj v brskalniku ter pogona USB. |
-| 3 | Potek delavnice in dogovor o učnem okolju | Pregled treh sklopov, časovnega razporeda, dovoljenih učnih tarč in dela v izoliranem okolju. |
-| 4 | Javno dostopne informacije in digitalne sledi | Uvod v prvi sklop in pregled vrst sledi, ki jih bodo udeleženci raziskovali. |
-| 5 | Kaj je zbiranje javno dostopnih informacij | Predvidena razlaga pojma OSINT ter primerov uporabe v preiskovanju, novinarstvu in informacijski varnosti. |
-| 6 | Kje puščamo digitalne sledi | Načrt prikaza povezav med fotografijami, uporabniškimi imeni, javnimi objavami in repozitoriji programske kode. |
-| 7 | Metapodatki v fotografijah | Opis prikaza podatkov EXIF, med drugim lokacije, modela fotoaparata in časa nastanka, ter njihove morebitne odsotnosti. |
-| 8 | Družbena omrežja in javni repozitoriji | Predvideni primeri povezovanja javnih profilov, odnosov med računi in informacij v objavljeni programski kodi. |
-| 9 | Napredno iskanje z iskalniki | Načrt predstavitve iskalnih operatorjev za domeno, vrsto datoteke in del spletnega naslova na pripravljenih učnih primerih. |
-| 10 | Preverjanje in povezovanje ugotovitev | Opis razprave o zanesljivosti virov, zastarelih podatkih in nevarnosti napačnega povezovanja enakih uporabniških imen. |
-| 11 | Vaja 1.1: Preglej metapodatke fotografije | Navodila za pregled pripravljene fotografije z ExifTool ali spletnim pregledovalnikom ter zapis opaženih podatkov. |
-| 12 | Vaja 1.2: Poišči javne učne dokumente | Navodila za uporabo naprednih iskalnih poizvedb za dokumente in odprte imenike na določenih učnih domenah. |
-| 13 | Vaja 1.3: Razišči uporabniško ime | Navodila za preverjanje pripravljenega javnega psevdonima z WhatsMyName.app ter presojo, ali najdeni profili pripadajo isti osebi. |
-| 14 | Pogovor o ugotovitvah prvega sklopa | Vprašanja za primerjavo rezultatov vaj in povezavo ugotovljenih digitalnih sledi z ukrepi za zasebnost. |
+| 1 | Cybersec-201: Uvod v kibernetske operacije za radovedne | Predstavitev zgodbe ACME in cilja delavnice. |
+| 2 | Eno podjetje, trije pogledi | Trije sklopi pred skupnim praktičnim blokom. |
+| 3 | Naše učno okolje | Prijava v pripravljeni Kali, Firefox, terminal in dovoljene tarče. |
+| 4 | 1. sklop: Javno dostopne informacije | OSINT, javne objave in metapodatki. |
+| 5 | Iskalniki za infrastrukturo | Shodan, Censys, SecurityTrails in crt.sh; en stavek o vsakem. |
+| 6 | Iskalniki za razkritja in zgodovino | DeHashed, IntelX, HIBP, VirusTotal in Wayback Machine; en stavek o vsakem. |
+| 7 | Od sledi do ugotovitve | Viri, čas opažanja, povezovanje in omejitve sklepanja. |
+| 8 | 2. sklop: Od naslova do storitve | IP, podomrežje, vrata in protokol na primeru ACME. |
+| 9 | Ista vtičnica, drugačna dosegljivost | DMZ, LAN, IoT in razlika med tremi scenariji. |
+| 10 | Nmap: kaj odgovarja? | Kratek prikaz pripravljenega izpisa odkrivanja in storitev. |
+| 11 | Greenbone: od pregleda do poročila | Štiriminutna demonstracija končanega poročila in ene ugotovitve. |
+| 12 | Različica → CVE → preverjanje | Razlika med zaznano različico in potrjeno ranljivostjo. |
+| 13 | 3. sklop: Kako razmišlja preizkuševalec | Zaporedje preizkušanja, povezana razkritja in obrambni ukrepi. |
+| 14 | Kaj potuje v spletni zahtevi? | Kratek prikaz lastne zahteve v Firefoxu na Juice Shop. |
+| 15 | Kodiranje ni šifriranje | Base64, kodiranje URL in kratek prikaz CyberChef. |
+| 16 | Piškotek predstavlja sejo | Namen in omejitve zastavic piškotkov. |
+| 17 | Od ugotovitve do zaščite | Oblika zapisa ugotovitve in povezava z obrambo. |
 
-### 2. sklop: Segmentacija omrežij in pregled ranljivosti
+## Praktični del po vseh treh sklopih
 
-| Št. | Naslov prosojnice | Kaj bo prosojnica vsebovala |
-| --- | --- | --- |
-| 15 | Od omrežja do izpostavljenih storitev | Uvod v drugi sklop in pregled povezave med napravami, storitvami in ranljivostmi. |
-| 16 | Naslovi IP in podomrežja | Načrt preproste sheme omrežja za razlago naslovov IP, podomrežij in dosegljivosti naprav. |
-| 17 | Vrata in omrežni protokoli | Predviden prikaz povezave med omrežnimi vrati in storitvami HTTP, SSH ter SMB. |
-| 18 | Zakaj razdelimo omrežje | Opis sheme, ki primerja skupno omrežje z ločenimi skupinami osebnih, službenih in pametnih naprav. |
-| 19 | Omrežje za goste in navidezna lokalna omrežja | Predvidena primerjava omrežja za goste in segmentacije z VLAN ter pomena pravil za promet med segmenti. |
-| 20 | Odkrivanje naprav z Nmap in Zenmap | Načrt prikaza osnovnega odkrivanja naprav in storitev v pripravljenem omrežju prek grafičnega vmesnika. |
-| 21 | Pregled storitev in ranljivosti | Opis razlike med odkrivanjem odprtih vrat z Nmap in širšim pregledom ranljivosti z OpenVAS na že pripravljenih rezultatih. |
-| 22 | Kako razlagamo zadetke in oznake CVE | Predviden prikaz branja različic, iskanja v NVD ali CVE Details ter preverjanja, ali ugotovitev velja za konkretno napravo. |
-| 23 | Vaja 2.1: Odkrij naprave v učnem omrežju | Navodila za pregled izoliranega omrežja z Zenmap oziroma Fing na telefonu ter izdelavo preprostega zemljevida aktivnih naprav. |
-| 24 | Vaja 2.2: Prepoznaj omrežne storitve | Navodila za pregled vrat na določeni učni napravi in povezovanje rezultatov s spletnimi storitvami, oddaljenim dostopom in deljenjem datotek. |
-| 25 | Vaja 2.3: Preveri možne ranljivosti | Navodila za primerjavo ugotovljenih različic z zapisi CVE, preverjanje pogojev za ranljivost in zapis predlaganega obrambnega ukrepa. |
-| 26 | Pogovor o ugotovitvah drugega sklopa | Vprašanja za primerjavo zemljevidov omrežja in izbiro prednostnih ukrepov za izpostavljene storitve. |
+| Sklop | Lahka raven | Srednja raven | Zahtevna raven |
+| --- | --- | --- | --- |
+| 1 | Poišči pripravljen javni IP v Shodanu. | Razišči spletne sledi in izpostavljeno kopijo ACME. | Razišči DNS in razkritje notranjih imen. |
+| 2 | Prepoznaj javne storitve ACME. | Primerjaj storitve v segmentiranem in ravnem omrežju. | Presodi zaznano različico in pogoje ranljivosti Apache. |
+| 3 | Preglej lastno spletno zahtevo v Juice Shop. | Dekodiraj lastno prijavno glavo HTTP Basic. | Poveži razkritje poverilnic z minimalnim dokazom dostopa SSH. |
 
-### 3. sklop: Kali Linux in razmišljanje napadalca
+Vsaka vaja se začne samostojno; zahtevnejša vaja ne zahteva uspeha pri prejšnji. Končni zapis vsebuje opažanje, dokaz, omejitev, vpliv in predlagan ukrep. Navodila in namigi za udeležence so v `vaje/VAJE.md`, priprava ter pričakovani izidi za izvajalca pa v `EXERCISES.md`.
 
-| Št. | Naslov prosojnice | Kaj bo prosojnica vsebovala |
-| --- | --- | --- |
-| 27 | Kali Linux v učnem okolju | Uvod v tretji sklop in pregled pripravljenega navideznega računalnika oziroma zagonskega pogona USB. |
-| 28 | Faze napadalčevega pristopa | Načrt sheme od zbiranja informacij prek pregledovanja in izrabe ranljivosti do dejavnosti po pridobitvi dostopa. |
-| 29 | Kaj vsebuje Kali Linux | Predviden prikaz namizja, vnaprej nameščenih varnostnih orodij in njihove razvrstitve po namenu. |
-| 30 | Kako ugotovitve uporabimo za obrambo | Opis povezovanja posameznih faz napada z možnostmi preprečevanja, zaznavanja in omejevanja posledic. |
-| 31 | Kodiranje podatkov in CyberChef | Načrt kratkega prikaza razlike med kodiranjem in šifriranjem ter sestavljanja postopka za dekodiranje podatkov. |
-| 32 | Spletne zahteve, obrazci in piškotki | Predviden prikaz poti zahteve HTTP, poslanih podatkov obrazca in varnostnih zastavic piškotkov v učni aplikaciji. |
-| 33 | Razvijalska orodja in prestrezni posrednik | Opis prikaza pregleda prometa z razvijalskimi orodji Firefox ter po potrebi z OWASP ZAP ali Burp Suite Community. |
-| 34 | Vaja 3.1: Razišči Kali Linux | Navodila za zagon pripravljenega navideznega računalnika ali zagonskega pogona USB ter raziskovanje namizja in menijev varnostnih orodij. |
-| 35 | Vaja 3.2: Dekodiraj pripravljene podatke | Navodila za uporabo CyberChef pri dekodiranju nizov Base64, parametrov spletnih naslovov in pripravljenih kodiranih podatkov. |
-| 36 | Vaja 3.3: Preglej promet učne spletne aplikacije | Navodila za pregled zahtev, prestrezanje podatkov obrazca in pregled zastavic piškotkov v lokalni aplikaciji OWASP Juice Shop. |
-| 37 | Pogovor o ugotovitvah tretjega sklopa | Vprašanja za primerjavo rezultatov vaj ter razlikovanje med opazovanjem podatkov, spreminjanjem zahtev in izrabo ranljivosti. |
-| 38 | Od ugotovitve do obrambnega ukrepa | Prostor za zaključni zapis opažene izpostavljenosti, dokazov, omejitev ugotovitve in predlagane izboljšave zaščite. |
-| 39 | Vprašanja in zaključek | Prostor za vprašanja, povratne informacije in povezavo nazaj na pregled delavnic. |
+### Usklajevanje omrežnih scenarijev
+
+Scenarij velja za vse udeležence hkrati. Prvi krog in javni pregled v drugem krogu potekata v `internet`. Drugi krog vključuje skupne prehode `internet → visitor → flat → visitor`. Izvajalec napove vsak prehod in počaka na zaključek primerjalnih meritev. Tretji krog ostane v `visitor`. Obstoječe povezave lahko preživijo preklop, zato primerjamo nove povezave in preglede odprtih vrat, ne le zaznanih gostiteljev.
 
 ## Priprava izvajalca
 
-- Izolirano brezžično učno omrežje ali namenski usmerjevalnik s tremi do petimi pripravljenimi napravami.
-- Vnaprej prenesena in preizkušena slika Kali Linux, pogoni USB ter možnost izvedbe vaj v brskalniku.
-- Vnaprej nameščen Zenmap; rezultate OpenVAS pripraviti vnaprej, da namestitev in konfiguracija ne porabita časa delavnice.
-- Lokalna učna spletna aplikacija, na primer OWASP Juice Shop v vsebniku Docker, ter preverjen dostop iz učnega okolja.
-- Pripravljena fotografija z metapodatki, učne domene, javni učni psevdonim in kodirani vzorci za CyberChef.
+- Pred dogodkom preveri prijave prek Guacamole, Kali, Firefox in WireGuard za dodatni način dostopa. Namestitev VM ali zagon USB nista pogoj za udeležbo.
+- Predhodna navodila `NAVODILO.md` še opisujejo obvezno lokalno namestitev; pred pošiljanjem jih uskladi z dostopom prek brskalnika.
+- Namesti Greenbone, posodobi podatkovne vire in pripravi končan pregled izbrane tarče ACME. Pripravi izvoz poročila in posnetke kot rezervo. Med predstavitvijo ne čakaj na nov pregled.
+- Izberi resničen javni IP z uporabnim Shodanovim zapisom, preveri dostop brez nepričakovanih omejitev in pripravi datiran posnetek rezultata. Naslovi 198.51.100.x so simulacija in niso tarče za Shodan.
+- Javne iskalnike udeleženci odpirajo v lastnem brskalniku; dostop iz Kali omejuje proxy. Računi pri plačljivih ponudnikih niso pogoj za delavnico.
+- Preveri orodja Nmap, dig, curl, SSH in lokalni CyberChef ter odzive ACME. Vnaprej preveri tudi prikaz zahtev in piškotkov trenutne različice Juice Shop.
+- Za zahtevno vajo 3 pripravi samostojni namig o uporabniškem imenu; udeleženci ne potrebujejo predhodne SMB vaje. Potrdi delovanje starega SSH z uporabljenim odjemalcem.
+- Apache 2.4.49 ima v trenutni pripravi omejen dostop zunaj DocumentRoot. Ne načrtuj zagotovljene uspešne izrabe ali prehoda do IoT prek njega.
+- Vaje ne spreminjajo skupnih gesel, nastavitev aplikacij ali naprav. Greenbone preglede vodi izvajalec, da ne obremenimo skupnih tarč z več sočasnimi pregledi.
+- Metapodatke ohranimo v razlagi; samostojna vaja s fotografijo ali PDF ni del tega osnutka in bi zahtevala preverjeno pripravljeno datoteko.

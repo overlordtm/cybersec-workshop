@@ -15,6 +15,7 @@ Open the URL printed by Vite. The landing page links to both decks:
 
 - `/cybersec-101/` — cybersecurity fundamentals
 - `/cybersec-201/` — applied cybersecurity
+- `/cybersec-201/vaje/` — participant exercise instructions in Slovenian
 
 ## Editing slides
 
@@ -69,6 +70,7 @@ https://<owner>.github.io/<repository>/
 https://<owner>.github.io/<repository>/cybersec-101/
 https://<owner>.github.io/<repository>/cybersec-101/vaje/
 https://<owner>.github.io/<repository>/cybersec-201/
+https://<owner>.github.io/<repository>/cybersec-201/vaje/
 ```
 
 If your default branch differs, update the branch filters and deployment
