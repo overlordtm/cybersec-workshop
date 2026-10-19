@@ -10,6 +10,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import secrets
 import tempfile
@@ -18,11 +19,20 @@ from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 INFRA = Path(__file__).resolve().parent
 ITERATIONS = 600_000
-ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+CODE_PATTERN = re.compile(r"[A-Z]{4}-[0-9]{4}")
 
 
 def normalize(code):
     return "".join(code.upper().split()).replace("-", "")
+
+
+def new_code(used):
+    while True:
+        code = "".join(secrets.choice(LETTERS) for _ in range(4)) + f"-{secrets.randbelow(10000):04d}"
+        if code not in used:
+            used.add(code)
+            return code
 
 
 def private_write(path, content):
@@ -68,18 +78,22 @@ def export(secrets_dir, output, rotate=False):
             codes = {r["user"]: r for r in csv.DictReader(f)}
     for row in codes.values():
         row["active"] = "no"
-    bundle = {"version": 1, "iterations": ITERATIONS, "entries": {}}
+    used_codes = {r["claim_code"] for r in codes.values()}
+    lookup_salt = secrets.token_bytes(16)
+    bundle = {"version": 2, "iterations": ITERATIONS,
+              "lookupSalt": base64.b64encode(lookup_salt).decode(), "entries": {}}
     for row, plaintext in payloads:
         user = row["user"]
-        if rotate or user not in codes:
-            code = "-".join("".join(secrets.choice(ALPHABET) for _ in range(5)) for _ in range(5))
+        if rotate or user not in codes or not CODE_PATTERN.fullmatch(codes[user]["claim_code"]):
+            code = new_code(used_codes)
             codes[user] = {"user": user, "access": row["access"], "claim_code": code}
         codes[user]["active"] = "yes"
         token = normalize(codes[user]["claim_code"]).encode()
-        ident = hashlib.sha256(token).hexdigest()
+        lookup_key = hashlib.pbkdf2_hmac("sha256", token, lookup_salt, ITERATIONS, dklen=32)
+        ident = hashlib.sha256(lookup_key).hexdigest()
         salt, iv = secrets.token_bytes(16), secrets.token_bytes(12)
         key = hashlib.pbkdf2_hmac("sha256", token, salt, ITERATIONS, dklen=32)
-        aad = f"cybersec-201-access-v1:{ident}".encode()
+        aad = f"cybersec-201-access-v2:{ident}".encode()
         ciphertext = AESGCM(key).encrypt(iv, plaintext, aad)
         bundle["entries"][ident] = {
             key: base64.b64encode(value).decode()

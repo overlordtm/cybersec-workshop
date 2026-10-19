@@ -57,13 +57,14 @@ class ExportTest(unittest.TestCase):
             self.assertNotIn(value, text)
         for row in codes.values():
             self.assertNotIn(row["claim_code"], text)
-            self.assertEqual(len(exporter.normalize(row["claim_code"])), 25)
+            self.assertRegex(row["claim_code"], r"^[A-Z]{4}-[0-9]{4}$")
+            self.assertEqual(len(exporter.normalize(row["claim_code"])), 8)
         self.assertEqual((self.secrets / "claim-codes.csv").stat().st_mode & 0o777, 0o600)
         # Execute the same Web Crypto function imported by the actual browser page.
         script = '''
           import assert from 'node:assert/strict';
           import { readFileSync } from 'node:fs';
-          import { createHash } from 'node:crypto';
+          import { createHash, pbkdf2Sync } from 'node:crypto';
           import { decryptCredential } from './cybersec-201/vaje/dostop/crypto.js';
           const {bundle, codes, password, config} = JSON.parse(readFileSync(0, 'utf8'));
           const kali = await decryptCredential(bundle, codes.udelezenec101.claim_code.toLowerCase().replaceAll('-', ' '));
@@ -74,7 +75,7 @@ class ExportTest(unittest.TestCase):
           assert.equal(wg.filename, 'udelezenec201.conf');
           assert.equal(wg.password, undefined);
           await assert.rejects(decryptCredential(bundle, 'invalid'));
-          const id = createHash('sha256').update(codes.udelezenec101.claim_code.replaceAll('-', '')).digest('hex');
+          const id = createHash('sha256').update(pbkdf2Sync(codes.udelezenec101.claim_code.replaceAll('-', ''), Buffer.from(bundle.lookupSalt, 'base64'), bundle.iterations, 32, 'sha256')).digest('hex');
           const entry = bundle.entries[id];
           const bytes = Buffer.from(entry.ciphertext, 'base64');
           bytes[0] ^= 1;
@@ -86,13 +87,34 @@ class ExportTest(unittest.TestCase):
                                          "password": self.password, "config": self.config}),
                        text=True, capture_output=True, check=True)
         token = exporter.normalize(codes["udelezenec101"]["claim_code"]).encode()
-        ident = hashlib.sha256(token).hexdigest()
+        lookup_key = hashlib.pbkdf2_hmac("sha256", token, base64.b64decode(bundle["lookupSalt"]),
+                                         bundle["iterations"], dklen=32)
+        ident = hashlib.sha256(lookup_key).hexdigest()
         entry = bundle["entries"][ident]
         # A wrong AES key cannot authenticate the ciphertext even with a known lookup id.
         with self.assertRaises(InvalidTag):
             AESGCM(bytes(32)).decrypt(base64.b64decode(entry["iv"]),
                                       base64.b64decode(entry["ciphertext"]),
-                                      f"cybersec-201-access-v1:{ident}".encode())
+                                      f"cybersec-201-access-v2:{ident}".encode())
+
+    def test_short_code_collisions_and_legacy_migration(self):
+        from unittest.mock import patch
+        used = {"AAAA-1234"}
+        with patch.object(exporter.secrets, "choice", return_value="A"), \
+             patch.object(exporter.secrets, "randbelow", side_effect=[1234, 7]):
+            self.assertEqual(exporter.new_code(used), "AAAA-0007")
+        self.assertEqual(used, {"AAAA-1234", "AAAA-0007"})
+        exporter.export(self.secrets, self.output)
+        codes = self.codes()
+        codes["udelezenec101"]["claim_code"] = "ABCDE-FGHIJ-KLMNO-PQRST-UVWXY"
+        with (self.secrets / "claim-codes.csv").open("w", newline="") as f:
+            w = csv.DictWriter(f, ["user", "access", "claim_code", "active"])
+            w.writeheader()
+            w.writerows(codes.values())
+        exporter.export(self.secrets, self.output)
+        updated = self.codes()
+        self.assertRegex(updated["udelezenec101"]["claim_code"], r"^[A-Z]{4}-[0-9]{4}$")
+        self.assertEqual(updated["udelezenec201"], codes["udelezenec201"])
 
     def test_code_reuse_retirement_rotation_and_atomic_failure(self):
         exporter.export(self.secrets, self.output)

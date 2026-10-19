@@ -400,8 +400,12 @@ without sending codes to the server or saving credentials to browser storage.
 Downloaded configs and passwords explicitly copied to the clipboard remain under
 the participant's control.
 
-Each generated code has 125 bits of randomness. A SHA-256 lookup identifies its
-blob; PBKDF2-SHA256 (600,000 iterations, random 16-byte salt) derives an AES-256-GCM
+Codes use four random uppercase letters and four random digits, e.g. `ABCD-1234`
+(about 32 bits of randomness). Duplicate codes are rejected, including codes retained
+for inactive participants. Older long codes migrate automatically on export.
+A PBKDF2-SHA256 derivation with a random per-export lookup salt, followed by
+SHA-256, identifies each code’s blob, so checking guesses also requires the slow
+derivation step; PBKDF2-SHA256 (600,000 iterations, random 16-byte salt) derives an AES-256-GCM
 key, and each payload has a fresh 12-byte nonce and authenticated lookup ID. The
 format is shared by the Python exporter and native browser Web Crypto code.
 See [Web Crypto key derivation](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey).
