@@ -9,3 +9,6 @@ infra/secrets/
 infra/tofu/.terraform/
 infra/tofu/terraform.tfstate*
 infra/tofu/.terraform.lock.hcl.bak
+
+# Python runtime caches
+__pycache__/

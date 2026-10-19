@@ -354,10 +354,77 @@ Typical changes:
 OpenTofu state is local (`infra/tofu/terraform.tfstate`, git-ignored). Keep it: without it
 OpenTofu no longer knows what it created. The API token is in `secrets/pve-token`.
 
+### Distributing credentials through the exercise site
+
+Participants open `cybersec-201/vaje/dostop/` (linked from the exercises) and enter
+one personal claim code. Hosted participants see their Guacamole login and browser
+instructions; WireGuard participants download their own `.conf` and see setup,
+connection, verification, and disconnect commands for their Kali VM. Admin access
+is never exported.
+
+After provisioning, export locally from `infra/`:
+
+```sh
+# One-time dependency setup; the virtual environment stays in ignored secrets/.
+python3 -m venv secrets/credentials-venv
+secrets/credentials-venv/bin/pip install -r requirements-credentials.txt
+
+# Run after ./lab.sh up so the CSV and WireGuard configs are current.
+CREDENTIALS_PYTHON=secrets/credentials-venv/bin/python ./lab.sh credentials
+```
+
+The exporter writes:
+
+- **Public:** `cybersec-201/vaje/dostop/credentials.json`, containing only encrypted
+  payloads and cryptographic metadata. Commit this file with the access page.
+- **Private:** `infra/secrets/claim-codes.csv`, containing `user,access,claim_code,active`.
+  Give each participant only their own active code and the page URL, e.g. on a
+  printed slip or in a direct message. Keep the list and backups private.
+
+From the repository root, build and publish through the existing Pages workflow:
+
+```sh
+npm run build
+git add cybersec-201/vaje/dostop cybersec-201/vaje/VAJE.md vite.config.js
+git add .gitignore infra/export-credentials.py infra/requirements-credentials.txt
+git add infra/tests/test_credential_export.py infra/lab.sh infra/README.md
+git commit -m "Add encrypted participant credential pickup"
+git push
+```
+
+The existing GitHub Pages workflow publishes pushes to `main`; pushing a branch
+requires merging it first. The claim page must be served over HTTPS (localhost
+also works for development). No backend, analytics, or external script is required.
+Codes are entered in a form, never in URLs. The page decrypts in browser memory,
+without sending codes to the server or saving credentials to browser storage.
+Downloaded configs and passwords explicitly copied to the clipboard remain under
+the participant's control.
+
+Each generated code has 125 bits of randomness. A SHA-256 lookup identifies its
+blob; PBKDF2-SHA256 (600,000 iterations, random 16-byte salt) derives an AES-256-GCM
+key, and each payload has a fresh 12-byte nonce and authenticated lookup ID. The
+format is shared by the Python exporter and native browser Web Crypto code.
+See [Web Crypto key derivation](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/deriveKey).
+No participant usernames or access types appear unencrypted in the bundle.
+
+Rerun `./lab.sh credentials` after changing accounts or WG configurations, then
+commit and publish the new bundle. Existing claim codes are reused, while inactive
+accounts disappear from the current bundle. `./lab.sh credentials --rotate` generates
+new codes for all active participants; redistribute those codes after publishing.
+
+**These are reusable claim codes, not one-time tokens.** Old bundles remain in Git
+history and may have been downloaded. Changing a claim code or deleting a blob
+cannot revoke credentials someone already has. For a leaked code, first change the
+actual Kali/Guacamole password or revoke/regenerate the WG peer key, apply the lab
+configuration, then export with `--rotate` and republish. Never publish
+`participants.csv`, `claim-codes.csv`, raw `.conf` files, `wg-keys.json`, or secrets
+backups. The existing `infra/secrets/` ignore rule covers the private inputs.
+
 ### Secrets (`infra/secrets/`, git-ignored)
 
 | File | Content |
 | --- | --- |
+| `claim-codes.csv` | Private per-participant claim codes for the encrypted credential page |
 | `participants.csv` | `n,user,password,access,active` – `access` is `kali`, `wireguard`, or `admin`; only `active=yes` entries are provisioned. Hosted login password = Kali password; WG passwords are empty. Inactive credentials stay for reuse. |
 | `wireguard/udelezenec2xx.conf`, `wireguard/admin.conf` | Active WireGuard client configs; no configs for hosted participants |
 | `labgw-*`, `acmefw-*` | OPNsense root passwords and API keys |

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="sl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="description" content="Prevzem osebnega dostopa do učnega okolja Cybersec-201." />
+    <title>Cybersec-201 — tvoj dostop</title>
+    <link rel="stylesheet" href="../../../shared/handout.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <script type="module" src="./main.js"></script>
+  </head>
+  <body>
+    <main>
+      <nav aria-label="Nazaj"><a href="../">← Praktične vaje</a></nav>
+      <p class="eyebrow">CYBERSEC–201 / UČNO OKOLJE</p>
+      <h1>Tvoj dostop do laboratorija</h1>
+      <p class="lead">Vnesi osebno kodo, ki ti jo je dal izvajalec. Tukaj dobiš prijavo ali datoteko za povezavo in navodila za začetek.</p>
+      <form id="unlock-form" class="card">
+        <label for="claim-code">Koda za prevzem dostopa</label>
+        <p id="code-help" class="hint">Pet skupin po pet znakov. Presledki, vezaji in velikost črk niso pomembni.</p>
+        <input id="claim-code" type="password" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-describedby="code-help" placeholder="XXXXX-XXXXX-XXXXX-XXXXX-XXXXX" required maxlength="100" />
+        <div class="actions">
+          <button type="submit" id="unlock">Odpri moj dostop</button>
+          <button type="button" id="show-code" class="secondary" aria-pressed="false">Pokaži kodo</button>
+        </div>
+      </form>
+      <p id="status" role="status" aria-live="polite"></p>
+      <noscript>Za prevzem dostopa omogoči JavaScript v brskalniku.</noscript>
+      <section id="result" class="card" hidden aria-labelledby="result-title">
+        <p id="access-kind" class="eyebrow"></p>
+        <h2 id="result-title" tabindex="-1">Tvoj dostop</h2>
+        <div class="identity"><span>Uporabniško ime</span><strong id="username"></strong></div>
+        <div id="hosted" hidden>
+          <div class="identity"><label for="login-password">Geslo za prijavo</label>
+            <input id="login-password" type="password" readonly autocomplete="off" />
+          </div>
+          <div class="actions">
+            <button id="copy-password" type="button">Kopiraj geslo</button>
+            <button id="show-password" type="button" class="secondary" aria-pressed="false">Pokaži geslo</button>
+          </div>
+          <h3>Povezava v brskalniku</h3>
+          <ol>
+            <li>Odpri <a href="https://lab.digilab-g.rtfm.si/" target="_blank" rel="noopener noreferrer">učno okolje Guacamole ↗</a>.</li>
+            <li>Vpiši zgornje uporabniško ime in geslo. Koda za prevzem je namenjena tej strani; za prijavo uporabi prikazano geslo.</li>
+            <li>Odpri svojo povezavo Kali. Če se namizje ne odpre samodejno, klikni povezavo na seznamu.</li>
+            <li>Na namizju za ukaze odpri Terminal, za splet pa Firefox. Vaje izvajaj znotraj tega namizja.</li>
+          </ol>
+          <p>Če se prikaže sistemska prijava v Kali, je uporabniško ime <code>kali</code>, geslo pa enako kot zgoraj. Če je namizje nedosegljivo, obvesti izvajalca.</p>
+        </div>
+        <div id="wireguard" hidden>
+          <p>Uporabi svojo Kali VM. Datoteko prenesi v brskalniku <strong>znotraj Kali VM</strong>, da bo na voljo v pravem sistemu.</p>
+          <button id="download-config" type="button">Prenesi WireGuard konfiguracijo</button>
+          <h3>1. Pripravi Kali</h3>
+          <p>V terminalu znotraj svoje Kali VM namesti orodja, preden vključiš VPN:</p>
+          <pre><code>sudo apt update
+sudo apt install wireguard-tools resolvconf</code></pre>
+          <h3>2. Shrani konfiguracijo</h3>
+          <p>Odpri terminal v mapi s preneseno datoteko (običajno <code>~/Downloads</code>). Naslednji ukazi jo namestijo kot <code>acme.conf</code>:</p>
+          <pre><code id="install-config"></code></pre>
+          <h3>3. Vključi povezavo in jo preveri</h3>
+          <pre><code>sudo wg-quick up acme
+ping -c 3 10.20.100.1
+sudo wg show acme
+dig @10.20.100.1 www.acme.lab</code></pre>
+          <p>Po pošiljanju prometa mora <code>wg show</code> pokazati nedaven <code>latest handshake</code>. Nato v Firefoxu znotraj Kali odpri <code>http://www.acme.lab/</code> in nadaljuj z vajami.</p>
+          <p>Če ni povezave, preveri internet v Kali VM in obvesti izvajalca. Omrežje lahko blokira UDP/51820; izvajalec ti lahko dodeli drug dostop.</p>
+          <h3>4. Po vajah izključi povezavo</h3>
+          <pre><code>sudo wg-quick down acme</code></pre>
+          <p>VPN poveže Kali z učnimi omrežji ACME. Običajen internetni promet ostane na tvoji povezavi. Dostopnost notranjih omrežij določa trenutni scenarij vaje.</p>
+          <p class="hint">Konfiguracija vsebuje tvoj zasebni ključ. Shrani jo zase in je ne deli. <a href="https://www.kali.org/blog/wireguard-on-kali/" target="_blank" rel="noopener noreferrer">WireGuard na Kali</a> · <a href="https://www.wireguard.com/quickstart/" target="_blank" rel="noopener noreferrer">Navodila WireGuard</a></p>
+        </div>
+        <div class="footer-actions"><a href="../">Nadaljuj na vaje →</a><button id="lock" type="button" class="secondary">Skrij moj dostop</button></div>
+      </section>
+      <p class="hint">Osebno kodo in dostop obdrži zase. Koda se obdeluje v tvojem brskalniku in se ne pošilja strežniku. Ko končaš, skrij dostop ali zapri zavihek.</p>
+    </main>
+  </body>
+</html>

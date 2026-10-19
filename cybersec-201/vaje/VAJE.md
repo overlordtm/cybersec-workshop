@@ -12,7 +12,7 @@ ACME nas prosi za pregled izpostavljenosti. V vsakem krogu izberi **eno raven**:
 
 Štiri minute namenimo dokončanju zapisov in deset minut skupnemu pogovoru. Scenarija ne spreminjaš sam; izvajalec ga preklopi za vse hkrati.
 
-**Dostop:** odpri [učno okolje](https://lab.digilab-g.rtfm.si/) in uporabi dodeljeno prijavo. Kali se odpre kot oddaljeno namizje. Za terminal poišči aplikacijo Terminal, za splet Firefox. Ukaze kopiraj po eno vrstico; besedila v oglatih oklepajih zamenjaj s svojim podatkom.
+**Dostop:** s svojo osebno kodo odpri [prevzem dostopa](./dostop/). Tam dobiš prijavo v Kali prek brskalnika ali WireGuard konfiguracijo za svojo Kali VM in navodila za povezavo. Pri dostopu prek brskalnika se Kali odpre kot oddaljeno namizje. Za terminal poišči aplikacijo Terminal, za splet Firefox. Ukaze kopiraj po eno vrstico; besedila v oglatih oklepajih zamenjaj s svojim podatkom.
 
 Aktivno preverjamo samo spodaj navedene učne tarče ACME. Shodan uporabljamo za pregled že zbranih podatkov o IP, ki ga določi izvajalec. Skupnih gesel, datotek in nastavitev ne spreminjamo. Če rezultat odstopa od navodil, ga zapiši in pokliči izvajalca.
 
