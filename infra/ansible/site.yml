@@ -71,6 +71,21 @@
       async: 5400
       poll: 30
 
+    # Existing ns1 containers skip provisioning; add the new record there too.
+    - name: Metasploitable 2 DNS record on existing ns1
+      ansible.builtin.shell: |
+        pct exec 134 -- sh -ec '
+          zone=/etc/bind/db.acme.lab
+          grep -q "^metasploitable2 " "$zone" && exit 0
+          echo "metasploitable2 IN A 172.20.20.30" >> "$zone"
+          sed -i "s/2026101901/2026101902/" "$zone"
+          named-checkzone acme.lab "$zone"
+          rndc reload acme.lab
+          echo UPDATED
+        '
+      register: metasploitable2_dns
+      changed_when: "'UPDATED' in metasploitable2_dns.stdout"
+
     - name: Snapshot "clean" (VMs)
       ansible.builtin.shell: qm listsnapshot {{ item }} | grep -q ' clean ' || qm snapshot {{ item }} clean --description "lab.sh up $(date +%F)"
       loop: "{{ snapshot_vms }}"

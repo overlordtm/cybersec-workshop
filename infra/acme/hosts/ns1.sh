@@ -16,7 +16,7 @@ zone "acme.lab" { type master; file "/etc/bind/db.acme.lab"; };
 E
 cat > /etc/bind/db.acme.lab <<'E'
 $TTL 3600
-@        IN SOA ns1.acme.lab. hostmaster.acme.lab. ( 2026101901 3600 900 604800 3600 )
+@        IN SOA ns1.acme.lab. hostmaster.acme.lab. ( 2026101902 3600 900 604800 3600 )
          IN NS  ns1.acme.lab.
          IN MX  10 mail.acme.lab.
          IN TXT "v=spf1 mx -all"
@@ -33,6 +33,7 @@ files    IN A   172.20.20.10
 intranet IN A   172.20.20.11
 nas      IN A   172.20.20.12
 hr-pc    IN A   172.20.20.20
+metasploitable2 IN A 172.20.20.30
 cam01    IN A   172.20.30.10
 printer  IN A   172.20.30.11
 hvac     IN A   172.20.30.12

@@ -79,7 +79,7 @@ claim-pdf)
     ;;
 status)
     tofu_ output
-    ssh -o BatchMode=yes $PVE 'qm list | grep -E "VMID|kali|gw|fw|greenbone"; pct list' 2>/dev/null
+    ssh -o BatchMode=yes $PVE 'qm list | grep -E "VMID|kali|gw|fw|greenbone|metasploitable2"; pct list' 2>/dev/null
     ;;
 *)
     sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'

@@ -130,6 +130,22 @@
       register: opnsense_image
       changed_when: "'DOWNLOADED' in opnsense_image.stdout"
 
+    - name: Tools for offline Metasploitable 2 disk preparation
+      ansible.builtin.apt:
+        name: [curl, unzip, libguestfs-tools]
+        state: present
+
+    - name: Metasploitable 2 image preparation script
+      ansible.builtin.copy:
+        src: "{{ infra }}/metasploitable2/prepare-image.sh"
+        dest: /usr/local/bin/prepare-metasploitable2
+        mode: "0755"
+
+    - name: Prepare Metasploitable 2 image for OpenTofu
+      ansible.builtin.command: /usr/local/bin/prepare-metasploitable2
+      register: metasploitable2_image
+      changed_when: "'PREPARED' in metasploitable2_image.stdout"
+
     - name: Lab directory
       ansible.builtin.file:
         path: "{{ lab_dir }}"

@@ -11,5 +11,5 @@ routers:
       plugins: [], script: acmefw.py }
 
 # Everything that gets a "clean" snapshot (lab.sh reset rolls back to it)
-snapshot_vms: [110, 120]
+snapshot_vms: [110, 120, 145]
 snapshot_cts: [111, 131, 132, 133, 134, 135, 141, 142, 143, 144, 151, 152, 153]
