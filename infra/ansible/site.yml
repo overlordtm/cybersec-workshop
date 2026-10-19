@@ -7,7 +7,7 @@
       ansible.builtin.import_tasks: tasks/sync.yml
 
     - name: Participants (Guacamole users, Kali passwords, WireGuard peers)
-      ansible.builtin.command: python3 -I {{ infra }}/guacamole/gen-users.py {{ secrets }} {{ secrets }}/guacamole-home {{ kali_count | default(15) }}
+      ansible.builtin.command: python3 -I {{ infra }}/guacamole/gen-users.py {{ secrets }} {{ secrets }}/guacamole-home {{ kali_count | default(15) }} {{ wg_count | default(0) }}
       delegate_to: localhost
       changed_when: false
 
@@ -54,6 +54,7 @@
     - name: WireGuard client configs to secrets
       ansible.posix.synchronize:
         mode: pull
+        delete: true
         src: "{{ lab_dir }}/secrets/wireguard/"
         dest: "{{ secrets }}/wireguard/"
 

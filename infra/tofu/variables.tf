@@ -20,13 +20,17 @@ variable "kali_template_id" {
 }
 
 variable "kali_count" {
-  description = "Number of Kali clones (participants udelezenec01..NN)"
+  description = "Number of Kali clones (participants udelezenec101..199)"
   type        = number
   default     = 15
+  validation {
+    condition     = var.kali_count >= 0 && var.kali_count <= 99 && floor(var.kali_count) == var.kali_count
+    error_message = "kali_count must be an integer between 0 and 99."
+  }
 }
 
 variable "participants_csv" {
-  description = "n,user,password — created by guacamole/gen-users.py"
+  description = "n,user,password,access,active — created by guacamole/gen-users.py"
   type        = string
   default     = "../secrets/participants.csv"
 }

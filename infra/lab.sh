@@ -1,7 +1,7 @@
 #!/bin/sh
 # Workshop lab: set up, tear down, reset. Run from your laptop in infra/.
 #
-#   ./lab.sh up [N]        build or update everything (N Kali workstations, default 15)
+#   ./lab.sh up [KALI] [WG] build/update (default 15 hosted Kali, 0 WireGuard participants)
 #   ./lab.sh down          destroy everything OpenTofu created (keeps host layer + Kali template)
 #   ./lab.sh down --all    ... and also the Kali template, vmbr1/NAT, firewall lines, API token
 #   ./lab.sh reset         roll firewalls/Guacamole/ACME back to "clean", recreate Kali clones
@@ -13,8 +13,10 @@ set -eu
 cd "$(dirname "$0")"
 PVE=root@pve.digilab-g.rtfm.si
 COUNT_FILE=secrets/kali-count
+WG_COUNT_FILE=secrets/wg-count
 
 count() { cat "$COUNT_FILE" 2>/dev/null || echo 15; }
+wg_count() { cat "$WG_COUNT_FILE" 2>/dev/null || echo 0; }
 play() { (cd ansible && ansible-playbook "$@"); }
 tofu_() {
     TF_VAR_pve_api_token=$(cat secrets/pve-token) tofu -chdir=tofu "$@"
@@ -28,16 +30,19 @@ kali_ids() {
 cmd=${1:-help}; shift || true
 case $cmd in
 up)
-    [ $# -gt 0 ] && echo "$1" > "$COUNT_FILE"
-    N=$(count)
+    [ $# -le 2 ] || { echo "Usage: ./lab.sh up [KALI_COUNT] [WG_COUNT]" >&2; exit 1; }
+    N=${1:-$(count)}
+    W=${2:-$(wg_count)}
     mkdir -p -m 700 secrets
-    python3 -I guacamole/gen-users.py secrets secrets/guacamole-home "$N"
+    python3 -I guacamole/gen-users.py secrets secrets/guacamole-home "$N" "$W"
+    echo "$N" > "$COUNT_FILE"
+    echo "$W" > "$WG_COUNT_FILE"
     play host.yml
     tofu_ init -input=false >/dev/null
     if template_exists; then K=$N; else K=0; fi
     tofu_ apply -input=false -auto-approve -var kali_count="$K"
-    play site.yml -e kali_count="$N"
-    if [ "$K" = 0 ]; then
+    play site.yml -e kali_count="$N" -e wg_count="$W"
+    if [ "$N" -gt 0 ] && [ "$K" = 0 ]; then
         play kali-template.yml
         tofu_ apply -input=false -auto-approve -var kali_count="$N"
     fi
@@ -49,6 +54,7 @@ down)
     ;;
 reset)
     play reset.yml
+    play site.yml -e kali_count="$(count)" -e wg_count="$(wg_count)"
     "$0" kalis
     ;;
 kalis)

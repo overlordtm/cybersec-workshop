@@ -2,7 +2,7 @@
 # Each gets MAC bc:24:11:20:00:NN -> DHCP reservation 10.20.0.(100+NN) on LAB-GW,
 # user "kali" with the participant's password (same as the Guacamole login).
 locals {
-  participants = { for p in csvdecode(file(var.participants_csv)) : tonumber(p.n) => p if p.user != "admin" }
+  participants = { for p in csvdecode(file(var.participants_csv)) : tonumber(p.n) => p if p.access == "kali" && p.active == "yes" }
   kalis        = { for n in range(1, var.kali_count + 1) : format("kali-%02d", n) => n }
 }
 

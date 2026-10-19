@@ -5,6 +5,7 @@ Objects are matched by name (aliases, gateways) or description (rules, DHCP rang
 and updated in place, so the script can be re-run after every change.
 Reads /root/lab/participants.csv; writes WireGuard client configs to /root/lab/secrets/wireguard/.
 """
+import csv
 import json
 import os
 import subprocess
@@ -12,6 +13,11 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from opnapi import Opn  # noqa: E402
+
+with open("/root/lab/participants.csv", newline="") as f:
+    participants = [r for r in csv.DictReader(f) if r["active"] == "yes"]
+kalis = [r for r in participants if r["access"] == "kali"]
+vpn = [r for r in participants if r["access"] in ("wireguard", "admin")]
 
 api = Opn("lab-gw")
 PUBLIC_NAME = "lab.digilab-g.rtfm.si"
@@ -67,12 +73,12 @@ api.rules([
     (299, "opt1", "block", "any", "any", "any", "", "FAKENET: default deny"),
 ])
 
-# --- DHCP on LAB. Kali clones get MAC bc:24:11:20:00:NN (set by infra/kali/clones.sh).
+# --- DHCP on LAB. Kali clones get MAC bc:24:11:20:00:NN (set by OpenTofu).
 api.upsert("dnsmasq/settings", "Range", "description", "LAB pool", {"range": {
     "interface": "lan", "start_addr": "10.20.0.200", "end_addr": "10.20.0.250",
     "domain_type": "range", "description": "LAB pool"}})
 HOSTS = {"guacamole": ("10.20.0.10", ""), "greenbone": ("10.20.0.11", "")}
-HOSTS.update({f"kali-{n:02d}": (f"10.20.0.{100 + n}", f"bc:24:11:20:00:{n:02d}") for n in range(1, 21)})
+HOSTS.update({f"kali-{n:02d}": (f"10.20.0.{100 + n}", f"bc:24:11:20:00:{n:02d}") for n in (int(r["n"]) for r in kalis)})
 for name, (ip, mac) in HOSTS.items():
     api.upsert("dnsmasq/settings", "Host", "host", name, {"host": {
         "host": name, "domain": "lab.internal", "ip": ip, "hwaddr": mac, "descr": "lab"}})
@@ -110,8 +116,12 @@ subprocess.run(["ssh", "lab-gw", "configctl proxy restart >/dev/null"], check=Tr
 
 # --- WireGuard for participants' own laptops (split tunnel: ACME only)
 KEYS = "/root/lab/secrets/wg-keys.json"
-PARTICIPANTS = [r.split(",")[1] for r in open("/root/lab/participants.csv").read().split()[1:]]
-keys = json.load(open(KEYS)) if os.path.exists(KEYS) else {}
+PARTICIPANTS = [r["user"] for r in vpn]
+peer_addresses = {r["user"]: f"{WG_NET}.{250 if r['access'] == 'admin' else 100 + int(r['n'])}" for r in vpn}
+keys = {}
+if os.path.exists(KEYS):
+    with open(KEYS) as f:
+        keys = json.load(f)
 for name in PARTICIPANTS:
     if name not in keys:
         priv = subprocess.run(["wg", "genkey"], capture_output=True, text=True, check=True).stdout.strip()
@@ -122,7 +132,12 @@ secret_file = lambda path: open(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_TR
 with secret_file(KEYS) as f:
     json.dump(keys, f, indent=1)
 
-peer_ip = lambda name: f"{WG_NET}.250" if name == "admin" else f"{WG_NET}.{100 + int(name[-2:])}"
+# Remove old shared peers and participants disabled by a smaller count.
+for row in api.rows("/api/wireguard/client/searchClient"):
+    name = row["name"]
+    if (name.startswith("udelezenec") or name == "admin") and name not in PARTICIPANTS:
+        api.saved(f"/api/wireguard/client/delClient/{row['uuid']}", {})
+peer_ip = lambda name: peer_addresses[name]
 peers = [api.upsert("wireguard/client", "Client", "name", name, {"client": {
     "enabled": "1", "name": name, "pubkey": keys[name]["pub"], "tunneladdress": f"{peer_ip(name)}/32",
     "keepalive": "25"}}) for name in PARTICIPANTS]
@@ -147,6 +162,10 @@ api.call("/api/wireguard/service/reconfigure", {})
 server_pub = next(r for r in api.rows("/api/wireguard/server/searchServer") if r["name"] == "wg-lab")["pubkey"]
 
 os.makedirs("/root/lab/secrets/wireguard", mode=0o700, exist_ok=True)
+for filename in os.listdir("/root/lab/secrets/wireguard"):
+    if filename.endswith(".conf") and (filename.startswith("udelezenec") or filename == "admin.conf"):
+        if filename[:-5] not in PARTICIPANTS:
+            os.unlink(f"/root/lab/secrets/wireguard/{filename}")
 for name in PARTICIPANTS:
     with secret_file(f"/root/lab/secrets/wireguard/{name}.conf") as f:
         f.write(f"[Interface]\n# ACME lab - {name}\nPrivateKey = {keys[name]['priv']}\n"
