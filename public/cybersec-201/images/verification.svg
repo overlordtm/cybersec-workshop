@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 300" role="img" aria-labelledby="title">
+<title id="title">Različica je izhodišče; preverimo pogoje in dejansko vedenje</title>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8" fill="#38bdf8"/></marker></defs>
+<rect width="960" height="300" rx="22" fill="#101e32"/>
+<g font-family="system-ui,sans-serif" text-anchor="middle"><g fill="#182b43" stroke-width="2"><rect x="30" y="72" width="250" height="150" rx="14" stroke="#7dd3fc"/><rect x="355" y="72" width="250" height="150" rx="14" stroke="#fcd34d"/><rect x="680" y="72" width="250" height="150" rx="14" stroke="#6ee7b7"/></g>
+<g font-size="25" font-weight="650"><text x="155" y="123" fill="#7dd3fc">Različica</text><text x="480" y="123" fill="#fcd34d">Pogoji</text><text x="805" y="123" fill="#6ee7b7">Preizkus</text></g>
+<g fill="#cbd5e1" font-size="19"><text x="155" y="162">Kaj ponuja storitev?</text><text x="155" y="193">Nmap · -sV</text><text x="480" y="162">Kaj zahteva ranljivost?</text><text x="480" y="193">Obvestilo · nastavitev</text><text x="805" y="162">Kaj res omogoča?</text><text x="805" y="193">Odziv · dokaz · omejitev</text></g></g>
+<g fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow)"><path d="M287 147H346"/><path d="M612 147H671"/></g></svg>

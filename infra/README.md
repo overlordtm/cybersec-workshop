@@ -239,6 +239,16 @@ networking inside its LXC. Website content is in Slovenian.
 DNS: `ns1` is authoritative for `acme.lab`. LAB-GW forwards `acme.lab` to ns1's public
 address, ACME-FW to its internal address; both allow private answers for `acme.lab`.
 
+The metadata exercise PDF is checked in at `acme/files/www/htdocs/dokumenti/cenik-2026.pdf`
+and `acme/files/files/javno/cenik-2026.pdf`. Rebuild both copies with
+`python3 infra/acme/generate-document.py` from the repository root. Its author, dates,
+and software metadata are deliberately prepared training data. Existing provisioned
+hosts need a planned content refresh to receive the new files.
+
+Cybersec-201 exercises run entirely in `visitor`; the `visitor`/`flat` comparison is
+an instructor demonstration before individual work. See `cybersec-201/EXERCISES.md`
+for preparation of the Greenbone report and the two Juice Shop training baskets.
+
 ### Metasploitable 2 placement and lifecycle
 
 [Metasploitable 2](https://docs.rapid7.com/metasploit/metasploitable-2/) represents an

@@ -9,7 +9,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 BASE=https://cdimage.kali.org/current
 CACHE=/var/lib/vz/template/kali
 PROXY=http://10.20.0.1:3128
-PACKAGES="xrdp cloud-init cloud-guest-utils zaproxy cyberchef enum4linux-ng bind9-dnsutils"
+PACKAGES="xrdp cloud-init cloud-guest-utils zaproxy cyberchef enum4linux-ng bind9-dnsutils nmap curl smbclient libimage-exiftool-perl wireshark snmp ffuf nikto sqlmap"
 
 if qm status "$VMID" >/dev/null 2>&1; then echo "VM $VMID exists; delete it first" >&2; exit 1; fi
 

@@ -1,464 +1,448 @@
-# Cybersec-201
-
-**Uvod v kibernetske operacije za radovedne**
-
-![Udeleženec in trije segmenti podjetja ACME](./images/acme.svg)
-
-<small>Andraž Vrhovec · Koofr d.o.o. · oktober 2026</small>
-
-Note:
-ACME je izmišljeno podjetje s pripravljeno infrastrukturo. Današnja zgodba: poiščemo sled, preverimo dokaz in predlagamo zaščito. Uvodne štiri prosojnice skupaj pet minut.
-
----
-
-## Eno podjetje, trije pogledi
-
-<div class="cards">
-<div class="card"><h3>01 · Sledi</h3><p>Kaj je že objavljeno?</p></div>
-<div class="card"><h3>02 · Omrežje</h3><p>Kaj lahko dosežemo?</p></div>
-<div class="card"><h3>03 · Preverjanje</h3><p>Kaj lahko dokažemo?</p></div>
-</div>
-
-**36 minut predstavitve s prikazi; preostanek za praktično delo in pogovor.**
-
-Note:
-Vse tri predstavitve pred praktičnim blokom. Prosojnic je več zaradi razdelitve pojmov, ne zaradi daljšega predavanja. Navodila za vaje so na posebni strani.
-
----
-
-## Kali je že pripravljen
-
-![Brskalnik prek Guacamole odpre pripravljeni Kali](./images/access.svg)
-
-Firefox za splet · terminal za ukaze · orodja za preverjanje
-
-Note:
-Pokaži prijavo na https://lab.digilab-g.rtfm.si/, Firefox in terminal. Vsak ima svoje namizje. Lokalna namestitev ni pogoj; WireGuard je dodatna možnost. Javne iskalnike odpiramo v lastnem običajnem brskalniku.
-
----
-
-## Dogovor o preverjanju
-
-<div class="cards">
-<div class="card"><h3>ACME</h3><p>Aktivne zahteve in pregledi samo na določenih učnih tarčah.</p></div>
-<div class="card"><h3>Javni viri</h3><p>Pregled že zbranih podatkov ponudnikov.</p></div>
-<div class="card"><h3>Dokazi</h3><p>Zapišemo vir, čas in meje sklepanja.</p></div>
-</div>
-
-Note:
-Pojasni razliko med iskanjem že indeksiranih podatkov in aktivnim pregledom strežnika. Lab omejuje internetni promet. Ne spreminjamo skupnih gesel, datotek ali nastavitev.
-
----
-
 ## 1. sklop · Digitalne sledi
 
-<p class="eyebrow">OD OBJAVE DO POVEZAVE</p>
+**Kaj lahko o podjetju izvemo iz javnih virov?**
 
 ![Spletna stran, dokument in repozitorij kot viri sledi](./images/traces.svg)
 
+ACME: ljudje, domenska imena, dokumenti in objavljene storitve.
+
 Note:
-Za celoten prvi sklop osem minut. OSINT je zbiranje in povezovanje javno dostopnih informacij. Uporablja se v preiskovanju, novinarstvu in informacijski varnosti.
+Za prvi sklop skupaj sedem minut. Začnemo neposredno z vsebino, brez naslovnice ali organizacijskega uvoda. ACME je izmišljeno podjetje v pripravljenem laboratoriju. OSINT pomeni zbiranje in povezovanje javno dostopnih informacij. Varnostni pregled začnemo z vprašanjem, kaj podjetje že razkriva o sebi. Predhodno uredimo prijave; dostop in obseg preverjanja sta opisana na strani z vajami.
 
 ---
 
-## Kaj izda spletna stran?
+## Kaj razkrijejo stran in dokumenti?
 
-<div class="cards">
-<div class="card"><h3>Ljudje</h3><p>Imena, kontakti in vloge v podjetju.</p></div>
-<div class="card"><h3>Storitve</h3><p>Trgovina, pošta in oddaljeni dostop.</p></div>
-<div class="card"><h3>Zgodovina</h3><p>Stare strani, komentarji in pozabljene datoteke.</p></div>
+<div class="example">
+<div class="example-label">PRIPRAVLJENI UČNI METAPODATKI · ACME PDF</div>
+
+```plaintext
+Title:    Interni cenik 2026
+Author:   Maja Kovac
+Creator:  LibreOffice 7.0
+Created:  2026-09-14
+```
+
 </div>
 
-**Posamezna objava je košček širše slike.**
+Na strani »O nas« najdemo Majo Kovač, odgovorno za finance.
+
+**Podatka se ujemata. Avtorstvo še ni dokazano.**
 
 Note:
-Na primeru ACME omeni javne kontakte in povezavo do trgovine. Ni treba odkrivati vseh odgovorov vaj. Spletni komentar in robots.txt nista mehanizma zaščite.
+Pripravljeni dokument je na www.acme.lab/dokumenti/cenik-2026.pdf in v deljeni mapi javno. Metapodatke preberemo z ExifTool. Ime lahko izvira iz predloge ali drugega računalnika. Pojasni razliko med podatkom v dokumentu in našim sklepom o osebi. Fotografije lahko vsebujejo tudi podatke GPS. Ukrep: pred objavo preverimo vidno vsebino in metapodatke. Brez dolgega naštevanja polj.
 
 ---
 
-## Metapodatki: podatki o podatkih
+## Iskanje omejimo na uporabne sledi
 
-<div class="example"><div class="example-label">IZMIŠLJEN PRIMER · METAPODATKI DOKUMENTA</div><pre><code>Title:    Predstavitev podjetja
-Author:   Maja Kovač
-Creator:  LibreOffice
-Created:  2026-09-14</code></pre></div>
+<div class="example">
+<div class="example-label">PRIMER SINTAKSE · IZMIŠLJENA DOMENA</div>
 
-Fotografija lahko doda še model naprave in lokacijo GPS.
-
-Note:
-Primer je ponazoritev, ne zajem dejanske datoteke. EXIF ali metapodatki PDF lahko manjkajo, so odstranjeni ali spremenjeni. Avtor dokumenta ni avtomatično oseba, ki ga je objavila.
-
----
-
-## Isto ime še ne pomeni iste osebe
-
-![Več neodvisnih virov vodi do previdnega sklepa](./images/traces.svg)
-
-**Preverimo čas, kontekst in neodvisno potrditev.**
-
-Note:
-Psevdonim se lahko pojavi na več družbenih omrežjih, ne da bi pripadal isti osebi. Podatki v javnem repozitoriju imajo zgodovino; odstranitev iz zadnje različice ni nujno odstranitev iz zgodovine.
-
----
-
-## Iskanje z manj šuma
-
-<div class="example"><div class="example-label">PONAZORITEV POIZVEDB · IZMIŠLJENA DOMENA</div><pre><code>site:podjetje.example
+```plaintext
 site:podjetje.example filetype:pdf
-site:podjetje.example inurl:backup</code></pre></div>
+site:podjetje.example inurl:backup
+```
 
-Domena · vrsta datoteke · del spletnega naslova
-
-Note:
-Operatorji pomagajo omejiti rezultate. Ne zagotavljajo popolnosti ali svežine. Izmišljena domena je primer sintakse; učna domena acme.lab ni indeksirana v javnem iskalniku.
-
----
-
-## Iskalniki za infrastrukturo
-
-<div class="cards">
-<div class="card"><h3><a href="https://www.shodan.io/">Shodan</a></h3><p>Išče internetno izpostavljene naprave in njihove storitve.</p></div>
-<div class="card"><h3><a href="https://censys.com/">Censys</a></h3><p>Povezuje podatke o gostiteljih, spletnih storitvah in certifikatih.</p></div>
-<div class="card"><h3><a href="https://securitytrails.com/">SecurityTrails</a></h3><p>Pomaga raziskovati DNS, poddomene in zgodovino infrastrukture.</p></div>
 </div>
 
+[Wayback Machine](https://web.archive.org/) pokaže stare objave.
+
+[crt.sh](https://crt.sh/) razkrije imena iz javnih certifikatov.
+
+**Čas objave in izvor podatka sta del ugotovitve.**
+
 Note:
-Vsako orodje predstavi z enim stavkom, brez treh dodatnih prikazov. Nekatere funkcije so odvisne od računa ali naročnine.
+Operatorja omejita domeno ter vrsto datoteke oziroma del naslova. Učna domena acme.lab ni javno indeksirana; za javne vire uporabimo domeno, izbrano pred dogodkom, in pripravljen posnetek kot rezervo. Certifikat lahko vsebuje staro ali nadomestno ime; ne potrjuje delujoče storitve. Izvorna koda in robots.txt na ACME lahko pokažeta pozabljene poti. Tehnične posledice objave kopije obravnavamo v tretjem sklopu. Druga orodja so povezave v gradivu, ne katalog dodatnih prosojnic.
 
 ---
 
-## Kako beremo zapis v Shodanu?
+## Shodan: kaj je bilo zaznano in kdaj?
 
-<div class="example"><div class="example-label">PONAZORITEV · NI ŽIV REZULTAT SHODANA</div><pre><code>IP             [izbrani javni naslov]
+<div class="example">
+<div class="example-label">PONAZORITEV ZADETKA · NI REZULTAT ŽIVEGA PREGLEDA</div>
+
+```plaintext
+Naslov         [izbrani javni IP]
 Organizacija   [podatek ponudnika]
-80 / HTTP      [opažena storitev]
-Opaženo        [datum pri storitvi]</code></pre></div>
+80/tcp         [opažena storitev in odziv]
+Opaženo        [datum pri storitvi]
+```
 
-**Čas opažanja šteje. Geolokacija je ocena.**
-
-Note:
-Na pripravljenem dejanskem zapisu lahko pokažeš iste štiri elemente. Ne uporabljaj simuliranega naslova 198.51.100.x kot živega zadetka. Oznaka CVE pri rezultatu ne potrjuje izrabe. Shodan že zbrane podatke ponudi v pregled; ne naročamo novega pregleda javne tarče.
-
----
-
-## Razkritja in izpostavljeni računi
-
-<div class="cards">
-<div class="card"><h3><a href="https://dehashed.com/">DeHashed</a></h3><p>Omogoča raziskovanje razkritih identitetnih in poverilnih podatkov.</p></div>
-<div class="card"><h3><a href="https://intelx.io/">IntelX</a></h3><p>Išče po indeksiranih dokumentih, arhivih in razkritjih.</p></div>
-<div class="card"><h3><a href="https://haveibeenpwned.com/">Have I Been Pwned</a></h3><p>Pomaga preveriti pojav e-poštnega naslova v znanih razkritjih.</p></div>
 </div>
 
+Preberemo storitev, odziv in čas zadnjega opažanja.
+
+**Oznaka CVE je namig za preverjanje.**
+
 Note:
-Orodja samo omenimo. Ne odpiramo resničnih razkritih gesel in ne iščemo podatkov drugih udeležencev. Zgodovinsko razkritje ni dokaz trenutnega vdora; obseg dostopa je odvisen od ponudnika.
+Približno minuto namenimo prikazu že izbranega resničnega zadetka v Shodanu. Ne iščemo simuliranih naslovov 198.51.100.x. Lokacija je ocena ponudnika, ne dokaz fizične lokacije naprave. Trenutne dosegljivosti iz zgodovinskega zapisa ne moremo potrditi. Censys je lahko omenjen kot alternativa. Pri ponudniku ne naročamo novega pregleda javne tarče. Pripravi datiran posnetek za primer omejitev dostopa.
 
 ---
 
-## Certifikati, povezave in zgodovina
+## Povežimo podatke, preverimo sklep
 
-<div class="cards">
-<div class="card"><h3><a href="https://crt.sh/">crt.sh</a></h3><p>Išče domenska imena v javnih dnevnikih certifikatov.</p></div>
-<div class="card"><h3><a href="https://www.virustotal.com/">VirusTotal</a></h3><p>Povezuje opažanja o datotekah, naslovih in domenah.</p></div>
-<div class="card"><h3><a href="https://web.archive.org/">Wayback Machine</a></h3><p>Prikazuje arhivirane različice spletnih strani.</p></div>
-</div>
+| Sled | Kaj izvemo? | Kaj še manjka? |
+| --- | --- | --- |
+| Ime v dokumentu | Navedeni avtor | Potrditev avtorstva |
+| Ime v certifikatu | Objavljeno domensko ime | Trenutno stanje storitve |
+| Zapis v Shodanu | Preteklo opažanje | Nova meritev |
+
+**Vir + čas + neodvisna potrditev → utemeljen sklep.**
 
 Note:
-Omeni, da zgodovinski certifikat ne potrjuje trenutno delujoče storitve. V javne storitve za analizo ne nalagamo zaupnih dokumentov. Arhiviran posnetek je sled preteklega stanja.
+Zaključi digitalne sledi z razliko med opaženim in sklepom. Enako uporabniško ime samo ne povezuje dveh oseb. Udeleženci lahko izberejo osnovni profil Shodan, spletne namige ali DNS; dodatna izziva sta dokument in certifikati. DNS AXFR ostane v praktični vaji 1.3 po poznejšem dogovoru, tehnično razlago pa umestimo med omrežne storitve. Nadaljuj neposredno na Omrežja; vse vaje so po vseh treh sklopih.
 
 ---
 
-## Znano ime ≠ dosegljiva naprava
+## 2. sklop · Omrežja
 
-![Ime DNS vodi do notranjega IP; dosegljivost je ločeno vprašanje](./images/dns.svg)
-
-**DNS razkrije naslov. Omrežje določi pot.**
-
-Note:
-Zaključi OSINT: ločimo odkrito ime, podatek o naslovu in preizkušeno storitev. Neposredno preverjanje DNS je aktivna zahteva in ga omejimo na dogovorjeno učno tarčo.
-
----
-
-## 2. sklop · Od omrežja do storitve
+**Katere storitve lahko dosežemo?**
 
 ![DMZ, LAN in IoT podjetja ACME](./images/acme.svg)
 
-Javno objavljeno · notranje dosegljivo · ločeno z omejitvami
+IP določi naslov · vrata označijo storitev · TCP in UDP ločimo.
 
 Note:
-Dvanajst minut za drugi sklop, od tega štiri za demonstracijo Greenbone. Na shemi niso prikazane vse upravljavske naprave, temveč učni segmenti ACME.
+Za Omrežja skupaj štirinajst minut. Na shemi razloži eno pot: Kali do spletnega strežnika ter do notranje naprave. IP je naslov omrežnega vmesnika, vrata pa številka v transportnem protokolu, prek katere je storitev dosegljiva. Isti strežnik lahko ponuja več storitev. 53/tcp in 53/udp nista ista meritev. DMZ vsebuje javne strežnike, LAN delovne naprave in datoteke, IoT kamero, tiskalnik ter krmilnik. Omrežje 198.51.100.0/24 v labu simulira javni internet.
 
 ---
 
-## Naslov IP in podomrežje
+## Nmap: od vrat do storitve
 
-<div class="cards">
-<div class="card"><h3>198.51.100.11</h3><p>Simulirani javni naslov spletnega strežnika ACME.</p></div>
-<div class="card"><h3>172.20.20.10</h3><p>Notranji naslov datotečnega strežnika.</p></div>
-<div class="card"><h3>172.20.20.0/24</h3><p>Skupina naslovov pisarniškega omrežja LAN.</p></div>
+<div class="example">
+<div class="example-label">UKAZ ZA UČNO TARČO · IZPIS JE PONAZORITEV</div>
+
+```plaintext
+nmap -Pn -sT -sV -p 80 198.51.100.11
+
+PORT    STATE  SERVICE  VERSION
+80/tcp  open   http     Apache httpd 2.4.49
+```
+
 </div>
 
-**Za pot med omrežji potrebujemo usmerjanje in dovoljen promet.**
+`-p` izbere vrata · `-sV` preveri vrsto in različico storitve.
+
+**Odprta vrata potrdijo dostop. Ranljivost preverimo posebej.**
 
 Note:
-/24 poenostavljeno predstavi kot skupino naslovov z istimi prvimi tremi deli. Ne računamo mask. 198.51.100.0/24 je dokumentacijski razpon; v labu igra vlogo interneta.
+Kratek prikaz na dejanski tarči; pripravi izpis kot rezervo. -Pn preskoči odkrivanje prisotnosti, -sT preveri povezavo TCP. Ime storitve brez -sV lahko temelji samo na številki vrat. Odprta storitev ni samodejno napaka; pomembno je, kdo jo potrebuje. Ukrep pri nepotrebni izpostavljenosti: storitev odstranimo ali omejimo dovoljene izvore. V tem laboratoriju odprto/neodprto zanesljiveje pokaže dostop kot razlika med closed in filtered.
 
 ---
 
-## Vrata so vstop do storitve
+## DNS: kdo lahko prenese celotno območje?
 
-![En strežnik lahko ponuja SSH, HTTP in HTTPS](./images/ports.svg)
+<div class="example">
+<div class="example-label">UČNA TARČA ACME · IZSEK PRIČAKOVANIH ZAPISOV</div>
 
-Številka vrat je namig; odziv storitve poda več dokazov.
+```plaintext
+dig @198.51.100.14 acme.lab AXFR
 
-Note:
-Shema je splošna ponazoritev, ne izpis dejanskih vrat www. Omeni še DNS 53, SMB 445 in poštne storitve. TCP in UDP sta različna načina prenosa; pregled TCP ne popiše storitev UDP.
+files.acme.lab.     A  172.20.20.10
+intranet.acme.lab.  A  172.20.20.11
+cam01.acme.lab.     A  172.20.30.10
+```
 
----
-
-## Zakaj DMZ, LAN in IoT?
-
-<div class="cards">
-<div class="card"><h3>DMZ</h3><p>Storitve, ki jih mora videti zunanji svet.</p></div>
-<div class="card"><h3>LAN</h3><p>Delovne naprave, datoteke in notranje aplikacije.</p></div>
-<div class="card"><h3>IoT</h3><p>Kamere, tiskalniki in krmilniki naprav.</p></div>
 </div>
 
-**Ločitev zmanjša doseg napake ali ukradenega računa.**
+**Napaka:** prenos območja je dovoljen vsakomur.
+
+**Ukrep:** omejimo AXFR in ločimo notranje podatke DNS.
 
 Note:
-VLAN loči omrežja, pravila požarnega zidu pa določajo prehode. Ime segmenta samo po sebi ni zaščita. Primer doma: gostujoče omrežje ne sme avtomatično dostopati do vseh naprav.
+AXFR prenese podatke območja in je namenjen med drugim izmenjavi med ustreznimi strežniki DNS. V ACME allow-transfer any razkrije tudi notranja imena. To je neposredna poizvedba učnemu strežniku. Dokaz je vrnjeno območje, ne zgolj odprta vrata 53. Ime in naslov ne dokazujeta dosegljive storitve. Ne trdimo, da so vsa notranja imena sama po sebi skrivnost; presodimo, ali je tako razkritje namerno.
 
 ---
 
-## Segmentacijo določajo dovoljene poti
+## SMB: kdo lahko bere deljene datoteke?
 
-![Obiskovalec lahko doseže dovoljeno storitev, ne pa IoT](./images/segmentation.svg)
+<div class="example">
+<div class="example-label">DVA KORAKA · UČNI DATOTEČNI STREŽNIK</div>
 
-Dovolimo potreben promet; preostale poti omejimo.
+```plaintext
+smbclient -N -L //172.20.20.10
+smbclient -N //172.20.20.10/javno -c 'ls'
+```
+
+</div>
+
+Seznam map → dostop do vsebine → pregled dovoljenj.
+
+**Napaka:** gost lahko bere podatke o notranjih napravah.
+
+**Ukrep:** uredimo dostop gostov in vsebino deljenih map.
 
 Note:
-Ne gre le za blokiranje interneta. Pomemben je tudi promet med notranjimi segmenti. V ACME obstaja namerna napaka DMZ → IoT; njen vpliv bi se pokazal iz ustreznega izhodišča v DMZ.
+-N preskoči poziv za geslo. Ime mape uprava je lahko vidno, čeprav vsebine ne moremo brati. Pokaži razliko med javno in uprava, ne razkrivaj gesel. Datoteka seznam-naprav.csv v javno razkriva naslove in lokacije. Javno branje ni vedno napaka; težava je neskladje z namenom podatkov. Enum4linux-ng lahko zbere širši pregled SMB, osnovno razliko pa jasneje pokažeta dva ukaza smbclient. Vaja ne zahteva spremembe segmentacije.
 
 ---
 
-## Ista vtičnica, tri stanja
+## Kako segmentacija spremeni dostop?
 
-| Položaj | Dosegljivo iz Kali |
+![V visitor so IoT storitve omejene, v flat pa dosegljive iz istega Kali](./images/segmentation-compare.svg)
+
+**Isti Kali, ista tarča in isti pregled; spremenijo se pravila.**
+
+Note:
+Približno dve minuti za skupni prikaz segmentacije, pred samostojnimi vajami. Enak omejen pregled vrat 80,445,502,554,9100 izvedi nad files in IoT najprej v visitor, nato v flat. Primerjaj odprta vrata; za rezervo pripravi oba izpisa. Krmilnik hvac v flat pokaže 80 in 502, kamera 80 in 554. Ločen VLAN brez pravil ne zagotovi omejitve dostopa. Povezave, odprte pred preklopom, lahko ostanejo, zato uporabljamo nove preglede. Po naslednjem prikazu SNMP nastavi visitor za ves praktični blok. Napaka DMZ → IoT je ločeno vprašanje, ki zahteva meritev iz DMZ; s tem prikazom je ne dokazujemo.
+
+---
+
+## IoT: dostop do naprav in njihovih podatkov
+
+| Naprava | Storitev | Kaj preverimo? |
+| --- | --- | --- |
+| Kamera | HTTP, RTSP 554/tcp | Izpostavljenost vmesnika |
+| Tiskalnik | SNMP 161/udp | Podatke s skupnostjo `public` |
+| Klima | Modbus 502/tcp | Dosegljivost krmilnika |
+
+<div class="example">
+
+
+```plaintext
+snmpwalk -v2c -c public 172.20.30.11 1.3.6.1.2.1.1
+```
+
+</div>
+
+**Ukrep:** dostop omejimo na potrebne upravljavske poti.
+
+Note:
+Kratek prikaz samo v flat med predstavitvijo: SNMP vrne ime, lokacijo in kontakt. Ukaz uporablja številčni OID, da ne potrebuje dodatnih imen MIB. Uporabi le branje. Nato vrni visitor in preveri stanje; samostojne vaje nimajo preklopov. Kamera je statični prijavni obrazec s simuliranim odgovorom RTSP, ne prava kamera; ne obljubljaj ogleda videa ali uspešne prijave. Na Modbus ne pošiljamo ukazov za spremembo nastavitev. Ukrep pri SNMP: omejitev izvorov in ustrezno zaščiten SNMPv3. Wireshark lahko pokaže lasten oziroma pripravljen promet; v preklopljenem omrežju ne vidi samodejno vsega tujega prometa.
+
+---
+
+## Zastarela storitev: kaj pove različica?
+
+![Zaznana različica, pogoji in potrditev vedenja so ločeni koraki](./images/verification.svg)
+
+**Nmap prepozna storitev. Naslednji preizkus preveri konkreten pogoj.**
+
+Note:
+Uporabi Metasploitable 2 na 172.20.20.30 kot primer starega notranjega strežnika. Nmap -sV pokaže programe; izbrana skripta NSE, denimo ftp-anon ali smb-protocols, preveri konkretno nastavitev. Ne zaganjamo vseh skript. Zastarel program je razlog za ukrep, vendar lahko različica v odzivu zavaja ali ima paket prenesene popravke. V aplikacijskem sklopu pokažemo še Apache, kjer privzeta omejitev poti vpliva na možnost izrabe. Odprava: nadgradnja oziroma zamenjava nepotrebne storitve in ponovna meritev.
+
+---
+
+## Greenbone: preverimo eno ugotovitev
+
+| V poročilu | Vprašanje za preizkuševalca |
 | --- | --- |
-| `internet` | objavljene javne storitve |
-| `visitor` | LAN in dovoljene storitve DMZ |
-| `flat` | vsi trije segmenti, tudi IoT |
+| Tarča in dokaz | Kaj je bilo izmerjeno? |
+| Resnost | Kakšne so lahko posledice? |
+| Quality of Detection | Kako zanesljiva je metoda zaznave? |
+| Predlog odprave | Kaj spremenimo in kako preverimo popravek? |
 
-**Rezultat vedno opremimo s podatkom o izhodišču.**
+**Opozorilo pregledovalnika povežemo z odzivom storitve.**
 
 Note:
-Scenarij velja globalno za vse. Preklopi spremenijo nove povezave; obstoječe lahko ostanejo. Udeleženci bodo primerjavo izvedli šele v praktičnem bloku.
+Dve minuti za eno ugotovitev iz končanega dejanskega poročila. Pred dogodkom osveži vire, izberi ugotovitev in pripravi izvoz. Ne čakaj na nov pregled. Pokaži dokaz; če temelji na različici, to povej. CVSS oziroma prikazana resnost ni verjetnost napada. Quality of Detection opisuje metodo zaznave, ne potrjuje vseh pogojev izrabe. Greenbone v tem labu teče ločeno na https://10.20.0.11/; paket gvm je na voljo tudi v Kali. Udeleženci dobijo izsek za samostojno presojo v dodatni vaji 2.5.
 
 ---
 
-## Nmap: tri različna vprašanja
+## 3. sklop · Aplikacije
 
-<div class="cards">
-<div class="card"><h3>Naprava</h3><p>Ali dobim odgovor na preverjanje prisotnosti?</p></div>
-<div class="card"><h3>Vrata</h3><p>Ali lahko dosežem določeno storitev?</p></div>
-<div class="card"><h3>Program</h3><p>Kaj odziv pove o vrsti in različici storitve?</p></div>
+**Kaj se zgodi z našim vnosom?**
+
+<div class="example">
+<div class="example-label">UČNI PRIMER JUICE SHOP · ZAHTEVA IN OBLIKA ODGOVORA</div>
+
+```plaintext
+GET /rest/products/search?q=jabolko HTTP/1.1
+Host: shop.acme.lab
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+
+{"status":"success","data":[...]}
+```
+
 </div>
 
+Metoda in pot → podatki → obdelava → odgovor.
+
 Note:
-Odkrivanje gostiteljev samo zase ni dovolj. V tem labu so odprte storitve zanesljivejši učni dokaz kot razlikovanje closed/filtered. Zenmap lahko pokaže rezultate grafično, če je pripravljen.
+Za Aplikacije skupaj štirinajst minut. Razloži HTTP na eni zahtevi, brez ločenega predavanja o vseh statusih. Iskalni niz je v URL, pri prijavi so podatki v telesu JSON. Data z ... je ponazoritev oblike, ne veljaven zajeti JSON. Status 200 beremo skupaj z vsebino. 401 navadno pomeni manjkajočo ali neveljavno prijavo, 403 zavrnjen dostop. Spletna aplikacija lahko vsebuje napako tudi, ko sta prenos in strežnik pravilno nastavljena.
 
 ---
 
-## Kako preberemo rezultat?
+## ZAP: zahtevo spremenimo in ponovimo
 
-<div class="example"><div class="example-label">PONAZORITEV IZPISA NMAP · JAVNI WWW ACME</div><pre><code>Nmap scan report for 198.51.100.11
-PORT     STATE     SERVICE
-80/tcp   open      http
-443/tcp  filtered  https</code></pre></div>
+![Brskalnik pošlje zahtevo prek lokalnega ZAP do aplikacije](./images/zap.svg)
 
-**»open« potrdi dosegljiva vrata; ne potrdi ranljivosti.**
+**Ohranimo izhodišče, spremenimo en podatek in primerjamo odgovor.**
 
 Note:
-Izpis je ponazoritev vedenja, opisanega v README, ne sveža meritev. Pokaži IP, protokol TCP in stanje posameznih vrat. Pri 443 je lahko za pravilom tudi odsotna delujoča storitev; ne poenostavljaj v trditev, da je vzrok vedno požarni zid.
+Približno dve minuti za orodje, skupaj z naslednjim prikazom IDOR največ pet minut. V ZAP zaženi njegov brskalnik, da ni potrebna ročna sprememba Firefoxovega proxyja Squid. Pokaži zgodovino zahtev in odpiranje zahteve za urejanje ter ponovno pošiljanje. Pri lokalnih tarčah ZAP ne sme uporabljati zunanjega proxyja. Začnemo z ogledom ene zahteve; ne zaganjamo samodejnega aktivnega pregleda. Firefox F12 je najlažja alternativa za opazovanje, Burp Suite Community pa alternativa za prestrezanje in ponavljanje. Žetonov ne projiciraj v celoti.
 
 ---
 
-## Greenbone sestavi širši pregled
+## Razkrite datoteke: kopija na javni strani
 
-<div class="cards">
-<div class="card"><h3>Obseg</h3><p>Katere tarče in katere teste smo vključili?</p></div>
-<div class="card"><h3>Ugotovitve</h3><p>Katere težave je orodje zaznalo in na podlagi česa?</p></div>
-<div class="card"><h3>Odprava</h3><p>Kateri ukrep predlaga in kako ga preverimo?</p></div>
+<div class="example">
+<div class="example-label">UČNA TARČA ACME</div>
+
+```plaintext
+curl http://www.acme.lab/backup/config.php.bak
+
+# Razkrito: notranje ime in prijavni podatki.
+```
+
 </div>
 
-**Kratek prikaz končanega pregleda ACME.**
+**Dokaz:** vsebina datoteke je dosegljiva brez prijave.
+
+**Ukrep:** odstranimo kopijo in zamenjamo razkrite skrivnosti.
 
 Note:
-Za naslednji dve prosojnici in preklop v Greenbone skupaj štiri minute. Odpri pripravljen pregled. Če pokažeš zagon novega, ne čakaj na zaključek. Namestitev in osvežitev podatkovnih virov morata biti opravljeni pred dogodkom.
+To je posledica sledi, ki smo jo omenili v prvem sklopu. Robots.txt ali odsotnost povezave datoteke ne zaščitita. Prikaži samo vrste podatkov, vrednosti gesla prekrij. curl preveri konkretno pot; ffuf pomaga odkrivati poti z omejenim seznamom imen. Ne izvajaj množičnih pregledov skupnih tarč. Razkrito geslo je lahko ponovno uporabljeno na SSH; vaja 3.3 samostojno preverja to povezavo z minimalnim dokazom dostopa. Prikaz ni zagotovilo skrbniških pravic.
 
 ---
 
-## V poročilu odpremo eno ugotovitev
+## Prijava: geslo in zaščita prenosa
 
-<div class="cards">
-<div class="card"><h3>Dokaz</h3><p>Odziv, zaznana različica ali rezultat preizkusa.</p></div>
-<div class="card"><h3>Resnost</h3><p>Kako velike bi bile posledice opisane težave?</p></div>
-<div class="card"><h3>Zanesljivost</h3><p>Kako zanesljivo orodje prepozna konkretno stanje?</p></div>
+| Primer ACME | Težava | Ukrep |
+| --- | --- | --- |
+| NAS | Predvidena privzeta prijava | Zamenjava privzetih podatkov |
+| Intranet | HTTP Basic brez TLS | HTTPS in omejen dostop |
+
+<div class="example">
+<div class="example-label">IZMIŠLJENA UČNA PODATKA</div>
+
+```plaintext
+Authorization: Basic dWNlbmVjOnVjbm8=
+                       ↓ From Base64
+                    ucenec:ucno
+```
+
 </div>
 
-**Preverimo pogoje, vpliv in predlagano odpravo.**
+**Base64 je kodiranje. HTTPS zaščiti prenos.**
 
 Note:
-Pokaži dejansko poročilo, CVSS oziroma prikaz resnosti in Quality of Detection. Ne izmišljaj številčnih ocen pred izvedbo pregleda. Resnost ni isto kot verjetnost napada; tudi visoka zanesljivost prepoznave različice ne potrjuje vseh pogojev izrabe. Rezervno uporabi izvoženo poročilo.
+Privzeto prijavo NAS potrdi pred dogodkom; kamera nima delujočega prijavnega zaledja. Vrednost zgoraj je rezervni učni niz, ne zajem intraneta. Na intranetu se Basic dekodira v pripravljena podatka zaposleni:acme123. Lokalni CyberChef izvede From Base64. Lastni brskalnik vidi podatke tudi pri HTTPS, kar ni dokaz prisluškovanja tretje osebe. Razlikuj preverjanje identitete od pravic do podatkov; to pripravlja naslednji primer IDOR. Ne spreminjamo skupnega gesla NAS med delavnico.
 
 ---
 
-## Različica → CVE → preverjanje
+## SQL injection: vnos spremeni poizvedbo
 
-<div class="example"><div class="example-label">UČNI PRIMER ACME</div><pre><code>Opažanje:      Apache 2.4.49
-Znana težava:  CVE-2021-41773
-Pogoj:         ustrezno dovoljen dostop do poti
-Sklep:         različica še ne potrdi izrabe</code></pre></div>
+<div class="example">
+<div class="example-label">POENOSTAVLJENA POIZVEDBA · UČNI PRIMER</div>
+
+```plaintext
+SELECT ... WHERE email = '[vnos]'
+             AND password = ...
+
+Vnos: admin@juice-sh.op'--
+
+SELECT ... WHERE email = 'admin@juice-sh.op'-- ...
+```
+
+</div>
+
+**Napaka:** aplikacija podatke združi z navodili SQL.
+
+**Ukrep:** parametrizirane poizvedbe ločijo podatke od kode.
+
+Note:
+Pokaži osnovni mehanizem, celoten postopek je v dodatni vaji 3.4. V Juice Shop v20.3.0 login.ts sestavi poizvedbo iz req.body.email; narekovaj zaključi niz, -- pa izloči nadaljnji pogoj. V vaji uporabljamo presledek za -- in JSON v ponovljeni zahtevi, da nismo odvisni od omejitev obrazca. Dokaz obhoda je vrnjen prijavni objekt z računom, ne samo 200. Ne razlagaj, da zadošča splošno čiščenje vnosa. Sqlmap je orodje za avtomatizirano preverjanje SQL injection, ne univerzalen iskalnik aplikacijskih napak.
+
+---
+
+## XSS: vnos postane skripta v brskalniku
+
+<div class="example">
+<div class="example-label">POENOSTAVLJEN PRIMER KODE V BRSKALNIKU</div>
+
+```javascript
+// Nevarno, če vnos vsebuje nezaupanja vreden HTML:
+rezultat.innerHTML = vnos;
+
+// Za prikaz navadnega besedila:
+rezultat.textContent = vnos;
+```
+
+</div>
+
+**Napaka:** brskalnik vnos obravnava kot izvajalno vsebino.
+
+**Ukrep:** varen DOM in kontekstu primerna obdelava izhoda.
+
+Note:
+XSS pomeni cross-site scripting. V Juice Shop uporabimo lokalni DOM XSS za prikaz učnega sporočila, ki ne spreminja skupnih podatkov. Posledice XSS so odvisne od konteksta aplikacije in razpoložljivih pravic. DOM primer se lahko izvede v brskalniku; samo pregled odziva HTTP ga ne potrdi. ZAP pomaga pregledati zahteve, ročni ogled DOM in vedenja pa ostane pomemben. textContent je ustrezna izbira za navadno besedilo; za dovoljen HTML potrebujemo ustrezno sanitizacijo. CSP je dodatna plast zaščite. Ne obljubljaj, da bo pasivni pregled ZAP samodejno odkril vse XSS.
+
+---
+
+## Prijava še ne pomeni pravice do vseh podatkov
+
+<div class="example">
+<div class="example-label">PONAZORITEV ID-JEV · PRIJAVNI ŽETON OSTAJA OD A</div>
+
+```plaintext
+Račun A → GET /rest/basket/7   → košarica A
+Račun A → GET /rest/basket/12  → košarica B
+```
+
+</div>
+
+**IDOR / BOLA:** strežnik ne preveri pravice do zahtevanega objekta.
+
+**Ukrep:** pri vsaki zahtevi preverimo lastništvo in dovoljene pravice.
+
+Note:
+Osrednji aplikacijski prikaz: Juice Shop View Basket. Pred dogodkom pripravi učna računa A in B z različnima izdelkoma in zapiši dejanska ID košaric. Številki 7 in 12 sta ponazoritev. Kot navaden uporabnik A odpri košarico, v ZAP ponovi zahtevo in spremeni samo ID na košarico B; žeton ohrani. Dokaz je izdelek iz B v odgovoru, ne skupni score board. Koda retrieveBasket v20.3.0 poišče objekt po ID brez preverjanja lastnika. IDOR pomeni insecure direct object reference, BOLA broken object level authorization. Skrivanje gumba ali težje ugibanje ID ne nadomestita preverjanja pravic. V košarici ničesar ne spreminjamo.
+
+---
+
+## Zastarele komponente: preverimo pogoje
+
+<div class="example">
+<div class="example-label">APACHE 2.4.49 · CVE-2021-41773</div>
+
+```plaintext
+Prizadeta različica       namig za preverjanje
+Dovoljenja do datotek     pogoj za razkritje
+Omogočeni CGI             dodaten pogoj za izvajanje kode
+```
+
+</div>
+
+**V pripravi ACME je dostop zunaj spletnega imenika zavrnjen.**
 
 <small>[Apache: varnostna obvestila](https://httpd.apache.org/security/vulnerabilities_24.html)</small>
 
 Note:
-Apache v labu privzeto zavrača dostop zunaj DocumentRoot. Razloži razliko med starim programom, znano ranljivostjo in potrjenim vedenjem konkretne namestitve. Negativen poskus prav tako ne dokazuje odsotnosti vseh ranljivosti.
+Poveži prepoznavo storitve iz drugega sklopa s konfiguracijo aplikacijskega strežnika. Ne načrtuj uspešnega vdora prek www, ker privzeta konfiguracija preprečuje obravnavano pot izrabe. Nmap ali Nikto lahko opozorita na različico oziroma znake napačne nastavitve; nato preverimo pogoje. Negativen poskus ene poti ne pomeni, da je namestitev v celoti varna. Ukrep: podprta različica in pregled nastavitev. Za učenje uspešnega aplikacijskega preverjanja uporabimo preverjen primer Juice Shop.
 
 ---
 
-## 3. sklop · Razmišljanje preizkuševalca
+## Katero orodje uporabimo?
 
-![Razkrita poverilnica lahko zaradi ponovne uporabe vodi do dostopa](./images/chain.svg)
-
-**Majhna razkritja se lahko povežejo v večji problem.**
-
-Note:
-Enajst minut za tretji sklop. Shema prikazuje možne povezave, ne zagotovljenega uspeha vsakega napada. Kali je zbirka orodij; razumevanje odzivov ostane naša naloga.
-
----
-
-## Kaj se zgodi po kliku?
-
-![Brskalnik pošlje zahtevo, strežnik vrne odgovor](./images/http.svg)
-
-Zahteva: metoda, cilj, glave, telo · odgovor: status, glave, vsebina
-
-Note:
-Zgornja puščica predstavlja zahtevo, spodnja odgovor. Poveži s klikom na iskanje v trgovini. Zahteva ne vsebuje nujno telesa; podatki so lahko tudi v naslovu ali glavah.
-
----
-
-## Zahteva pod povečevalnim steklom
-
-<div class="example"><div class="example-label">IZMIŠLJEN PRIMER HTTP · NI ZAJEM JUICE SHOP</div><pre><code>POST /prijava HTTP/1.1
-Host: trgovina.example
-Content-Type: application/json
-
-{&quot;uporabnik&quot;:&quot;ucenec&quot;,&quot;geslo&quot;:&quot;ucno&quot;}</code></pre></div>
-
-Metoda in pot → glave → prazna vrstica → telo
-
-Note:
-Razloži štiri dele na kratko. Podatki so namerno izmišljeni, pot /prijava ni obljuba API Juice Shop. Ob HTTPS brskalnik še vedno vidi svoje podatke pred šifriranjem prenosa.
-
----
-
-## Odgovor pove, kaj se je zgodilo
-
-<div class="cards">
-<div class="card"><h3>200 · OK</h3><p>Strežnik je zahtevo uspešno obdelal.</p></div>
-<div class="card"><h3>401 · Unauthorized</h3><p>Zahteva potrebuje ustrezno prijavo.</p></div>
-<div class="card"><h3>403 · Forbidden</h3><p>Strežnik zavrne dostop do vira.</p></div>
-</div>
-
-Status beremo skupaj z vsebino in kontekstom.
-
-Note:
-Status 200 sam zase ne dokazuje uspešne prijave; aplikacija lahko vrne sporočilo o napaki znotraj uspešnega odziva HTTP. Razloži še, da preusmeritev ni nujno napaka, brez dodatne tabele kod.
-
----
-
-## Firefox pokaže lastni promet
-
-<div class="cards">
-<div class="card"><h3>Omrežje</h3><p>Zahteve, metode, odzivi in časi.</p></div>
-<div class="card"><h3>Glave in telo</h3><p>Kaj je brskalnik dejansko poslal.</p></div>
-<div class="card"><h3>Shramba</h3><p>Piškotki in drugi podatki aplikacije.</p></div>
-</div>
-
-**Kratek prikaz na pripravljeni trgovini ACME.**
-
-Note:
-Odpri F12 → Network v Firefoxu na shop.acme.lab. Pokaži eno lastno iskanje. Ne ustvarjaj računov in ne spreminjaj naročil. ZAP ali Burp prestrezata in omogočata dodatno obdelavo prometa; za začetno razumevanje zadostujejo razvijalska orodja.
-
----
-
-## Kodiranje ni šifriranje
-
-![Pretvorba Base64 je povratna in ne potrebuje skrivnega ključa](./images/encoding.svg)
-
-**Base64 spremeni zapis. Šifriranje uporabi ključ.**
-
-Note:
-Prikazani učni niz se dekodira v ucenec:ucno. Omeni še kodiranje URL za posebne znake. Sprememba zapisa ne pomeni skrivnosti.
-
----
-
-## CyberChef: sestavimo pretvorbo
-
-<div class="cards">
-<div class="card"><h3>Vhod</h3><p>dWNlbmVjOnVjbm8=</p></div>
-<div class="card"><h3>Postopek</h3><p>From Base64</p></div>
-<div class="card"><h3>Izhod</h3><p>ucenec:ucno</p></div>
-</div>
-
-Vhodni podatek → izbrana operacija → preverljiv rezultat
-
-Note:
-Kratek prikaz lokalnega CyberChef na Kali. Vnaprej preveri zagon. Uporabljaj le pripravljene izmišljene podatke. Pri več operacijah vrstni red vpliva na rezultat; avtomatsko zaznana pretvorba še ni dokaz pomena.
-
----
-
-## HTTP Basic in zaščita prenosa
-
-<div class="cards">
-<div class="card"><h3>Basic</h3><p>Uporabnik in geslo sta zapisana z Base64.</p></div>
-<div class="card"><h3>HTTP</h3><p>Prenos nima zaščite TLS.</p></div>
-<div class="card"><h3>HTTPS</h3><p>TLS šifrira promet med brskalnikom in strežnikom.</p></div>
-</div>
-
-**Lastna orodja brskalnika podatke vidijo tudi pri HTTPS.**
-
-Note:
-Poveži z učnim intranetom, ne razkrivaj vseh odgovorov vaj. Lastni ogled zahteve ni dokaz prisluškovanja tretje osebe. HTTPS varuje prenos, ne zagotavlja poštenosti storitve in ne popravi vseh napak aplikacije.
-
----
-
-## Piškotek lahko predstavlja sejo
-
-| Zaščita | Namen |
+| Vprašanje | Orodje v Kali |
 | --- | --- |
-| `Secure` | pošiljanje piškotka prek HTTPS |
-| `HttpOnly` | omejitev dostopa JavaScript |
-| `SameSite` | omejitev pošiljanja med spletnimi mesti |
+| Kaj pošiljam in kaj lahko spremenim? | Firefox, ZAP ali Burp |
+| Katere poti so objavljene? | curl, ffuf |
+| Kaj razkriva nastavitev spletnega strežnika? | Nikto |
+| Ali vnos vpliva na poizvedbo SQL? | ZAP, dodatno sqlmap |
+| Ali lahko A bere podatke B? | Ročni preizkus z dvema učnima računoma |
 
-**Vrednost prijavne seje obravnavamo kot skrivnost.**
+**Orodje izberemo glede na vprašanje in preverimo njegov rezultat.**
 
 Note:
-Niso vsi piškotki prijavni. Odsotnost zastavice na nenevarni nastavitvi ni samodejno ranljivost. Nekatere aplikacije prijavne žetone hranijo drugače; pokaži samo dejansko stanje pripravljene različice.
+Zaokroži aplikacijski sklop. ZAP je glavno orodje in je izrecno v pripravi Kali. Drugih orodij ne nameščamo med delavnico; preverimo jih pred dogodkom. Ne prikazujemo dveh prestreznih posrednikov zapored. Zaženi samo dogovorjene prikaze; podrobni ukazi in pomoč so pri posamezni vaji. Vaje so samostojne in v celoti potekajo v visitor.
 
 ---
 
-## Od dokaza do izboljšave
+## Od ugotovitve do ukrepa
 
-<div class="cards">
-<div class="card"><h3>Opažanje in dokaz</h3><p>Kaj, kje in kdaj smo preverili?</p></div>
-<div class="card"><h3>Vpliv in omejitve</h3><p>Kaj ugotovitev pomeni in česa še ne vemo?</p></div>
-<div class="card"><h3>Ukrep in potrditev</h3><p>Kaj spremenimo in kako preverimo izboljšavo?</p></div>
-</div>
+**Kaj smo opazili? → Kaj to omogoča? → Kaj spremenimo?**
 
-**Poišči sled. Preveri dokaz. Predlagaj zaščito.**
+| Dokaz | Ukrep | Ponovno preverjanje |
+| --- | --- | --- |
+| Gost prebere interno datoteko | Uredimo dovoljenja | Gostujoče branje je zavrnjeno |
+| Račun A vidi košarico B | Preverimo lastništvo | Zahteva A za B je zavrnjena |
+
+[Praktične vaje](./vaje/) · naloga → namig → postopek
 
 Note:
-Zaključi predstavitev. Navodila za praktični blok so na ločeni strani vaje/. Skupni zaključni pogovor izvedi po vseh vajah: primerjava dokazov in izbor treh najkoristnejših ukrepov za ACME. Vsebinsko 35 prosojnic skupaj, brez navodil za naloge.
+S tem zaključimo 35 minut predstavitev. Sledi 25 minut za digitalne sledi, 40 za omrežja, 40 za aplikacije in 10 za skupni pogovor; skupaj 150 minut. V vsakem krogu izberemo eno od treh osnovnih vaj glede na izkušnje, hitrejši imajo še dva dodatna izziva. Dostop in pravila so na strani z vajami. Za skupni pogovor po vajah zberemo tri najkoristnejše ukrepe za ACME ter pri vsaki ugotovitvi ločimo dokaz in omejitev.

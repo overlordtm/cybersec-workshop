@@ -43,6 +43,12 @@ The `handout` Vite plugin (`shared/handout.js`) renders it into
 external link in each `##` section. When `SITE_URL` is set (the Pages workflow
 sets it), the page also shows a QR code of its own published URL.
 
+Cybersec-201 has fifteen exercises. Within an exercise, use `### Namig` followed
+by `### Postopek` to keep the hint and solution separate from the task. The
+renderer creates nested native disclosure buttons: the hint appears first,
+then its button for the procedure. Links and QR codes stay inside their
+respective disclosure. Exercises without these headings render as before.
+
 ## Production build
 
 ```sh

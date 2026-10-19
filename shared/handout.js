@@ -78,25 +78,55 @@ function splitSections(tokens) {
   return { title, intro, sections };
 }
 
+async function renderBlock(tokens) {
+  const cards = await Promise.all(
+    [...externalLinks(tokens)].map(([url, label]) => qrCard(url, label)),
+  );
+  return `${marked.parser(tokens)}${cards.length
+    ? `<div class="qr-grid" aria-label="Povezave s QR-kodami">${cards.join('\n')}</div>`
+    : ''}`;
+}
+
+async function renderSection(tokens) {
+  const isHeading = (token, text) => token.type === 'heading' && token.depth === 3 && token.text === text;
+  const hint = tokens.findIndex((token) => isHeading(token, 'Namig'));
+  const solution = tokens.findIndex((token) => isHeading(token, 'Postopek'));
+  if (hint === -1 && solution === -1) return renderBlock(tokens);
+  if (hint === -1 || solution <= hint) {
+    throw new Error('Vaja mora vsebovati »### Namig« in nato »### Postopek«.');
+  }
+
+  // Nesting makes the second button available only after revealing the hint.
+  // Native details work with the keyboard and without client-side JavaScript.
+  return `${await renderBlock(tokens.slice(0, hint))}
+<div class="exercise-help">
+<details class="exercise-hint">
+<summary>Prikaži namig</summary>
+<div class="help-content">
+${await renderBlock(tokens.slice(hint + 1, solution))}
+<details class="exercise-solution">
+<summary>Pokaži postopek</summary>
+<div class="help-content">
+${await renderBlock(tokens.slice(solution + 1))}
+</div>
+</details>
+</div>
+</details>
+</div>`;
+}
+
 export async function renderHandout(markdown, { pageUrl } = {}) {
   const { title, intro, sections } = splitSections(marked.lexer(markdown));
 
   const rendered = await Promise.all(
     sections.map(async ({ heading, tokens }) => {
       const id = slugify(heading.text);
-      const cards = await Promise.all(
-        [...externalLinks(tokens)].map(([url, label]) => qrCard(url, label)),
-      );
-      const qrGrid = cards.length
-        ? `<div class="qr-grid" aria-label="Povezave s QR-kodami">${cards.join('\n')}</div>`
-        : '';
       return {
         id,
         heading: marked.parseInline(heading.text),
         html: `<section id="${id}">
 <h2><a class="anchor" href="#${id}">${marked.parseInline(heading.text)}</a></h2>
-${marked.parser(tokens)}
-${qrGrid}
+${await renderSection(tokens)}
 </section>`,
       };
     }),

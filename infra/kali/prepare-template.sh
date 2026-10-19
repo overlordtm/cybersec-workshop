@@ -1,6 +1,6 @@
 #!/bin/sh
 # Prepare kali-tmpl for cloning. Run inside the VM as root (qm guest exec).
-# Assumes packages are installed: xrdp cloud-init zaproxy cyberchef enum4linux-ng bind9-dnsutils
+# Assumes workshop packages from build-template.sh are installed.
 set -eu
 
 PROXY=http://10.20.0.1:3128
