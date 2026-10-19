@@ -46,7 +46,7 @@ Izvorna koda: [registracija poti](https://github.com/juice-shop/juice-shop/blob/
 
 ## Scenariji in časovnica
 
-Za neobvezni kratki prikaz segmentacije med predstavitvijo uporabi pripravljena izpisa ali skupni preklop: `./infra/lab.sh scenario visitor`, nato `flat`, nato nazaj `visitor`. Preklopi veljajo za vse. SNMP lahko pojasniš s pripravljenim izsekom; za živi prikaz tiskalnika potrebuješ flat. Za primerjavo uporabljaj nove povezave; že odprte povezave lahko preživijo preklop. Daljše prikaze zamenja splošna razlaga resničnih primerov, da ostane časovni okvir predstavitve 35 minut.
+Prikaz segmentacije je osrednji prikaz predstavitve (približno tri minute). Priporočen je skupni preklop med predstavitvijo: `./infra/lab.sh scenario visitor`, nato `flat`, nato nazaj `visitor`; z istega Kali ponovi `nmap -Pn -sT -p 80,502 172.20.30.12`. Rezerva je izpis na prosojnici. Preklopi veljajo za vse. SNMP lahko pojasniš s pripravljenim izsekom; za živi prikaz tiskalnika potrebuješ flat. Za primerjavo uporabljaj nove povezave; že odprte povezave lahko preživijo preklop. Daljše prikaze zamenja splošna razlaga resničnih primerov, da ostane časovni okvir predstavitve 45 minut.
 
 **Pred praktičnim blokom nastavi in preveri visitor. Med vajami scenarija ne spreminjamo.** Meritev javnih naslovov v vaji 2.1 zato opišemo kot pregled javnih naslovov z notranjega izhodišča. IoT ni samostojna vaja in ostane omejen.
 
@@ -57,7 +57,7 @@ Za neobvezni kratki prikaz segmentacije med predstavitvijo uporabi pripravljena 
 | 65–105 min | visitor | Aplikacije |
 | 105–115 min | visitor | Skupni pogovor |
 
-Pred tem je 35 minut predstavitve; celotna delavnica traja 150 minut. V vsakem krogu je cilj ena od treh osnovnih vaj glede na izkušnje, nato poljubna druga vaja ali dodatni izziv. Nihče ne potrebuje uspeha pri prejšnji vaji. Ne ponastavljaj skupnih tarč med delom udeležencev.
+Pred tem je 45 minut predstavitve; celotna delavnica traja 160 minut. V vsakem krogu je cilj ena od treh osnovnih vaj glede na izkušnje, nato poljubna druga vaja ali dodatni izziv. Nihče ne potrebuje uspeha pri prejšnji vaji. Ne ponastavljaj skupnih tarč med delom udeležencev.
 
 ## Pričakovani izidi
 

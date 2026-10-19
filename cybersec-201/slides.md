@@ -11,7 +11,22 @@ Andraž Vrhovec, Koofr d.o.o.
 oktober 2026
 
 Note:
-Kratka naslovnica po vzoru Cybersec-101. Pozdravi udeležence in preidi na digitalne sledi. Organizacijske informacije in dostop so pri vajah; čas naslovnice je vključen v prvi sklop.
+Kratka naslovnica po vzoru Cybersec-101. Pozdravi udeležence in preidi na način dela. Dostop in pravila vaj so na koncu predstavitve; čas naslovnice je vključen v prvi sklop.
+
+---
+
+## Od sledi do ukrepa
+
+**Pri vsaki ugotovitvi danes odgovorimo na isto zaporedje vprašanj.**
+
+<div class="case-chain"><span>Kaj sem opazil?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vem?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
+
+Enaka polja izpolnite v zapisu pri vajah.
+
+**Poišči sled. Preveri dokaz. Predlagaj zaščito.**
+
+Note:
+Okvir za celo delavnico, približno minuto. Polja ustrezajo obrazcu »Moj zapis« na strani z vajami: opažanje, dokaz z virom in časom, kar ostaja nepotrjeno, možen vpliv in predlagan ukrep. Poudari tretji korak: omejen, pošteno zapisan sklep je dober rezultat, tudi če preverjanje ne uspe. Na ta okvir se vrnemo pri sklepni prosojnici.
 
 ---
 
@@ -21,10 +36,10 @@ Kratka naslovnica po vzoru Cybersec-101. Pozdravi udeležence in preidi na digit
 
 ![Spletna stran, dokument in repozitorij kot viri sledi](./images/traces.svg)
 
-Objave, dokumenti, fotografije in storitve puščajo povezljive sledi.
+**OSINT** je zbiranje in povezovanje javno dostopnih informacij. Objave, dokumenti, fotografije in storitve puščajo povezljive sledi.
 
 Note:
-Za prvi sklop skupaj deset minut. Začnemo neposredno z vsebino, brez organizacijskega uvoda. OSINT je zbiranje in povezovanje javno dostopnih informacij; digitalna forenzika pa preiskovanje podatkov na napravah, v datotekah in zajemih. Področji se dopolnjujeta, vendar dostop do zasebnega nosilca ni OSINT. Predstavitev najprej razloži splošne vzorce in resnične dogodke, nato jih v vajah povežemo z izmišljenim podjetjem ACME.
+Za prvi sklop skupaj dvanajst minut, vključno z naslovnico in okvirom. Začnemo neposredno z vsebino, brez organizacijskega uvoda. OSINT je zbiranje in povezovanje javno dostopnih informacij; digitalna forenzika pa preiskovanje podatkov na napravah, v datotekah in zajemih. Področji se dopolnjujeta, vendar dostop do zasebnega nosilca ni OSINT. Predstavitev najprej razloži splošne vzorce in resnične dogodke, nato jih v vajah povežemo z izmišljenim podjetjem ACME.
 
 ---
 
@@ -84,10 +99,12 @@ site:podjetje.example inurl:backup
 
 [crt.sh](https://crt.sh/) razkrije imena iz javnih certifikatov.
 
+Tudi DNS je javni vir: zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje.
+
 **Čas objave in izvor podatka sta del ugotovitve.**
 
 Note:
-Iskalni operatorji omejijo domeno, vrsto datoteke ali del naslova. Arhiv pokaže preteklo objavo, javni dnevniki certifikatov domenska imena. Noben vir ne zagotavlja popolnosti ali trenutnega delovanja. Robots.txt je navodilo iskalniku, ne nadzor dostopa. Ne izvajaj vseh poizvedb v živo; uporabi pripravljen primer. Učna domena acme.lab ni javno indeksirana.
+Iskalni operatorji omejijo domeno, vrsto datoteke ali del naslova. Arhiv pokaže preteklo objavo, javni dnevniki certifikatov domenska imena. DNS omeni zato, ker je vaja 1.3 (AXFR) v krogu digitalnih sledi, tehnična razlaga prenosa območja pa pride šele v sklopu Omrežja; poizvedba na strežnik je že neposreden stik s tarčo, ne pasivno iskanje. Noben vir ne zagotavlja popolnosti ali trenutnega delovanja. Robots.txt je navodilo iskalniku, ne nadzor dostopa. Ne izvajaj vseh poizvedb v živo; uporabi pripravljen primer. Učna domena acme.lab ni javno indeksirana.
 
 ---
 
@@ -111,13 +128,14 @@ Približno minuto za primer. Pentagon je januarja 2018 opisal varnostno vprašan
 ## Shodan: kaj je bilo zaznano in kdaj?
 
 <div class="example">
-<div class="example-label">PONAZORITEV ZADETKA · NI REZULTAT ŽIVEGA PREGLEDA</div>
+<div class="example-label">PONAZORITEV ZADETKA · DOKUMENTACIJSKI NASLOV, NI ŽIV REZULTAT</div>
 
 ```plaintext
-Naslov         [izbrani javni IP]
-Organizacija   [podatek ponudnika]
-80/tcp         [opažena storitev in odziv]
-Opaženo        [datum pri storitvi]
+IP             203.0.113.25
+Organizacija   Primer Gostovanje d.o.o.   ← podatek ponudnika
+Lokacija       Ljubljana, SI              ← ocena iz baze naslovov
+80/tcp         nginx 1.18.0               ← odziv ob opažanju
+Zadnjič        2026-09-30                 ← ne pomeni »zdaj«
 ```
 
 </div>
@@ -127,7 +145,7 @@ Preberemo storitev, odziv in čas zadnjega opažanja.
 **Oznaka CVE je namig za preverjanje.**
 
 Note:
-Shodan in Censys indeksirata opažene spletne storitve ter odzive; to ni isti korak kot lasten aktivni pregled. Razloži polja na pripravljenem zadetku ali ponazoritvi. Organizacija in lokacija sta podatka ponudnika, čas je ključen. Oznaka CVE je izhodišče za preverjanje. Živi prikaz je dodatna možnost, če ostane čas; ne zahteva računa udeležencev. Vaja 1.1 omogoča podrobnejši samostojen pregled.
+Shodan in Censys indeksirata opažene spletne storitve ter odzive; to ni isti korak kot lasten aktivni pregled. 203.0.113.25 je dokumentacijski naslov (RFC 5737), zadetek je sestavljen. Če je mogoče, namesto njega pokaži datiran posnetek resničnega zadetka, ki ga pripraviš za vajo 1.1. Organizacija in lokacija sta podatka ponudnika, čas je ključen. Oznaka CVE je izhodišče za preverjanje. Živi prikaz je dodatna možnost, če ostane čas; ne zahteva računa udeležencev. Vaja 1.1 omogoča podrobnejši samostojen pregled.
 
 ---
 
@@ -145,7 +163,7 @@ Shodan in Censys indeksirata opažene spletne storitve ter odzive; to ni isti ko
 **Vir podatka določa, kaj lahko iz njega sklepamo.**
 
 Note:
-To je orientacijski zemljevid, ne seznam orodij za namestitev. theHarvester zbira podatke iz virov, Maltego prikaže in raziskuje povezave, SpiderFoot avtomatizira zbiranje iz več virov. BBOT rekurzivno odkriva dodatne domene in storitve ter povezuje module za raziskovanje izpostavljenosti; glede na izbiro modulov uporablja pasivne vire ali aktivne poizvedbe. ExifTool bere metapodatke, Autopsy preiskuje nosilce, Volatility analizira zajeme pomnilnika. Zajem zasebnega nosilca ali pomnilnika ni javni vir; ne enači forenzike z OSINT. Ne trdi, da so bila ta orodja uporabljena v opisani preiskavi. Možnosti in način dela so odvisni od podatkov, virov in nastavitev. Uradne povezave so zbrane v SOURCES.md.
+To je orientacijski zemljevid, ne seznam orodij za namestitev. theHarvester zbira podatke iz virov, Maltego prikaže in raziskuje povezave, SpiderFoot avtomatizira zbiranje iz več virov. BBOT rekurzivno odkriva dodatne domene in storitve ter povezuje module za raziskovanje izpostavljenosti; glede na izbiro modulov uporablja pasivne vire ali aktivne poizvedbe. ExifTool bere metapodatke, Autopsy preiskuje nosilce, Volatility analizira zajeme pomnilnika. Zajem zasebnega nosilca ali pomnilnika ni javni vir; ne enači forenzike z OSINT. Ne trdi, da so bila ta orodja uporabljena v opisani preiskavi. Možnosti in način dela so odvisni od podatkov, virov in nastavitev. Uradne povezave so na imenih orodij v preglednici.
 
 ---
 
@@ -177,7 +195,7 @@ Zaključi prvi sklop z razločevanjem med opažanjem in sklepom. Enako ime na dv
 IP določi naslov · vrata označijo storitev · TCP in UDP ločimo.
 
 Note:
-Za Omrežja skupaj dvanajst minut. IP je naslov omrežnega vmesnika; vrata so številka v transportnem protokolu, na kateri je storitev dosegljiva. 53/tcp in 53/udp sta različni meritvi. Splošno vprašanje je, katere poti so potrebne za delo in katere samo širijo posledice vdora. Zunanji in notranji dostop nista enakovredna. Za predstavo lahko omeniš domače omrežje gostov, službeni prenosnik in kamero, nato poslovni primer izvajalca in plačilnega okolja.
+Za Omrežja skupaj petnajst minut, vključno s prikazom segmentacije. IP je naslov omrežnega vmesnika; vrata so številka v transportnem protokolu, na kateri je storitev dosegljiva. 53/tcp in 53/udp sta različni meritvi. Splošno vprašanje je, katere poti so potrebne za delo in katere samo širijo posledice vdora. Zunanji in notranji dostop nista enakovredna. Za predstavo lahko omeniš domače omrežje gostov, službeni prenosnik in kamero, nato poslovni primer izvajalca in plačilnega okolja.
 
 ---
 
@@ -212,9 +230,9 @@ Na kratkem označenem izpisu razloži tri vprašanja: prisotnost naprave, dosegl
 ```plaintext
 dig @192.0.2.53 podjetje.example AXFR
 
-files.podjetje.example.     A  172.20.20.10
-intranet.podjetje.example.  A  172.20.20.11
-cam01.podjetje.example.     A  172.20.30.10
+files.podjetje.example.     A  10.10.20.10
+intranet.podjetje.example.  A  10.10.20.11
+cam01.podjetje.example.     A  10.10.30.10
 ```
 
 </div>
@@ -247,12 +265,25 @@ Deljene mape so vsakdanji vir preširokega dostopa. Javno branje ni nujno napaka
 
 ## Kako segmentacija spremeni dostop?
 
-![Segmentirano omrežje omeji dostop do IoT, ravno omrežje pa dovoli dodatne poti](./images/segmentation-compare.svg)
+<div class="example">
+<div class="example-label">ACME · ISTA MERITEV IZ VTIČNICE V SEJNI SOBI, DVA SCENARIJA</div>
+
+```plaintext
+nmap -Pn -sT -p 80,502 172.20.30.12        # krmilnik klime
+
+visitor (segmentirano)     flat (brez segmentacije)
+80/tcp   filtered          80/tcp   open   http
+502/tcp  filtered          502/tcp  open   mbap (Modbus)
+```
+
+</div>
 
 **Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.**
 
+Za razpravo: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ?
+
 Note:
-Segmentacija loči okolja glede na njihove vloge in s pravili omeji promet med njimi. Ločen VLAN brez omejitev prometa ne zadostuje. Cilj je tudi omejiti posledice, ko je ena naprava že napadena. Shema je splošna ponazoritev, ne načrt omrežja Target ali NHS. Po potrebi pokaži minuto primerjave pripravljenih izpisov ACME visitor/flat. Preklopi veljajo za vse, zato jih opravimo pred vajami; pred praktičnim delom vrnemo visitor. Razpravo nadaljuj z resničnima primeroma Target in WannaCry.
+Segmentacija loči okolja glede na njihove vloge in s pravili omeji promet med njimi. Ločen VLAN brez omejitev prometa ne zadostuje. Cilj je tudi omejiti posledice, ko je ena naprava že napadena. To je osrednji prikaz delavnice, približno tri minute. Priporočeno v živo: z ./infra/lab.sh scenario flat preklopi, z istega Kali ponovi ukaz (nova povezava), nato takoj ./infra/lab.sh scenario visitor in preveri status. Preklop velja za vse, zato ga izvedi samo med predstavitvijo, nikoli med vajami. Če laboratorij ni na voljo, uporabi izpis s prosojnice; ustreza meritvam iz infra/README.md. V visitor lahko nmap -sn naslov IoT označi kot dosegljiv, čeprav so vsa vrata filtrirana; šteje rezultat vrat. Vprašanje o DMZ: ACME namerno dovoljuje promet DMZ → IoT. S Kali ga ne vidimo; pokaže se šele, ko nekdo prevzame strežnik v DMZ. Odgovora ne razkrij takoj, vrni se nanj pri Targetu. Razpravo nadaljuj z resničnima primeroma Target in WannaCry.
 
 ---
 
@@ -269,7 +300,7 @@ Analiza opozarja na nezadostno ločitev občutljivih delov omrežja.
 <small>Vir: [odbor ameriškega senata, 2014, povzetek](https://www.commerce.senate.gov/wp-content/uploads/media/doc/2014%200325%20Target%20Kill%20Chain%20Analysis.pdf#page=2)</small>
 
 Note:
-Približno minuto. Poročilo senata povzema takrat javno dostopne ugotovitve in analize; ne gre za popolno končno forenzično rekonstrukcijo. V njem opisana pot od dobaviteljevega dostopa do občutljivih sistemov nakazuje pomanjkljivo izolacijo. Ne poenostavi v zgodbo, da so napadalci vdrli v sam krmilnik klime. Segmentacija bi lahko omejila nadaljnji premik; trditev, da bi sama zagotovo preprečila celoten vdor, ni upravičena. Potrebni so tudi omejene pravice računov, spremljanje ter odziv na opozorila.
+Približno minuto. Poročilo senata povzema takrat javno dostopne ugotovitve in analize; ne gre za popolno končno forenzično rekonstrukcijo. V njem opisana pot od dobaviteljevega dostopa do občutljivih sistemov nakazuje pomanjkljivo izolacijo. Ne poenostavi v zgodbo, da so napadalci vdrli v sam krmilnik klime. Segmentacija bi lahko omejila nadaljnji premik; trditev, da bi sama zagotovo preprečila celoten vdor, ni upravičena. Potrebni so tudi omejene pravice računov, spremljanje ter odziv na opozorila. Tu odgovori na vprašanje s prosojnice o segmentaciji: tudi ACME ima eno preširoko pot, DMZ → IoT. Kdor prevzame spletni strežnik, doseže kamero, tiskalnik in klimo, čeprav jih obiskovalec v sejni sobi ne vidi.
 
 ---
 
@@ -299,7 +330,7 @@ Približno minuto. NAO opisuje posledice za oskrbo in pomanjkljivosti pri poprav
 | Klima | Modbus 502/tcp | Dosegljivost krmilnika |
 
 <div class="example">
-
+<div class="example-label">VZOREC UKAZA · V VAJAH (VISITOR) IoT NI DOSEGLJIV</div>
 
 ```plaintext
 snmpwalk -v2c -c public [IP-tiskalnika] 1.3.6.1.2.1.1
@@ -310,7 +341,7 @@ snmpwalk -v2c -c public [IP-tiskalnika] 1.3.6.1.2.1.1
 **Ukrep:** dostop omejimo na potrebne upravljavske poti.
 
 Note:
-Splošni primeri naprav: tiskalnik razkriva kontakt in lokacijo prek slabo omejenega SNMP, kamera izpostavlja spletno upravljanje, krmilnik uporablja protokol brez ustreznega preverjanja uporabnika. Dostopnost vrat sama še ne dokazuje možnosti spremembe nastavitev. Ukaz je vzorec z nadomestnim naslovom. V predavanju ni treba vzpostavljati povezav; uporabi pripravljen izsek. Če vseeno pokažeš SNMP v labu, ga izvedi pred vajami v flat in nato vrni visitor. Wireshark vidi lasten oziroma dosegljiv promet, ne samodejno vsega prometa preklopljenega omrežja.
+Splošni primeri naprav: tiskalnik razkriva kontakt in lokacijo prek slabo omejenega SNMP, kamera izpostavlja spletno upravljanje, krmilnik uporablja protokol brez ustreznega preverjanja uporabnika. Dostopnost vrat sama še ne dokazuje možnosti spremembe nastavitev. Ukaz je vzorec z nadomestnim naslovom. Ker vaje potekajo v visitor, udeleženci naprav IoT ne dosežejo; to je namerna posledica segmentacije s prejšnje prosojnice. V predavanju ni treba vzpostavljati povezav; uporabi pripravljen izsek. Če vseeno pokažeš SNMP v labu (tiskalnik 172.20.30.11), ga izvedi skupaj s prikazom segmentacije v flat in nato vrni visitor. Wireshark vidi lasten oziroma dosegljiv promet, ne samodejno vsega prometa preklopljenega omrežja.
 
 ---
 
@@ -380,7 +411,7 @@ Content-Type: application/json
 Metoda in pot → podatki → obdelava → odgovor.
 
 Note:
-Za Aplikacije skupaj trinajst minut. Razloži HTTP na eni zahtevi in odgovoru; primer je generičen, ne obljuba konkretne poti API. Vnos je lahko v URL, telesu ali glavah. Status beremo skupaj z vsebino. HTTPS zaščiti prenos, vendar ne odpravi napak v poslovni logiki ali preverjanju pravic. Pri praktičnih nalogah isti model uporabimo na Juice Shop.
+Za Aplikacije skupaj štirinajst minut, vključno s sklepno prosojnico »Od ugotovitve do ukrepa«. Razloži HTTP na eni zahtevi in odgovoru; primer je generičen, ne obljuba konkretne poti API. Vnos je lahko v URL, telesu ali glavah. Status beremo skupaj z vsebino. HTTPS zaščiti prenos, vendar ne odpravi napak v poslovni logiki ali preverjanju pravic. Pri praktičnih nalogah isti model uporabimo na Juice Shop.
 
 ---
 
@@ -440,6 +471,17 @@ Authorization: Basic dWNlbmVjOnVjbm8=
 
 Note:
 Razlikuj tri težave: privzeto geslo, ponovno uporabo skrivnosti in nezaščiten prenos. Niz Base64 je izmišljen; CyberChef pokaže, da za pretvorbo ne potrebujemo skrivnega ključa. Lastni brskalnik podatke vidi tudi pri HTTPS. MFA zmanjša tveganje nekaterih zlorab računov, ni pa nadomestilo za preverjanje pravic do posameznega vira. Praktična primera sta NAS in intranet ACME; ni ju treba odpirati med splošno razlago.
+
+---
+
+## Eno razkritje, več vrat
+
+![Javna kopija razkrije geslo, ponovljeno geslo odpre drugo storitev; ukrepi prekinejo vsak člen](./images/chain.svg)
+
+**Geslo iz ene napake odpre drugo storitev, če ga ponovno uporabimo.**
+
+Note:
+Približno minuto. Zgornja vrsta je veriga: razkrita poverilnica v javni kopiji, isto geslo pri drugi storitvi, nato dostop s pravicami tega računa. Spodnja vrsta pokaže, da vsak ukrep prekine en člen: odstranitev kopije in menjava gesla, ločene prijave ali ključi SSH, omejene pravice in beleženje prijav. Odstranitev datoteke brez menjave gesla ne zadostuje, ker je geslo morda že kopirano. Povezava med dvema ugotovitvama je pogosto pomembnejša od vsake posebej. Vaja 3.3 preveri točno to verigo na ACME; vrednosti gesla ne razkrivaj.
 
 ---
 
@@ -595,7 +637,53 @@ Ta pregled obsega več možnosti, kot jih bomo uporabili pri vajah. Nikto prever
 | Gost prebere interno datoteko | Uredimo dovoljenja | Gostujoče branje je zavrnjeno |
 | Račun A vidi košarico B | Preverimo lastništvo | Zahteva A za B je zavrnjena |
 
-[Praktične vaje](./vaje/) · naloga → namig → postopek
+**Ukrep je končan, ko ponovno preverjanje pokaže spremembo.**
 
 Note:
-Zaključi splošni pregled z vprašanjem, kaj bi pri posameznem resničnem dogodku prekinilo verigo in kakšen dokaz bi potrebovali za preverjanje ukrepa. Primeri so ilustracije vzorcev, ne rekonstrukcije v laboratoriju. Predstavitev ostane v okviru 35 minut: 10 digitalne sledi, 12 omrežja, 13 aplikacije z zaključkom. Sledi 25 minut digitalnih sledi, po 40 minut omrežij in aplikacij ter 10 minut pogovora. Vaje ostajajo samostojne, z namigi in postopki; omrežje je ves čas visitor.
+Zaključi splošni pregled z vprašanjem, kaj bi pri posameznem resničnem dogodku prekinilo verigo in kakšen dokaz bi potrebovali za preverjanje ukrepa. Vrni se na okvir z začetka: zadnji korak »Kaj spremenimo?« dopolni ponovna meritev. Primeri so ilustracije vzorcev, ne rekonstrukcije v laboratoriju.
+
+---
+
+## ACME: izmišljeno podjetje za vaje
+
+![Udeleženec prek požarnega zidu do treh segmentov ACME: DMZ, LAN in IoT](./images/acme.svg)
+
+<small>Javni naslovi 198.51.100.11–15 · DMZ 172.20.10.0/24 · LAN 172.20.20.0/24 · IoT 172.20.30.0/24</small>
+
+**Vaš položaj (`visitor`):** prenosnik v vtičnici sejne sobe. Dosežete javne naslove, LAN in storitve DMZ, IoT pa ne.
+
+Note:
+Približno dve minuti. ACME je izmišljen; javni naslovi 198.51.100.x so dokumentacijski in delujejo samo v laboratoriju, imena pod acme.lab razreši laboratorijski DNS. DMZ: www, shop (Juice Shop), mail, ns1, vpn. LAN: files, intranet, nas, hr-pc in Metasploitable 2 (172.20.20.30) kot primer nevzdrževanega notranjega strežnika. IoT: kamera, tiskalnik, klima. Scenarij visitor ostane nastavljen ves praktični blok; s prikaza segmentacije vemo, zakaj IoT ni dosegljiv. Notranjih naslovov ne iščemo na javnem internetu.
+
+---
+
+## Pravila in potek vaj
+
+<div class="cards">
+<div class="card">
+
+### Dostop
+
+S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuard. V Kali uporabljaš Firefox in Terminal.
+
+</div>
+<div class="card">
+
+### Kaj smemo
+
+Samo navedene tarče ACME. Ničesar ne spreminjamo. Javne vire samo beremo. Napad na tuje sisteme je kaznivo dejanje.
+
+</div>
+<div class="card">
+
+### Potek
+
+Trije krogi: 25, 40 in 40 minut. Izberi 1 od 3 vaj, nato dodatni izziv. Namig → postopek → zapis.
+
+</div>
+</div>
+
+[Praktične vaje](./vaje/) · podatke za vaje 1.1, 1.5 in 3.5 poda izvajalec
+
+Note:
+Približno dve minuti, nato začnemo prvi krog. Kali dostopa do spleta samo prek posrednika Squid; tarče ACME so v no_proxy izvzete. Ukazi v vajah z curl --noproxy '*' zagotovijo neposredno povezavo tudi pri lastnem Kali ali drugačnih nastavitvah lupine; teh možnosti ni treba odstranjevati. Shodan in crt.sh udeleženci odpirajo v svojem običajnem brskalniku in javnih naslovov ne pregledujejo z Nmap. Pravna plat: v Sloveniji je nepooblaščen vstop v informacijski sistem kaznivo dejanje po KZ-1; vaje so dovoljene, ker smo lastniki laboratorija. Napiši na tablo ali pokaži IP za vajo 1.1, domeno za vajo 1.5 ter učna računa in ID košaric za vajo 3.5. Ne zapisuj gesel na prosojnice. Časovnica: 45 minut predstavitve, nato 25 minut digitalnih sledi, po 40 minut omrežij in aplikacij ter 10 minut pogovora. Vaje ostajajo samostojne, z namigi in postopki; omrežje je ves čas visitor.
