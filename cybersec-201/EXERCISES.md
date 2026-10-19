@@ -46,7 +46,7 @@ Izvorna koda: [registracija poti](https://github.com/juice-shop/juice-shop/blob/
 
 ## Scenariji in časovnica
 
-Segmentacijo pokažemo skupno med predstavitvijo. Preklopi veljajo za vse: `./infra/lab.sh scenario visitor`, nato `flat`, nato nazaj `visitor`. V flat lahko pokažeš še branje SNMP tiskalnika. Pripravi oba izpisa za primer težav. Za primerjavo uporabljaj nove povezave; že odprte povezave lahko preživijo preklop.
+Za neobvezni kratki prikaz segmentacije med predstavitvijo uporabi pripravljena izpisa ali skupni preklop: `./infra/lab.sh scenario visitor`, nato `flat`, nato nazaj `visitor`. Preklopi veljajo za vse. SNMP lahko pojasniš s pripravljenim izsekom; za živi prikaz tiskalnika potrebuješ flat. Za primerjavo uporabljaj nove povezave; že odprte povezave lahko preživijo preklop. Daljše prikaze zamenja splošna razlaga resničnih primerov, da ostane časovni okvir predstavitve 35 minut.
 
 **Pred praktičnim blokom nastavi in preveri visitor. Med vajami scenarija ne spreminjamo.** Meritev javnih naslovov v vaji 2.1 zato opišemo kot pregled javnih naslovov z notranjega izhodišča. IoT ni samostojna vaja in ostane omejen.
 

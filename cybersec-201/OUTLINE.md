@@ -1,16 +1,16 @@
 # Cybersec-201: načrt izvedbe
 
-Delavnica povezuje digitalne sledi, omrežne storitve in aplikacijske ranljivosti na infrastrukturi izmišljenega podjetja ACME. Pri vsakem primeru razložimo težavo, orodje, dokaz in ukrep. Namenjena je radovednim udeležencem z različnimi tehničnimi izkušnjami.
+Predstavitev poda splošen uvod v digitalne sledi, omrežja in aplikacijsko varnost. Pojme poveže z resničnimi dogodki in širšim izborom orodij, nato pripravi udeležence na praktično delo v izmišljenem podjetju ACME. Namenjena je radovednim udeležencem z različnimi tehničnimi izkušnjami.
 
 ## Potek
 
-Uvodnih prosojnic ni. Prijave uredimo pred začetkom; predstavitev se začne neposredno s prvim sklopom. Najprej izvedemo vse tri vsebinske sklope s kratkimi prikazi, nato praktično delo.
+Predstavitev odpre naslovna prosojnica po vzoru Cybersec-101, nato neposredno sledi prvi vsebinski sklop. Prijave uredimo pred začetkom; ločenega organizacijskega uvoda ni. Najprej izvedemo vse tri vsebinske sklope s primeri iz prakse, nato praktično delo. Podrobni postopki in večina prikazov orodij sodijo k vajam; v predavanju ostane največ en kratek prikaz. Čas naslovnice je vključen v prvi sklop.
 
 | Del | Predstavitev s prikazi | Praktično delo in pogovor | Skupaj |
 | --- | --- | --- | --- |
-| 1. Digitalne sledi | 7 minut | — | 7 minut |
-| 2. Omrežja | 14 minut | — | 14 minut |
-| 3. Aplikacije | 14 minut | — | 14 minut |
+| 1. Digitalne sledi | 10 minut | — | 10 minut |
+| 2. Omrežja | 12 minut | — | 12 minut |
+| 3. Aplikacije | 13 minut | — | 13 minut |
 | Vaje: Digitalne sledi | — | 25 minut | 25 minut |
 | Vaje: Omrežja | — | 40 minut | 40 minut |
 | Vaje: Aplikacije | — | 40 minut | 40 minut |
@@ -19,35 +19,46 @@ Uvodnih prosojnic ni. Prijave uredimo pred začetkom; predstavitev se začne nep
 
 ## Prosojnice
 
-Predstavitev vsebuje 23 prosojnic: pet za digitalne sledi, osem za omrežja, devet za aplikacije in eno sklepno. Izpisi, številke košaric ter poenostavljeni primeri so označeni; niso predstavljeni kot meritve živega okolja.
+Predstavitev vsebuje 32 prosojnic: naslovno, osem za digitalne sledi, enajst za omrežja, enajst za aplikacije in eno sklepno. Pet resničnih dogodkov ima vidne povezave do primarnih virov ter pojasnila v opombah. Izmišljeni izpisi, poti API in številke košaric so označeni kot ponazoritve. Viri so zbrani tudi v `SOURCES.md`.
 
 | Št. | Naslov | Namen |
 | --- | --- | --- |
-| 1 | 1. sklop · Digitalne sledi | Neposreden začetek: kaj o ACME povedo javni viri? |
-| 2 | Kaj razkrijejo stran in dokumenti? | Povezava učnih metapodatkov z javnimi podatki o ekipi. |
-| 3 | Iskanje omejimo na uporabne sledi | Iskalni operatorji, arhivi in certifikati. |
-| 4 | Shodan: kaj je bilo zaznano in kdaj? | En pripravljen dejanski zadetek; vir, storitev in čas. |
-| 5 | Povežimo podatke, preverimo sklep | Razlika med opažanjem in utemeljenim sklepom. |
-| 6 | 2. sklop · Omrežja | IP, vrata in TCP/UDP na eni shemi ACME. |
-| 7 | Nmap: od vrat do storitve | Omejen pregled in branje rezultata. |
-| 8 | DNS: kdo lahko prenese celotno območje? | AXFR, notranja imena in ukrep. |
-| 9 | SMB: kdo lahko bere deljene datoteke? | Vidnost mape in pravica do njene vsebine. |
-| 10 | Kako segmentacija spremeni dostop? | Skupni prikaz iste meritve v visitor in flat. |
-| 11 | IoT: dostop do naprav in njihovih podatkov | SNMP, kamera in Modbus; po prikazu vrnemo visitor. |
-| 12 | Zastarela storitev: kaj pove različica? | Od prepoznave do preverjanja pogojev. |
-| 13 | Greenbone: preverimo eno ugotovitev | Končano poročilo, dokaz in odprava. |
-| 14 | 3. sklop · Aplikacije | HTTP na eni zahtevi in odgovoru Juice Shop. |
-| 15 | ZAP: zahtevo spremenimo in ponovimo | Zgodovina, urejanje in primerjava odgovora. |
-| 16 | Razkrite datoteke: kopija na javni strani | Posledice razkritja prijavnih podatkov. |
-| 17 | Prijava: geslo in zaščita prenosa | Privzeta prijava, HTTP Basic ter kratka razlaga Base64. |
-| 18 | SQL injection: vnos spremeni poizvedbo | Mehanizem napake in parametrizirane poizvedbe. |
-| 19 | XSS: vnos postane skripta v brskalniku | DOM XSS, varen prikaz besedila in obdelava izhoda. |
-| 20 | Prijava še ne pomeni pravice do vseh podatkov | Glavni aplikacijski prikaz: View Basket z računoma A in B. |
-| 21 | Zastarele komponente: preverimo pogoje | Apache 2.4.49 brez obljube uspešne izrabe. |
-| 22 | Katero orodje uporabimo? | ZAP, Firefox, Burp, curl, ffuf, Nikto in sqlmap glede na vprašanje. |
-| 23 | Od ugotovitve do ukrepa | Prehod na vaje in podlaga za sklepni pogovor. |
+| 1 | OSINT, omrežna in aplikacijska varnost | Naslovnica z geslom, fotografijo, avtorjem in datumom po vzoru Cybersec-101. |
+| 2 | 1. sklop · Digitalne sledi | Splošen pogled na javne sledi ter razlikovanje OSINT in forenzike. |
+| 3 | Kaj razkrijejo stran in dokumenti? | Metapodatki, povezovanje podatkov in omejitve sklepa. |
+| 4 | Philadelphia, 2020: majica poveže spletne sledi | Povezovanje posnetkov, spletne ocene in profilov z dodatno potrditvijo. |
+| 5 | Iskanje omejimo na uporabne sledi | Iskalni operatorji, arhivi in certifikati. |
+| 6 | Strava, 2018: vzorec gibanja razkrije lokacijo | Resnični primer sklepanja iz javnih lokacijskih vzorcev. |
+| 7 | Shodan: kaj je bilo zaznano in kdaj? | Storitev, odziv in čas opažanja. |
+| 8 | Orodja za sledi, povezave in forenziko | Zbiranje, povezovanje podatkov, pregled nosilcev in pomnilnika. |
+| 9 | Povežimo podatke, preverimo sklep | Razlika med podatkom in potrjenim sklepom. |
+| 10 | 2. sklop · Omrežja | Vloge sistemov in upravičene omrežne poti. |
+| 11 | Nmap: od vrat do storitve | Vrata, storitev in omejitve izpisa. |
+| 12 | DNS: kdo lahko prenese celotno območje? | Prenos območja in notranja imena. |
+| 13 | SMB: kdo lahko bere deljene datoteke? | Vidnost mape in pravica do vsebine. |
+| 14 | Kako segmentacija spremeni dostop? | Splošna shema omejitve dosega; laboratorij je ponazoritev. |
+| 15 | Target, 2013: od dobavitelja do občutljivih sistemov | Dobaviteljev dostop in izolacija občutljivih sistemov. |
+| 16 | WannaCry, 2017: ko izpad IT prekine zdravstveno oskrbo | Operativne posledice napada in več plasti obrambe. |
+| 17 | IoT: dostop do naprav in njihovih podatkov | Upravljanje naprav, SNMP in Modbus. |
+| 18 | Zastarela storitev: kaj pove različica? | Od prepoznave različice do preverjanja vedenja. |
+| 19 | Greenbone: preverimo eno ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep. |
+| 20 | Omrežna orodja: pregled, preizkus in zaznava | Pregled, zajem prometa, preverjanje in stalno spremljanje. |
+| 21 | 3. sklop · Aplikacije | HTTP na generični zahtevi in odgovoru. |
+| 22 | ZAP: zahtevo spremenimo in ponovimo | Ogled, sprememba in ponovitev zahteve. |
+| 23 | Razkrite datoteke: kopija na javni strani | Kopije, dnevniki, nastavitve in posledice razkritja. |
+| 24 | Prijava: geslo in zaščita prenosa | Privzeta gesla, ponovna uporaba in zaščita prenosa. |
+| 25 | SQL injection: vnos spremeni poizvedbo | Mešanje podatkov in navodil SQL. |
+| 26 | XSS: vnos postane skripta v brskalniku | Nezaupanja vreden vnos postane izvajalna vsebina. |
+| 27 | Prijava še ne pomeni pravice do vseh podatkov | Pravice do posameznega objekta: IDOR/BOLA. |
+| 28 | Equifax, 2017: znana ranljivost, veliko razkritje | Resnični primer povezave komponent, skrivnosti in dostopov. |
+| 29 | Zastarele komponente: preverimo pogoje | Različica, pogoji in preverjanje konfiguracije. |
+| 30 | Varnost preverjamo tudi pred objavo | Pregled kode, odvisnosti, slik in nastavitev. |
+| 31 | Katero orodje uporabimo? | Ročni preizkusi, pregled strežnika in preizkusi po predlogah. |
+| 32 | Od ugotovitve do ukrepa | Povezava ugotovitve, ukrepa in ponovnega preverjanja; prehod na vaje. |
 
-Prikazi so časovno omejeni: Shodan približno minuto, segmentacija približno dve minuti, SNMP kratek izsek, Greenbone približno dve minuti, ZAP z IDOR skupaj največ pet minut. Drugi primeri uporabljajo pripravljene izseke; vseh orodij ne prikazujemo v živo.
+Vsak resnični dogodek dobi približno minuto. Podrobni ukazi so pri vajah; Shodan in Greenbone pojasnimo s pripravljenim izsekom. Po želji izvedemo en kratek prikaz segmentacije ali IDOR, največ dve minuti. S tem ohranimo 35 minut predstavitve in obstoječi čas za praktično delo.
+
+Pri Targetu ohranimo negotovosti zgodnje analize. Pri WannaCry notranjo segmentacijo predstavimo kot splošen nauk, ne kot edini vzrok iz poročila. Pri Equifaxu navedbe pripišemo FTC ob poravnavi. Pri primeru iz Philadelphie ločimo javne vire od uradnih evidenc in podatkov, pridobljenih s sodnim pozivom.
 
 ## Vaje
 
@@ -65,7 +76,7 @@ Vsaka vaja v `vaje/VAJE.md` vsebuje nalogo ter ločeni podpoglavji `### Namig` i
 
 ## Omrežni scenariji
 
-V predstavitvi izvajalec za prikaz segmentacije in SNMP preklopi `visitor → flat → visitor`. Za rezervo pripravi izpise obeh stanj. Pred praktičnim blokom potrdi `visitor` in ga ohrani do konca. Vaje ne zahtevajo preklopov, zato jih lahko udeleženci rešujejo različno hitro.
+Če izvajalec izbere živi prikaz segmentacije oziroma SNMP, pred vajami preklopi `visitor → flat → visitor`. Sicer uporabi splošno shemo in pripravljena izpisa obeh stanj. Pred praktičnim blokom potrdi `visitor` in ga ohrani do konca. Vaje ne zahtevajo preklopov, zato jih lahko udeleženci rešujejo različno hitro.
 
 Javne naslove ACME lahko pregledamo tudi v visitor, vendar je to meritev z notranjega izhodišča. Notranji IoT ostane omejen. Skupni preklop flat ni dokaz ločene napake DMZ → IoT. Obstoječe povezave lahko preživijo preklop; v prikazu uporabljamo nove meritve.
 

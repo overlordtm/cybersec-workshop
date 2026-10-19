@@ -26,6 +26,14 @@
   border-radius: 16px;
 }
 
+.cybersec-201 .reveal .title-slide img {
+  width: auto;
+  max-width: 96%;
+  max-height: 245px;
+  margin: 12px auto;
+  border-radius: 12px;
+}
+
 .cybersec-201 .cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -57,3 +65,31 @@
 .cybersec-201 .reveal .example pre { width: 100%; margin: 0; box-shadow: none; font-size: 0.74em; }
 .cybersec-201 .reveal .example code { padding: 0; background: transparent; color: #dbeafe; line-height: 1.65; max-height: 340px; }
 .cybersec-201 .eyebrow { color: #6ee7b7; font-size: 0.65em; letter-spacing: 0.16em; }
+
+.cybersec-201 .case-tag {
+  color: #6ee7b7;
+  font-size: 0.57em;
+  letter-spacing: 0.08em;
+}
+
+.cybersec-201 .case-chain {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin: 28px 0;
+  font-size: 0.8em;
+  line-height: 1.45;
+}
+
+.cybersec-201 .case-chain span {
+  flex: 1;
+  padding: 22px 16px;
+  border: 1px solid #37516e;
+  border-top: 3px solid #38bdf8;
+  border-radius: 12px;
+  background: #142235;
+}
+
+.cybersec-201 .case-chain b {
+  color: #6ee7b7;
+}
