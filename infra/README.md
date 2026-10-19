@@ -79,8 +79,8 @@ Hetzner sends abuse reports when scanning traffic leaves the server. Layers:
 
 | From → To | ACME (fakenet, 172.20/16) | LAB-GW | lab | internet |
 | --- | --- | --- | --- | --- |
-| lab (Kali, Guacamole) | ✓ | DNS, Squid, ping | (L2, see below) | Squid allowlist |
-| WireGuard clients | ✓ | DNS, ping | ✗ | ✗ |
+| lab (Kali, Guacamole) | public IPs; internal ranges only in `visitor`/`flat` | DNS, Squid, ping | (L2, see below) | Squid allowlist |
+| WireGuard clients | public IPs; internal ranges only in `visitor`/`flat` | DNS, ping | ✗ | ✗ |
 | fakenet (ACME) | — | DNS; Squid from 198.51.100.8/29 | ✗ | Squid allowlist |
 | WAN | — | 80/443/51820 public; 22/8443 from host | ✗ | — |
 
@@ -100,15 +100,119 @@ ACME's public block is 198.51.100.10–15. Each DMZ server has its own public IP
 | .14 | 172.20.10.14 | ns1 | 53 tcp/udp |
 | .15 | 172.20.10.15 | vpn | 22 |
 
-- DMZ → IoT: **allowed (intentional misconfiguration)**; DMZ → LAN: ✗.
-- LAN → anywhere: ✓. IoT → DNS and the update proxy only.
-- **Scenario switches** (disabled rules; enable live in ACME-FW → Firewall → Rules):
-  - `SCENARIO visitor` – lab and VPN reach ACME LAN ("someone plugged into a meeting room socket").
-  - `SCENARIO flat (from outside)`, `SCENARIO flat (DMZ)`, `SCENARIO flat (IoT)` – no segmentation.
+Segmentation inside ACME (normal state, i.e. `internet` and `visitor` scenarios):
+
+| From → To | DMZ | LAN | IoT | internet (fake) |
+| --- | --- | --- | --- | --- |
+| DMZ | — | ✗ | **✓ (intentional misconfiguration)** | DNS, update proxy only |
+| LAN (office PCs) | service ports only (`dmz_ports`: 22, 25, 53, 80, 110, 143, 443, 587, 993) | — | ✗ | ✓ |
+| IoT | ✗ | ✗ | — | DNS, update proxy only |
+
+The DMZ → IoT hole is not visible from Kali. It is the "pivot" finding: whoever takes over a
+DMZ server (e.g. `www`) can reach the camera, printer and HVAC.
+
+## Scenarios
+
+A scenario decides **where the participants are**, from ACME's point of view. There are
+three modes, and exactly one is active at a time:
+
+| Mode | Story | Participants (Kali and VPN) reach |
+| --- | --- | --- |
+| `internet` (default) | attacker on the internet | ACME's public IPs 198.51.100.10–15, published ports only |
+| `visitor` | someone plugged a laptop into a socket in ACME's meeting room (office LAN); ACME is segmented | public IPs + **LAN** (all ports) + **DMZ** (service ports, as an office PC) — **no IoT** |
+| `flat` | the same visitor, but ACME has no segmentation | public IPs + **all three segments, all ports** |
+
+Switch it from your laptop or on the host:
+
+```sh
+./lab.sh scenario visitor          # or internet / flat / status
+python3 /root/lab/opnsense/scenario.py visitor     # same, on the PVE host
+```
+
+The switch takes effect immediately for new connections and scans; connections that are
+already open (e.g. a mounted SMB share) keep working until they close. Guacamole sessions
+are not affected. `./lab.sh up` keeps the current mode; `./lab.sh reset` returns to `internet`.
+
+### Which subnets are reachable
+
+From Kali (10.20.0.0/24) and WireGuard (10.20.100.0/24):
+
+| Destination | `internet` | `visitor` | `flat` |
+| --- | --- | --- | --- |
+| 198.51.100.1 (LAB-GW) | DNS 53, proxy 3128, ping | same | same |
+| 198.51.100.10 (ACME-FW) | ping only | same | same |
+| 198.51.100.11–15 (public servers) | published ports | same | same |
+| 172.20.10.0/24 DMZ | ✗ (not routed) | service ports (`dmz_ports`), ping | all ports |
+| 172.20.20.0/24 LAN | ✗ (not routed) | all ports | all ports |
+| 172.20.30.0/24 IoT | ✗ (not routed) | ✗ | all ports |
+
+Inside ACME, `flat` also opens DMZ ↔ LAN ↔ IoT completely (matters only for pivoting).
+
+### What you see in nmap
+
+Measured from `kali-01` with `nmap -sn 198.51.100.0/24 172.20.10.0/24 172.20.20.0/24 172.20.30.0/24`
+(host discovery) and `nmap -Pn -p 22,53,80,139,443,445,502,554,9100 <host>` (ports):
+
+**`internet`**
+- Discovery finds only 198.51.100.1 and .10–.15. The 172.20.x.x ranges stay empty
+  ("0 hosts up"): on the internet, private addresses are not routable.
+- `198.51.100.11` (www): 80 open, everything else filtered.
+- `172.20.x.x` with `-Pn`: every port filtered.
+
+**`visitor`**
+- Discovery also finds the internal hosts: DMZ .11–.15, LAN .10, .11, .12, .20, and ACME-FW's
+  own addresses .1 in each segment.
+- `172.20.20.10` (files): 139 and 445 open → the SMB shares can be listed
+  (`smbclient -N -L //172.20.20.10`).
+- `172.20.10.11` (www, internal address): 80 open, as from the internet.
+- `172.20.30.12` (hvac): all filtered. IoT is protected by segmentation.
+
+**`flat`**
+- Discovery: same hosts as `visitor`.
+- `172.20.30.12` (hvac): 80 and **502 (Modbus)** open; the camera (80, 554) and the printer
+  (80, 9100, SNMP 161/udp) also become visible.
+- Everything else as in `visitor`.
+
+The workshop story is the step from `visitor` to `flat`. The same scan from the same meeting
+room socket suddenly shows the building controller and the cameras: that is exactly what
+segmentation is for.
+
+Notes for reading the output:
+- In `visitor` mode, discovery may also report IoT addresses as up although all their
+  ports are filtered. nmap's discovery probes get answered at the network level even though
+  no service can be reached. Port results are what counts.
+- Ports with no service behind them show as `filtered`, not `closed`, also where the firewall
+  passes them (e.g. 443 on www). Don't use `closed` vs `filtered` in the workshop to explain
+  firewall behaviour; open vs not open is reliable.
+
+### Where the changes are applied
+
+A scenario rule is a firewall rule whose description starts with `SCENARIO <modes>:`.
+`scenario.py` turns a rule on when the chosen mode is in `<modes>` and off otherwise. The
+rules are defined in `opnsense/labgw.py` and `opnsense/acmefw.py`. The firewall GUIs show them
+under Firewall → Rules.
+
+| Firewall | Rule | `internet` | `visitor` | `flat` |
+| --- | --- | --- | --- | --- |
+| LAB-GW, LAB | `SCENARIO visitor+flat: LAB to ACME internal` (lab → 172.20.0.0/16) | off | **on** | **on** |
+| LAB-GW, WireGuard | `SCENARIO visitor+flat: VPN to ACME internal` | off | **on** | **on** |
+| ACME-FW, WAN | `SCENARIO visitor: like a LAN PC (LAN)` (lab_nets → LAN, any) | off | **on** | off |
+| ACME-FW, WAN | `SCENARIO visitor: like a LAN PC (DMZ services)` (→ DMZ, `dmz_ports`) | off | **on** | off |
+| ACME-FW, WAN | `SCENARIO visitor: like a LAN PC (ping DMZ)` | off | **on** | off |
+| ACME-FW, WAN | `SCENARIO flat: outside to all segments` (lab_nets → 172.20.10–30.0/24, any) | off | off | **on** |
+| ACME-FW, DMZ | `SCENARIO flat: DMZ to all segments` | off | off | **on** |
+| ACME-FW, LAN | `SCENARIO flat: LAN to all segments` | off | off | **on** |
+| ACME-FW, IoT | `SCENARIO flat: IoT to all segments` | off | off | **on** |
+
+Why both firewalls are involved: ACME-FW filters after the 1:1 NAT, so it cannot tell
+"came in for the public IP 198.51.100.11" from "came in for 172.20.10.11". Without the LAB-GW
+rule, participants could therefore reach the DMZ by its private addresses even in the
+`internet` mode. LAB-GW plays the internet and only routes ACME's private ranges when a
+scenario puts the participants inside ACME.
 
 ## ACME services
 
-One small Debian 13 LXC container per server (VMID 131–153, `infra/acme/hosts.tsv`).
+One small Debian 13 LXC container per server (VMID 131–153, `infra/acme/hosts.csv`).
 Software whose *version* matters for the CVE exercise runs as a Docker container with host
 networking inside its LXC. Website content is in Slovenian.
 
@@ -236,5 +340,5 @@ ssh -L 8443:172.31.255.2:8443 -L 8444:198.51.100.10:8443 root@pve.digilab-g.rtfm
 LAB-GW: `https://localhost:8443`, ACME-FW: `https://localhost:8444` (user `root`, passwords
 in `secrets/`). From the host: `ssh lab-gw`, `ssh acme-fw`, `opn lab-gw GET /api/...`.
 
-Scenario switches during the workshop (on the host):
-`python3 /root/lab/opnsense/scenario.py visitor on|off`, `... flat on|off`, `... status`.
+Scenario switch during the workshop: `./lab.sh scenario internet|visitor|flat|status`
+(see [Scenarios](#scenarios)).

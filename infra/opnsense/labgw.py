@@ -39,12 +39,14 @@ api.call("/api/routes/routes/reconfigure", {})
 api.aliases({
     "mgmt_ports": ("port", ["22", "8443"], "SSH and web GUI"),
     "web_ports": ("port", ["80", "443"], "HTTP and HTTPS (Caddy)"),
-    "acme_nets": ("network", ["198.51.100.0/24", "172.20.0.0/16"], "ACME public and internal networks"),
+    "fakenet_net": ("network", ["198.51.100.0/24"], "Fake internet (ACME public addresses)"),
+    "acme_internal": ("network", ["172.20.0.0/16"], "ACME internal networks (not routable from the internet)"),
     "acme_fw": ("host", ["198.51.100.10"], "ACME-FW WAN address"),
     "acme_public": ("network", ["198.51.100.8/29"], "ACME public block (.10 firewall, .11-.15 DMZ)"),
 })
 
-# --- Filter rules
+# --- Filter rules (first remove rules of earlier versions)
+api.remove_rules(["LAB: to ACME", "VPN: to ACME"])
 WG_NET, WG_SERVER_IP, WG_PORT = "10.20.100", "10.20.100.1", "51820"
 api.rules([
     (10, "wan", "pass", "TCP", "172.31.255.1", "(self)", "mgmt_ports", "Management from PVE host"),
@@ -55,7 +57,9 @@ api.rules([
     (100, "lan", "pass", "TCP/UDP", "lan", "(self)", "53", "LAB: DNS"),
     (110, "lan", "pass", "TCP", "lan", "(self)", "3128", "LAB: web proxy"),
     (120, "lan", "pass", "ICMP", "lan", "(self)", "", "LAB: ping gateway"),
-    (130, "lan", "pass", "any", "lan", "acme_nets", "", "LAB: to ACME"),
+    (130, "lan", "pass", "any", "lan", "fakenet_net", "", "LAB: to the fake internet (ACME public IPs)"),
+    # ACME's private addresses are reachable only in the visitor and flat scenarios (scenario.py)
+    (131, "lan", "pass", "any", "lan", "acme_internal", "", "SCENARIO visitor+flat: LAB to ACME internal", False),
     (199, "lan", "block", "any", "lan", "any", "", "LAB: default deny"),
     (200, "opt1", "pass", "TCP/UDP", "opt1", "(self)", "53", "FAKENET: DNS"),
     (210, "opt1", "pass", "TCP", "acme_public", "(self)", "3128", "FAKENET: ACME-FW web proxy"),
@@ -154,7 +158,8 @@ for name in PARTICIPANTS:
 api.rules([
     (300, "wireguard", "pass", "TCP/UDP", f"{WG_NET}.0/24", WG_SERVER_IP, "53", "VPN: DNS"),
     (310, "wireguard", "pass", "ICMP", f"{WG_NET}.0/24", WG_SERVER_IP, "", "VPN: ping gateway"),
-    (320, "wireguard", "pass", "any", f"{WG_NET}.0/24", "acme_nets", "", "VPN: to ACME"),
+    (320, "wireguard", "pass", "any", f"{WG_NET}.0/24", "fakenet_net", "", "VPN: to the fake internet (ACME public IPs)"),
+    (321, "wireguard", "pass", "any", f"{WG_NET}.0/24", "acme_internal", "", "SCENARIO visitor+flat: VPN to ACME internal", False),
     (399, "wireguard", "block", "any", "any", "any", "", "VPN: default deny"),
 ])
 

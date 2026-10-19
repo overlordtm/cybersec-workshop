@@ -7,6 +7,7 @@
 #   ./lab.sh reset         roll firewalls/Guacamole/ACME back to "clean", recreate Kali clones
 #   ./lab.sh kalis         recreate Kali clones only (fresh desktops)
 #   ./lab.sh start|stop [N ...]   start/stop Kali clones (all, or by number)
+#   ./lab.sh scenario internet|visitor|flat|status   switch what participants can reach
 #   ./lab.sh status        what exists and what is running
 set -eu
 cd "$(dirname "$0")"
@@ -59,11 +60,14 @@ kalis)
 start|stop)
     for id in $(kali_ids "$@"); do ssh -o BatchMode=yes $PVE "qm $cmd $id" && echo "$cmd $id"; done
     ;;
+scenario)
+    ssh -o BatchMode=yes $PVE "python3 -I /root/lab/opnsense/scenario.py ${1:-status}"
+    ;;
 status)
     tofu_ output
     ssh -o BatchMode=yes $PVE 'qm list | grep -E "VMID|kali|gw|fw"; pct list' 2>/dev/null
     ;;
 *)
-    sed -n '2,10p' "$0" | sed 's/^# \{0,1\}//'
+    sed -n '2,11p' "$0" | sed 's/^# \{0,1\}//'
     ;;
 esac

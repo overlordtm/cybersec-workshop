@@ -60,14 +60,27 @@ class Opn:
 
     def rules(self, rules):
         """[(sequence, interface, action, protocol, source, destination, port, description[, enabled])]
-        Rules are matched by description, so descriptions must be unique."""
+        A destination starting with "!" is negated. Rules are matched by description, so
+        descriptions must be unique. Rules whose description starts with "SCENARIO" keep their
+        current on/off state when they already exist (scenario.py switches them)."""
+        existing = {r.get("description"): r for r in self.rows("/api/firewall/filter/searchRule")}
         for seq, iface, action, proto, src, dst, port, descr, *rest in rules:
             enabled = rest[0] if rest else True
+            if descr.startswith("SCENARIO") and descr in existing:
+                enabled = existing[descr]["enabled"] == "1"
             self.upsert("firewall/filter", "Rule", "description", descr, {"rule": {
                 "enabled": "1" if enabled else "0", "sequence": str(seq), "action": action, "quick": "1",
                 "interface": iface, "direction": "in", "ipprotocol": "inet", "protocol": proto,
-                "source_net": src, "destination_net": dst, "destination_port": port,
+                "source_net": src, "destination_net": dst.lstrip("!"),
+                "destination_not": "1" if dst.startswith("!") else "0", "destination_port": port,
                 "log": "1" if action == "block" else "0", "description": descr}})
+        self.call("/api/firewall/filter/apply", {})
+
+    def remove_rules(self, descriptions):
+        """Delete rules (by description) that an earlier version of the config created."""
+        for r in self.rows("/api/firewall/filter/searchRule"):
+            if r.get("description") in descriptions and not r.get("is_automatic"):
+                self.saved(f"/api/firewall/filter/delRule/{r['uuid']}", {})
         self.call("/api/firewall/filter/apply", {})
 
     def gateway(self, name, interface, address, default=False, descr=""):
