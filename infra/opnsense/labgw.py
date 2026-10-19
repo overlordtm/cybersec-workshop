@@ -117,7 +117,7 @@ api.call("/api/proxy/service/reconfigure", {})
 # reconfigure rewrites squid.conf but does not always reload the running Squid
 subprocess.run(["ssh", "lab-gw", "configctl proxy restart >/dev/null"], check=True)
 
-# --- WireGuard for participants' own laptops (split tunnel: ACME only)
+# --- WireGuard for participants' own laptops (split tunnel: ACME and Greenbone UI)
 KEYS = "/root/lab/secrets/wg-keys.json"
 PARTICIPANTS = [r["user"] for r in vpn]
 peer_addresses = {r["user"]: f"{WG_NET}.{250 if r['access'] == 'admin' else 100 + int(r['n'])}" for r in vpn}
@@ -174,12 +174,13 @@ for name in PARTICIPANTS:
         f.write(f"[Interface]\n# ACME lab - {name}\nPrivateKey = {keys[name]['priv']}\n"
                 f"Address = {peer_ip(name)}/32\nDNS = {WG_SERVER_IP}\n\n"
                 f"[Peer]\nPublicKey = {server_pub}\nEndpoint = {PUBLIC_NAME}:{WG_PORT}\n"
-                f"AllowedIPs = {WG_SERVER_IP}/32, 198.51.100.0/24, 172.20.0.0/16\nPersistentKeepalive = 25\n")
+                f"AllowedIPs = {WG_SERVER_IP}/32, 10.20.0.11/32, 198.51.100.0/24, 172.20.0.0/16\nPersistentKeepalive = 25\n")
 
 # Rules on the WireGuard interface group (exists only once WireGuard is enabled)
 api.rules([
     (300, "wireguard", "pass", "TCP/UDP", f"{WG_NET}.0/24", WG_SERVER_IP, "53", "VPN: DNS"),
     (310, "wireguard", "pass", "ICMP", f"{WG_NET}.0/24", WG_SERVER_IP, "", "VPN: ping gateway"),
+    (311, "wireguard", "pass", "TCP", f"{WG_NET}.0/24", "10.20.0.11", "443", "VPN: Greenbone web UI"),
     (320, "wireguard", "pass", "any", f"{WG_NET}.0/24", "fakenet_net", "", "VPN: to the fake internet (ACME public IPs)"),
     (321, "wireguard", "pass", "any", f"{WG_NET}.0/24", "acme_internal", "", "SCENARIO visitor+flat: VPN to ACME internal", False),
     (399, "wireguard", "block", "any", "any", "any", "", "VPN: default deny"),

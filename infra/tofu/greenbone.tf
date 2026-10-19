@@ -85,6 +85,14 @@ resource "proxmox_virtual_environment_firewall_rules" "greenbone" {
     dport  = "443"
   }
   rule {
+    type    = "in"
+    action  = "ACCEPT"
+    source  = "10.20.100.0/24"
+    proto   = "tcp"
+    dport   = "443"
+    comment = "Greenbone web UI from WireGuard participants"
+  }
+  rule {
     type    = "out"
     action  = "ACCEPT"
     dest    = "10.20.0.1"
@@ -99,5 +107,5 @@ resource "proxmox_virtual_environment_firewall_rules" "greenbone" {
 }
 
 output "greenbone" {
-  value = "VM 112, https://10.20.0.11/ (from Kali); admin password: secrets/greenbone-admin.pass"
+  value = "VM 112, https://10.20.0.11/ (from Kali or WireGuard); admin password: secrets/greenbone-admin.pass"
 }

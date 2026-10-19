@@ -75,7 +75,7 @@ class WireGuardTest(unittest.TestCase):
         import os
 
         source = (GENERATOR.parents[1] / "opnsense/labgw.py").read_text()
-        vpn_code = source.split("# --- WireGuard for participants' own laptops (split tunnel: ACME only)\n", 1)[1]
+        vpn_code = source.split("# --- WireGuard for participants' own laptops", 1)[1].split("\n", 1)[1]
         vpn_code = vpn_code.split("# Rules on the WireGuard interface group", 1)[0]
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -104,6 +104,11 @@ class WireGuardTest(unittest.TestCase):
             self.assertEqual({p.name for p in config_dir.iterdir()}, {"udelezenec201.conf", "admin.conf"})
             self.assertIn("Address = 10.20.100.101/32", (config_dir / "udelezenec201.conf").read_text())
             self.assertIn("Address = 10.20.100.250/32", (config_dir / "admin.conf").read_text())
+            for config in config_dir.glob("*.conf"):
+                allowed = next(line.split("=", 1)[1].strip() for line in config.read_text().splitlines()
+                               if line.startswith("AllowedIPs"))
+                self.assertEqual(set(allowed.split(", ")), {
+                    "10.20.100.1/32", "10.20.0.11/32", "198.51.100.0/24", "172.20.0.0/16"})
             server_call = next(c for c in api.upsert.call_args_list if c.args[0] == "wireguard/server")
             self.assertEqual(server_call.args[-1]["server"]["peers"], "udelezenec201,admin")
             self.assertEqual({c.args[0] for c in api.saved.call_args_list if "delClient" in c.args[0]},
