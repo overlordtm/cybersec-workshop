@@ -365,7 +365,7 @@ V glavah zahteve poišči `Authorization: Basic`. Dekodiraš samo niz za besedo 
 
 1. V Firefoxu odpri `F12` → Network, nato odpri intranet in vnesi pripravljena učna podatka. Če si že prijavljen, osveži stran in izberi novo zahtevo.
 2. V surovih glavah zahteve poišči `Authorization: Basic …` in kopiraj samo kodirani del.
-3. V lokalnem CyberChef uporabi `From Base64`. Druga možnost je ukaz, pri katerem niz prilepiš ob pozivu, da ne ostane v zgodovini ukazov:
+3. V CyberChef uporabi `From Base64`. Druga možnost je ukaz, pri katerem niz prilepiš ob pozivu, da ne ostane v zgodovini ukazov:
 
 ```sh
 printf 'Prilepi učni niz Base64: '

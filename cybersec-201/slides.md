@@ -13,7 +13,7 @@ oktober 2026
 Note:
 *[pozdrav · čas je vključen v prvi sklop]*
 
-Dober dan in dobrodošli na delavnici Cybersec-201. Danes bomo v treh sklopih pogledali digitalne sledi, omrežja in spletne aplikacije, nato pa boste vse skupaj preizkusili sami, v laboratoriju izmišljenega podjetja ACME.
+Dober dan in dobrodošli na delavnici Cybersec-201. Danes bomo v treh sklopih pogledali digitalne sledi, omrežja in spletne aplikacije, nato pa boste vse skupaj preizkusili še sami.
 
 Geslo današnjega dne je na prosojnici: poišči sled, preveri dokaz, predlagaj zaščito.
 
@@ -25,8 +25,6 @@ Geslo današnjega dne je na prosojnici: poišči sled, preveri dokaz, predlagaj 
 
 <div class="case-chain"><span>Kaj sem opazil?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vem?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
 
-Enaka polja izpolnite v zapisu pri vajah.
-
 **Poišči sled. Preveri dokaz. Predlagaj zaščito.**
 
 Note:
@@ -34,7 +32,7 @@ Note:
 
 Preden začnemo, en okvir, ki nas bo spremljal ves dan. Ko nekaj najdemo, se najprej vprašamo, kaj smo dejansko opazili. Nato, kakšen je dokaz in kdaj je nastal. Tretje vprašanje je najpomembnejše in ga najraje preskočimo: česa še ne vemo? Šele potem razmišljamo, kaj ugotovitev omogoča napadalcu, in na koncu, kaj bi spremenili.
 
-Ista polja boste izpolnjevali pri vajah. In že zdaj povem: pošteno omejen sklep, na primer »različica je ranljiva, izrabe nisem potrdil«, je povsem dober rezultat.
+In že zdaj povem: pošteno omejen sklep, na primer »različica je ranljiva, izrabe nisem potrdil«, je povsem dober rezultat.
 
 ---
 
@@ -51,34 +49,29 @@ Note:
 
 Začnimo s sledmi, ki jih puščamo za sabo. OSINT pomeni zbiranje in povezovanje javno dostopnih informacij: spletnih strani, dokumentov, objav in javnih evidenc. Sorodno področje je digitalna forenzika, ki preiskuje podatke na napravah, v datotekah in v zajemih prometa. Področji se dopolnjujeta, meja pa je jasna: ko pregledujemo tuj disk ali pomnilnik, to ni več OSINT.
 
-Najprej si bomo ogledali splošne vzorce in nekaj resničnih dogodkov, v vajah pa boste iste vzorce poiskali pri ACME.
+Ogledali si bomo splošne vzorce in nekaj resničnih dogodkov.
 
 ---
 
 ## Kaj razkrijejo stran in dokumenti?
 
 <div class="example">
-<div class="example-label">IZMIŠLJEN PRIMER · METAPODATKI DOKUMENTA</div>
+<div class="example-label">PRIMER · METAPODATKI DOKUMENTA</div>
 
-```plaintext
-Title:    Interni cenik 2026
-Author:   Maja Kovac
-Creator:  LibreOffice 7.0
-Created:  2026-09-14
-```
+![Lastnosti dokumenta Word v sistemu Windows: avtor, zadnji urejevalec, program Microsoft Office Word ter datuma ustvarjanja in shranjevanja](./images/metadata.png)
 
 </div>
 
 Ime avtorja lahko povežemo z javnim seznamom zaposlenih.
 
-**Podatka se ujemata. Avtorstvo še ni dokazano.**
+**Ujemanje imena še ne dokaže avtorstva.**
 
 Note:
 *[PDF ACME je v vaji 1.4; tu ga ne odpiraj]*
 
 Vsak dokument nosi tudi podatke o sebi, metapodatke: kdo naj bi ga napisal, s katerim programom in kdaj. Fotografije imajo pogosto še lokacijo GPS.
 
-Na prosojnici je izmišljen primer: PDF, v katerem je kot avtorica navedena Maja Kovac. Če na spletni strani podjetja najdemo zaposleno s tem imenom, se podatka ujemata. Ali je dokument res napisala ona? Tega ne vemo. Ime lahko izvira iz predloge ali iz računalnika, ki ga je nekdo podedoval.
+Na prosojnici so lastnosti dokumenta Word, kot jih pokaže Windows: avtor, kdo ga je zadnji shranil, program in datuma. Če na spletni strani podjetja najdemo osebo s tem imenom, se podatka ujemata. Ali je dokument res napisala ta oseba? Tega ne vemo. Ime lahko izvira iz predloge ali iz računalnika, ki ga je nekdo podedoval.
 
 Napadalcu so takšni podatki vseeno koristni: razkrijejo imena zaposlenih, stare različice programov ali notranje poti do datotek.
 
@@ -136,7 +129,7 @@ Kako takšne sledi iščemo? Iskalniki poznajo operatorje: `site` omeji iskanje 
 
 Wayback Machine hrani stare različice strani, tudi tiste, ki jih je podjetje že umaknilo. ctlogs.dev in crt.sh iščeta po javnih dnevnikih certifikatov, kjer se pojavijo imena strežnikov, na primer test ali vpn.
 
-Javni vir je tudi DNS. Običajni zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje. To boste preizkusili v vaji 1.3, tehnično ozadje pa razložim v sklopu omrežij. Pri tem upoštevajte, da je poizvedba na strežnik že neposreden stik s tarčo, ne pasivno iskanje.
+Javni vir je tudi DNS. Običajni zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje. Tehnično ozadje razložim v sklopu omrežij. Pri tem upoštevajte, da je poizvedba na strežnik že neposreden stik s tarčo, ne pasivno iskanje.
 
 Še dve opozorili. Noben vir ni popoln ali nujno aktualen, zato vedno zapišemo, od kod je podatek in iz katerega dne. In robots.txt je samo prošnja iskalnikom, naj nečesa ne indeksirajo, ne pa zaklepanje.
 
@@ -189,7 +182,7 @@ Shodan in podobni Censys neprestano pregledujeta internet in shranjujeta, kaj od
 
 Preberimo polja. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz baze naslovov, ne fizični naslov naprave. Pri vratih vidimo storitev in njen odziv, tukaj nginx z različico. Ključen je datum: »zadnjič opaženo« pomeni takrat, ne zdaj.
 
-Če Shodan ob zadetku pokaže oznako CVE, je to namig za preverjanje, ne dokaz ranljivosti. Podrobneje boste to preizkusili v vaji 1.1.
+Če Shodan ob zadetku pokaže oznako CVE, je to namig za preverjanje, ne dokaz ranljivosti.
 
 ---
 
@@ -339,7 +332,7 @@ Deljene mape so v podjetjih eden najpogostejših virov preširokega dostopa. Na 
 
 Javna mapa ni nujno napaka, če so v njej res javni podatki. Težava nastane, ko vanjo nekdo odloži seznam naprav, izvoz baze ali kopijo pogodbe.
 
-Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng. V vaji 2.2 boste primerjali mapi javno in uprava.
+Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng.
 
 ---
 
@@ -356,7 +349,7 @@ Note:
 
 Zdaj osrednji prikaz današnje delavnice. Segmentacija pomeni, da omrežje razdelimo po vlogah in s pravili določimo, kateri promet med deli je dovoljen. Ločen VLAN brez pravil še ni segmentacija.
 
-Predstavljajte si, da ste obiskovalec pri ACME in prenosnik priključite v vtičnico v sejni sobi. Z istega mesta poženemo isti ukaz proti krmilniku klime. V segmentiranem omrežju so vrata filtrirana. Ko segmentacijo izklopimo, sta odprta spletni vmesnik in Modbus, protokol za krmiljenje naprav, ki ne pozna prijave.
+Predstavljajte si, da ste obiskovalec v podjetju in prenosnik priključite v vtičnico v sejni sobi. Z istega mesta poženemo isti ukaz proti krmilniku klime. V segmentiranem omrežju so vrata filtrirana. Ko segmentacijo izklopimo, sta odprta spletni vmesnik in Modbus, protokol za krmiljenje naprav, ki ne pozna prijave.
 
 Na krmilniku se ni spremenilo nič, spremenila so se le pravila poti. Segmentacija ne prepreči vdora, omeji pa, kam pride nekdo, ki je že notri.
 
@@ -385,7 +378,7 @@ Target, ameriška trgovska veriga, leto 2013. Napadalci so najprej zlorabili dos
 
 Pogosto slišimo poenostavitev, da so vdrli »prek klime«. V sam krmilnik klime niso vdrli; zlorabili so dostop izvajalca, ki je segal dlje, kot je bilo treba. Poročilo je tudi zgodnja analiza, ne končna forenzika. Segmentacija bi lahko omejila premikanje, sama pa vdora ne bi zagotovo preprečila. Potrebni so še omejeni računi, spremljanje in odziv na opozorila.
 
-Zdaj pa odgovor na vprašanje od prej. Tudi ACME ima eno takšno preširoko pot, iz DMZ v IoT. Kdor prevzame spletni strežnik, doseže kamero, tiskalnik in klimo, čeprav jih obiskovalec v sejni sobi ne vidi.
+Zdaj pa odgovor na vprašanje od prej. Če pravila dovoljujejo pot iz DMZ v IoT, kdor prevzame spletni strežnik, doseže kamero, tiskalnik in klimo, čeprav jih obiskovalec v sejni sobi ne vidi. Ena preširoka pot zadošča.
 
 ---
 
@@ -421,7 +414,7 @@ Nauk za nas: popravki zmanjšajo možnost okužbe, omejene omrežne poti pa omej
 | Klima | Modbus 502/tcp | Dosegljivost krmilnika |
 
 <div class="example">
-<div class="example-label">VZOREC UKAZA · V VAJAH (VISITOR) IoT NI DOSEGLJIV</div>
+<div class="example-label">VZOREC UKAZA · SNMP</div>
 
 ```plaintext
 snmpwalk -v2c -c public [IP-tiskalnika] 1.3.6.1.2.1.1
@@ -438,7 +431,7 @@ Pri napravah IoT je težava pogosto v tem, da jih nihče ne šteje za računalni
 
 Na prosojnici je primer ukaza, ki iz tiskalnika prebere osnovne podatke. Dosegljiva vrata pa še ne pomenijo, da lahko spremenimo nastavitve.
 
-Pri vajah teh naprav ne boste dosegli, ker delamo v segmentiranem načinu. To ni napaka laboratorija, ampak prav učinek segmentacije, ki smo ga pravkar videli. Ukrep je enak: dostop do naprav omejimo na mesta, od koder jih upravljamo.
+Ukrep je enak kot pri segmentaciji: dostop do naprav omejimo na mesta, od koder jih upravljamo.
 
 *Izvedba:* ukaz ima nadomestni naslov. SNMP v živo (tiskalnik 172.20.30.11) izvedi samo skupaj s prikazom segmentacije v flat, nato vrni visitor. Če kdo vpraša za Wireshark: vidi le promet, ki doseže naš vmesnik, ne vsega prometa v preklopljenem omrežju.
 
@@ -455,7 +448,7 @@ Recimo, da Nmap pokaže staro različico. Kaj to pomeni? Najprej le to, da jo je
 
 Na sliki so trije ločeni koraki. Različica pove, kaj storitev oglašuje, in oglas lahko zavaja: distribucije pogosto vgradijo varnostne popravke, ne da bi spremenile številko različice. Pogoje ranljivosti preberemo v obvestilu proizvajalca. Šele preizkus, na primer izbrana skripta Nmap, pokaže, kaj storitev res omogoča.
 
-Metasploit pomaga pri nadzorovanem preverjanju znanih ranljivosti, a sam obstoj modula ni dokaz. V laboratoriju je za stare storitve pripravljen Metasploitable 2, namenoma ranljiv strežnik v notranjem omrežju ACME.
+Metasploit pomaga pri nadzorovanem preverjanju znanih ranljivosti, a sam obstoj modula ni dokaz.
 
 ---
 
@@ -519,7 +512,7 @@ Tretji sklop so spletne aplikacije. Vse se vrti okoli enega vprašanja: kaj se z
 
 Ko v trgovini iščete jabolko, brskalnik pošlje zahtevo HTTP z metodo, potjo in parametri, tukaj q=jabolko. Strežnik podatke obdela in vrne odgovor s statusom in vsebino. Vnos je lahko v naslovu, v telesu zahteve ali v glavah.
 
-Status beremo skupaj z vsebino; 200 OK še ne pomeni, da je vse v redu. HTTPS zaščiti prenos, ne pa logike aplikacije ali preverjanja pravic. Isti model boste v vajah uporabili na trgovini Juice Shop.
+Status beremo skupaj z vsebino; 200 OK še ne pomeni, da je vse v redu. HTTPS zaščiti prenos, ne pa logike aplikacije ali preverjanja pravic.
 
 ---
 
@@ -604,7 +597,7 @@ Posamezne napake so redko usodne same po sebi. Nevarne postanejo, ko se povežej
 
 Spodnja vrsta pokaže, da lahko vsak člen prekinemo. Kopijo odstranimo in geslo zamenjamo. Za vsako storitev uporabljamo ločeno geslo ali ključ. Pravice računov omejimo in prijave beležimo.
 
-Povezava med dvema ugotovitvama je pogosto pomembnejša od vsake posebej. Točno to verigo boste preverili v vaji 3.3.
+Povezava med dvema ugotovitvama je pogosto pomembnejša od vsake posebej.
 
 ---
 
