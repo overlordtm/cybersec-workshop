@@ -27,26 +27,26 @@ Predstavitev vsebuje 34 prosojnic: naslovno, okvir dela, šest za digitalne sled
 | 1 | OSINT, omrežna in aplikacijska varnost | Naslovnica z geslom, fotografijo, avtorjem in datumom po vzoru Cybersec-101. |
 | 2 | Od sledi do ukrepa | Okvir dela za vse ugotovitve; ustreza zapisu pri vajah. |
 | 3 | 1. sklop · Digitalne sledi | Splošen pogled na javne sledi ter razlikovanje OSINT in forenzike. |
-| 4 | Kaj razkrijejo stran in dokumenti? | Metapodatki, povezovanje podatkov, omejitve sklepa in čiščenje pred objavo. |
+| 4 | Kaj razkrijejo objavljeni dokumenti? | Metapodatki, kaj z njimi naredi napadalec in čiščenje pred objavo. |
 | 5 | Philadelphia, 2020: majica poveže spletne sledi | Povezovanje posnetkov, spletne ocene in profilov z dodatno potrditvijo. |
 | 6 | Iskanje omejimo na uporabne sledi | Iskalni operatorji, arhivi, certifikati in iskanje lastnih sledi. |
 | 7 | Shodan: kaj je bilo zaznano in kdaj? | Storitev, odziv, čas opažanja in popis lastne izpostavljenosti. |
 | 8 | Orodja za sledi, povezave in forenziko | Zbiranje, povezovanje podatkov, pregled nosilcev in pomnilnika. |
 | 9 | 2. sklop · Omrežja | Vloge sistemov in upravičene omrežne poti. |
 | 10 | Nmap: od vrat do storitve | Vrata, storitev in omejitve izpisa. |
-| 11 | DNS: kdo lahko prenese celotno območje? | Prenos območja in notranja imena. |
-| 12 | SMB: kdo lahko bere deljene datoteke? | Vidnost mape in pravica do vsebine. |
+| 11 | DNS: kaj razkrije imenik omrežja? | Kaj je DNS; prenos območja, notranja imena, prevzem poddomene, odprt razreševalnik. |
+| 12 | SMB: deljene mape in kako jih zlorabijo | Kaj je SMB, štiri pogoste zlorabe in ukrepi. |
 | 13 | Kako segmentacija spremeni dostop? | Ista meritev ACME v visitor in flat; vprašanje o poti DMZ → IoT. |
 | 14 | Target, 2013: od dobavitelja do občutljivih sistemov | Dobaviteljev dostop in izolacija občutljivih sistemov. |
 | 15 | WannaCry, 2017: ko izpad IT prekine zdravstveno oskrbo | Operativne posledice napada in več plasti obrambe. |
-| 16 | IoT: dostop do naprav in njihovih podatkov | Upravljanje naprav, SNMP in Modbus. |
+| 16 | IoT: pozabljeni računalniki v omrežju | Kaj je IoT; privzeta gesla, SNMP, Modbus, nevzdrževane naprave. |
 | 17 | Zastarela storitev: kaj pove različica? | Od prepoznave različice do preverjanja vedenja. |
 | 18 | Pregledovalniki ranljivosti: kako beremo ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep; pregled s prijavo in brez nje. |
 | 19 | Omrežna orodja: pregled, preizkus in zaznava | Pregled, zajem prometa, preverjanje in stalno spremljanje. |
 | 20 | 3. sklop · Aplikacije | HTTP na generični zahtevi in odgovoru. |
 | 21 | ZAP: zahtevo spremenimo in ponovimo | Ogled, sprememba in ponovitev zahteve. |
-| 22 | Razkrite datoteke: kopija na javni strani | Kopije, dnevniki, nastavitve in posledice razkritja. |
-| 23 | Prijava: geslo in zaščita prenosa | Privzeta gesla, ponovna uporaba in zaščita prenosa. |
+| 22 | Razkrite datoteke: kaj ostane na javnem strežniku? | Kopije, .git, izvozi, .env; kako jih napadalec najde. |
+| 23 | Prijava: geslo in zaščita prenosa | Privzeta gesla, gesla iz drugih vdorov in zaščita prenosa. |
 | 24 | Eno razkritje, več vrat | Veriga razkritje → ponovna uporaba gesla → dostop; priprava na vajo 3.3. |
 | 25 | SQL injection: vnos spremeni poizvedbo | Mešanje podatkov in navodil SQL. |
 | 26 | XSS: vnos postane skripta v brskalniku | Vnos, ki ni zaupanja vreden, brskalnik izvede kot kodo. |

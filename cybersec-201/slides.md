@@ -68,34 +68,6 @@ Ogledali si bomo splošne vzorce in nekaj resničnih dogodkov.
 
 ---
 
-## Kaj razkrijejo stran in dokumenti?
-
-<div class="example">
-<div class="example-label">PRIMER · METAPODATKI DOKUMENTA</div>
-
-![Lastnosti dokumenta Word v sistemu Windows: avtor, zadnji urejevalec, program Microsoft Office Word ter datuma ustvarjanja in shranjevanja](./images/metadata.png)
-
-</div>
-
-Ime avtorja lahko povežemo z javnim seznamom zaposlenih.
-
-**Ujemanje imena še ne dokaže avtorstva.**
-
-**Ukrep:** pred objavo očistimo metapodatke dokumentov.
-
-Note:
-*[PDF ACME je v vaji 1.4; tu ga ne odpiraj]*
-
-Vsak dokument nosi tudi podatke o sebi, metapodatke: kdo naj bi ga napisal, s katerim programom in kdaj. Fotografije s telefona imajo pogosto še lokacijo GPS. Večina družbenih omrežij jo ob objavi odstrani, e-pošta, spletne strani in deljene datoteke pa ne.
-
-Na prosojnici so lastnosti dokumenta Word, kot jih pokaže Windows: avtor, kdo ga je zadnji shranil, program in datuma. Če na spletni strani podjetja najdemo osebo s tem imenom, se podatka ujemata. Ali je dokument res napisala ta oseba? Tega ne vemo. Ime lahko izvira iz predloge ali iz računalnika, ki ga je nekdo podedoval.
-
-Napadalcu so takšni podatki vseeno koristni: razkrijejo imena zaposlenih, stare različice programov ali notranje poti do datotek. Z imeni in vlogami zaposlenih sestavi prepričljivo ciljano sporočilo, phishing.
-
-Ukrep je preprost: dokument pred objavo očistimo, na primer z Wordovim pregledovalnikom dokumenta ali z `exiftool -all=`.
-
----
-
 ## Philadelphia, 2020: majica poveže spletne sledi
 
 <p class="case-tag">RESNIČEN PRIMER · POVEZOVANJE JAVNIH VIROV</p>
@@ -118,6 +90,36 @@ Pomembna je razlika med viri. Ocena in profili so javni, to je OSINT. FBI pa je 
 Sama majica ali uporabniško ime nista dokaz identitete. Sklep utemelji šele več neodvisnih virov skupaj.
 
 *Če kdo vpraša za izid: opisan je v objavi ameriškega pravosodnega ministrstva iz julija 2022.*
+
+---
+
+## Kaj razkrijejo objavljeni dokumenti?
+
+<div class="example">
+<div class="example-label">PRIMER · METAPODATKI DOKUMENTA</div>
+
+![Lastnosti dokumenta Word v sistemu Windows: avtor, zadnji urejevalec, program Microsoft Office Word ter datuma ustvarjanja in shranjevanja](./images/metadata.png)
+
+</div>
+
+**Kaj napadalec dobi:** imena zaposlenih za ciljana sporočila, različice programov in notranje poti.
+
+**Ukrep:** pred objavo očistimo metapodatke dokumentov.
+
+Note:
+*[PDF ACME je v vaji 1.4; tu ga ne odpiraj]*
+
+Vsak dokument nosi tudi podatke o sebi, metapodatke: kdo naj bi ga napisal, s katerim programom in kdaj. Fotografije s telefona imajo pogosto še lokacijo GPS. Večina družbenih omrežij jo ob objavi odstrani, e-pošta, spletne strani in deljene datoteke pa ne.
+
+Na prosojnici so lastnosti dokumenta Word, kot jih pokaže Windows: avtor, kdo ga je zadnji shranil, program in datuma.
+
+Kaj napadalec s tem naredi? Imena poveže s seznamom zaposlenih na spletni strani in iz njih razbere obliko uporabniških imen in e-poštnih naslovov. Z imeni in vlogami sestavi prepričljivo ciljano sporočilo, phishing. Različica programa mu pove, katere ranljivosti so morda še odprte, notranje poti, kot je \\strežnik\projekti, pa razkrijejo imena strežnikov.
+
+Ime v metapodatkih je lahko tudi zavajajoče, na primer iz predloge ali podedovanega računalnika, zato samo po sebi ne dokaže avtorstva.
+
+Ukrep je preprost: dokument pred objavo očistimo, na primer z Wordovim pregledovalnikom dokumenta ali z `exiftool -all=`.
+
+
 
 ---
 
@@ -160,11 +162,11 @@ Za obrambo je ukrep isti kot za napad: svoje sledi poiščemo sami in redno. Uma
 
 ![Shodan, iskanje country:SI: 259.423 zadetkov z razčlenitvijo po mestih, vratih, organizacijah in produktih ter zadetki s ponudnikom, lokacijo, odzivom storitve in časom opažanja](./images/shodan.png)
 
-Preberemo storitev, odziv in čas zadnjega opažanja.
+**Shodan** je iskalnik po napravah in storitvah, dosegljivih z interneta. Naslove pregleduje sam; mi beremo njegov zapis in čas opažanja.
 
 **Oznaka CVE je namig za preverjanje.**
 
-**Ukrep:** isti vir uporabimo za popis lastne zunanje izpostavljenosti.
+*lahko ga uporabimo za popis lastne zunanje izpostavljenosti.*
 
 Note:
 *[posnetek: iskanje country:SI, 20. 10. 2026; poizvedb ne izvajaj v živo]*
@@ -181,7 +183,7 @@ Shodan ni le orodje napadalca. Podjetje lahko z istim iskanjem preveri, katere n
 
 ---
 
-## Orodja za sledi, povezave in forenziko
+## Orodja
 
 | Kaj raziskujemo? | Primeri orodij |
 | --- | --- |
@@ -256,56 +258,59 @@ Izpis pravi: na vratih 80 teče Apache 2.4.49. To potrdi, da je storitev doseglj
 
 ---
 
-## DNS: kdo lahko prenese celotno območje?
+## DNS: kaj razkrije imenik omrežja?
 
-<div class="example">
-<div class="example-label">PRIMER</div>
+**DNS** prevaja imena v naslove, na primer `www.podjetje.example` v IP. Zapisi so javni po namenu, zato razkrijejo vse, kar vanje zapišemo.
 
-```plaintext
-dig @192.0.2.53 podjetje.example AXFR
+| Zloraba | Kaj napadalec dobi | Ukrep |
+| --- | --- | --- |
+| Prenos območja (AXFR) za vsakogar | Seznam vseh imen v območju | AXFR samo za sekundarne strežnike |
+| Notranja imena v javnem DNS | Zemljevid notranjih sistemov | Ločen notranji DNS |
+| Pozabljen zapis CNAME | Lastno vsebino na našem imenu | Zapis odstranimo skupaj s storitvijo |
+| Odprt rekurzivni strežnik | Ojačevanje napadov DDoS na druge | Rekurzija samo za lastne odjemalce |
 
-files.podjetje.example.     A  10.10.20.10
-intranet.podjetje.example.  A  10.10.20.11
-cam01.podjetje.example.     A  10.10.30.10
-```
-
-</div>
-
-**Napaka:** prenos območja je dovoljen vsakomur.
-
-**Ukrep:** omejimo AXFR, notranja imena pa hranimo v ločenem, notranjem DNS.
+**V javni DNS zapišemo le, kar mora biti javno.**
 
 Note:
-*[izpis je sintetičen, 192.0.2.53 ni tarča; preizkus je vaja 1.3]*
+*[preizkus AXFR je vaja 1.3; tu ga ne izvajaj]*
 
-DNS je imenik interneta: imena prevaja v naslove. Strežniki si celotno območje izmenjujejo s prenosom AXFR, kar je med primarnim in sekundarnim strežnikom povsem normalno.
+DNS je imenik interneta: imena prevaja v naslove. Ker mora vsak odjemalec znati vprašati, so zapisi javni po namenu. Napadalec ga zato zlorabi predvsem tako, da prebere več, kot bi smel.
 
-Težava nastane, ko strežnik prenos dovoli komurkoli. Takrat napadalec z enim ukazom dobi seznam vseh imen, tudi notranjih: datotečni strežnik, intranet, kamero. To je zemljevid infrastrukture.
+Prva zloraba je prenos območja. Strežniki si celotno območje izmenjujejo s prenosom AXFR, kar je med primarnim in sekundarnim strežnikom povsem normalno. Če strežnik prenos dovoli komurkoli, napadalec z enim ukazom dobi seznam vseh imen: datotečni strežnik, intranet, kamero. To je zemljevid infrastrukture.
 
-Ime v DNS pa še ne pomeni, da storitev lahko dosežemo; o tem odloča požarni zid. Popravek je dvojen: prenos omejimo na prave strežnike, notranja imena pa sploh ne sodijo v javni DNS.
+Druga so notranja imena v javnem DNS. Tudi brez prenosa jih lahko ugane po seznamu pogostih imen, kot so vpn, test ali intranet. Ime samo še ne odpre poti, o tem odloča požarni zid, a napadalcu pove, kje iskati.
+
+Tretja je prevzem poddomene. Podjetje ukine storitev v oblaku, zapis CNAME, ki kaže nanjo, pa ostane. Napadalec isto ime storitve registrira zase in pod našo domeno objavi svojo vsebino, na primer lažno prijavno stran.
+
+Četrta prizadene druge: odprt rekurzivni strežnik odgovarja vsakomur, zato ga napadalci uporabijo za ojačevanje napadov DDoS. Majhna poizvedba s ponarejenim naslovom žrtve sproži velik odgovor proti njej.
+
+Ukrepi so v zadnjem stolpcu; skupno pravilo je, da v javni DNS zapišemo le, kar mora biti javno.
 
 ---
 
-## SMB: kdo lahko bere deljene datoteke?
+## SMB: deljene mape in kako jih zlorabijo
 
-| Opažanje | Kaj dokazuje? | Česa še ne vemo? |
+**SMB** (445/tcp) je protokol, prek katerega Windows deli mape in tiskalnike v lokalnem omrežju. Uporabljajo ga tudi strežniki NAS in Samba.
+
+| Zloraba | Kaj napadalec dobi | Ukrep |
 | --- | --- | --- |
-| Vidimo ime mape | Mapa obstaja | Ali jo lahko odpremo |
-| Brez prijave preberemo datoteko | Gost lahko bere | Ali so podatki občutljivi |
-| Prodaja bere mapo kadrovske | Pravice so širše od vloge | Kdo vse še ima dostop |
+| Dostop brez prijave | Seznam map, včasih uporabnikov, in datoteke | Izklop gostujočega in anonimnega dostopa |
+| Preširoke pravice | Gesla v skriptah, izvoze baz, kopije pogodb | Pravice po vlogah in redni pregled |
+| Ukradeno ali ponovljeno geslo | Vse mape računa; s skrbniškim zagon programov drugod | Ločena gesla, omejeni skrbniški računi |
+| Stara različica SMBv1 | Izvajanje kode na daljavo (EternalBlue) | Izklop SMBv1 in popravki |
 
-**Javna mapa sama ni napaka; težava je, kaj je v njej.**
-
-**Ukrep:** pravice uskladimo z vlogo uporabnika in namenom podatkov.
+**Vrata 445 nikoli ne odpremo proti internetu, med segmenti pa jih omejimo.**
 
 Note:
 *[ukazi so pri vaji 2.2; tu jih ne izvajaj]*
 
-Deljene mape prek protokola SMB, ki ga uporablja Windows, so v podjetjih eden najpogostejših virov preširokega dostopa. Na prosojnici so tri opažanja, ki dokazujejo različne stvari, in pri vsakem nekaj še manjka. Če vidimo ime mape, vemo le, da obstaja, ne pa, ali jo lahko odpremo. Če datoteko preberemo brez prijave, ima gost pravico branja, ne vemo pa še, ali je vsebina občutljiva. Če račun iz prodaje bere mapo kadrovske službe, so pravice širše od vloge, odprto pa ostane, kdo vse ima še tak dostop.
+SMB je protokol, prek katerega Windows deli mape in tiskalnike v lokalnem omrežju; teče na vratih 445/tcp. Uporabljajo ga tudi strežniki NAS in Linux s programom Samba. Ko v raziskovalcu odprete pogon S: ali naslov \\strežnik\skupno, je to SMB.
 
-Javna mapa ni nujno napaka, če so v njej res javni podatki. Težava nastane, ko vanjo nekdo odloži seznam naprav, izvoz baze ali kopijo pogodbe.
+Napadalci ga zlorabljajo na štiri načine. Prvi je dostop brez prijave: strežnik gostu ali anonimnemu uporabniku pokaže seznam map, včasih tudi uporabnikov, in vsebino. Drugi so preširoke pravice: v mapah, ki jih vidijo vsi, pogosto ležijo skripte z gesli, izvozi baz ali kopije pogodb. Tretji je ukradeno ali ponovljeno geslo: z enim računom napadalec odpre vse mape, do katerih ima ta račun dostop, s skrbniškim pa prek SMB zažene programe na drugih računalnikih. Tako se izsiljevalski programi širijo po omrežju in šifrirajo deljene mape. Četrti so stare različice: v SMBv1 je bila ranljivost EternalBlue, prek katere se je širil WannaCry, ki ga bomo videli čez nekaj prosojnic.
 
-Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng.
+Ukrepi sledijo iz tega: gostujoči dostop izklopimo, pravice uskladimo z vlogo, SMBv1 izklopimo, vrata 445 pa nikoli ne odpremo proti internetu in jih med segmenti omejimo.
+
+Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng; oboje je pri vaji 2.2.
 
 ---
 
@@ -378,35 +383,35 @@ Nauk za nas: popravki zmanjšajo možnost okužbe, omejene omrežne poti pa omej
 
 ---
 
-## IoT: dostop do naprav in njihovih podatkov
+## IoT: pozabljeni računalniki v omrežju
 
-| Naprava | Storitev | Kaj preverimo? |
+**IoT** (internet stvari) so kamere, tiskalniki, krmilniki in druge naprave z omrežnim vmesnikom. So računalniki, ki jih redko kdo posodablja.
+
+| Zloraba | Kaj napadalec dobi | Ukrep |
 | --- | --- | --- |
-| Kamera | HTTP, RTSP 554/tcp | Izpostavljenost vmesnika |
-| Tiskalnik | SNMP 161/udp | Podatke s skupnostjo `public` |
-| Klimatska naprava | Modbus 502/tcp | Dosegljivost krmilnika |
+| Privzeto geslo na vmesniku | Nadzor kamere in posnetke | Zamenjava gesel ob namestitvi |
+| SNMP s skupnostjo `public` (161/udp) | Podatke o napravi, s `private` tudi spremembo nastavitev | SNMPv3 ali izklop |
+| Modbus brez prijave (502/tcp) | Branje in spreminjanje krmiljenja | Dostop le iz upravljavskega segmenta |
+| Nevzdrževana programska oprema | Prevzem naprave, vključitev v botnet | Posodobitve ali zamenjava naprave |
 
-<div class="example">
-<div class="example-label">VZOREC UKAZA · SNMP</div>
-
-```plaintext
-snmpwalk -v2c -c public [IP-tiskalnika] 1.3.6.1.2.1.1
-```
-
-</div>
-
-**Ukrep:** dostop omejimo na potrebne upravljavske poti.
+**Naprav IoT ne izpostavljamo internetu; dostop omejimo na upravljavske poti.**
 
 Note:
-*[uporabi izsek s prosojnice, povezav ne vzpostavljaj]*
+*[splošen pregled; SNMP v živo samo skupaj s prikazom segmentacije]*
 
-Pri napravah IoT, internetu stvari, je težava pogosto v tem, da jih nihče ne šteje za računalnike. Kamera ima spletni vmesnik in video tok RTSP. Tiskalnik prek protokola SNMP s privzeto skupnostjo public izda lokacijo in kontakt. Krmilnik klime uporablja Modbus, ki ne preverja, kdo pošilja ukaze.
+Pri napravah IoT, internetu stvari, je težava pogosto v tem, da jih nihče ne šteje za računalnike. Imajo pa operacijski sistem, spletni vmesnik in omrežne storitve, posodobitve pa le redko.
 
-Na prosojnici je primer ukaza, ki iz tiskalnika prebere osnovne podatke. Dosegljiva vrata pa še ne pomenijo, da lahko spremenimo nastavitve.
+Prva zloraba je privzeto geslo. Kamera s tovarniškim geslom napadalcu odpre spletni vmesnik in video tok RTSP. Leta 2016 je botnet Mirai na ta način prevzel na stotisoče kamer in usmerjevalnikov ter z njimi izvajal napade DDoS.
 
-Ukrep je enak kot pri segmentaciji: dostop do naprav omejimo na mesta, od koder jih upravljamo.
+Druga je SNMP, protokol za nadzor naprav. S privzeto skupnostjo public tiskalnik izda opis, lokacijo in kontakt; če je vklopljena skupnost za pisanje, na primer private, lahko napadalec spreminja tudi nastavitve.
 
-*Izvedba:* ukaz ima nadomestni naslov. SNMP v živo (tiskalnik 172.20.30.11) izvedi samo skupaj s prikazom segmentacije v flat, nato vrni visitor. Če kdo vpraša za Wireshark: vidi le promet, ki doseže naš vmesnik, ne vsega prometa v omrežju s stikali.
+Tretja so industrijski protokoli, kot je Modbus, ki ga uporablja krmilnik klime. Modbus ne pozna prijave: kdor doseže vrata 502, lahko bere in pošilja ukaze.
+
+Četrta je nevzdrževana programska oprema. Proizvajalci popravke za starejše naprave pogosto ukinejo, zato jih je včasih treba zamenjati.
+
+Ukrep je enak kot pri segmentaciji: naprav ne izpostavljamo internetu, dostop do njih pa omejimo na mesta, od koder jih upravljamo.
+
+*Izvedba:* ukaz za živi prikaz je `snmpwalk -v2c -c public 172.20.30.11 1.3.6.1.2.1.1`; izvedi ga samo skupaj s prikazom segmentacije v flat, nato vrni visitor. Če kdo vpraša za Wireshark: vidi le promet, ki doseže naš vmesnik, ne vsega prometa v omrežju s stikali.
 
 ---
 
@@ -509,41 +514,39 @@ Ločimo tri dejavnosti: opazovanje prometa, ročno preverjanje in samodejni akti
 
 ---
 
-## Razkrite datoteke: kopija na javni strani
+## Razkrite datoteke: kaj ostane na javnem strežniku?
 
-<div class="example">
-<div class="example-label">IZMIŠLJEN PRIMER OBJAVLJENE KOPIJE</div>
+| Kaj ostane | Kaj napadalec dobi | Ukrep |
+| --- | --- | --- |
+| Varnostna kopija (`.bak`, `.zip`) | Izvorno kodo in gesla iz nastavitev | Kopije hranimo zunaj spletnega imenika |
+| Repozitorij `.git` | Vso kodo in zgodovino, tudi izbrisana gesla | Objavljamo brez `.git` |
+| Izvoz baze (`.sql`) | Podatke strank | Izvozov ne hranimo na spletnem strežniku |
+| Datoteka `.env`, razvojna stran | Ključe API, notranje poti | Skrivnosti zunaj imenika, razvojne strani izklopljene |
 
-```plaintext
-GET /backup/config.php.bak HTTP/1.1
-Host: podjetje.example
+Napadalec jih najde s seznami pogostih poti (ffuf, Gobuster), v iskalnikih in v arhivu.
 
-# Razkrito: notranje ime in prijavni podatki.
-```
-
-</div>
-
-**Dokaz:** vsebina datoteke je dosegljiva brez prijave.
-
-**Ukrep:** odstranimo kopijo in zamenjamo razkrite skrivnosti.
+**Razkrito skrivnost vedno zamenjamo, ne le odstranimo.**
 
 Note:
 *[ne prikazuj resničnih razkritih gesel; primer ACME je v vajah 1.2 in 3.3]*
 
-Ena najpogostejših napak je zelo preprosta: na javnem strežniku ostane kopija, ki tja ne sodi. To so varnostne kopije, izvozi baz, dnevniki, datoteke z nastavitvami ali kar cel repozitorij .git.
+Ena najpogostejših napak je zelo preprosta: na javnem strežniku ostane datoteka, ki tja ne sodi.
 
-Primer na prosojnici je izmišljen: datoteke config.php.bak strežnik ne izvede, ampak jo vrne kot besedilo, skupaj z notranjim imenom in geslom. Dokaz je, da vsebino dobimo brez prijave. Če datoteka ni povezana s strani ali je navedena v robots.txt, to še ne pomeni, da je zaščitena.
+Varnostna kopija, na primer config.php.bak, je najbolj tipična. Strežnik datoteke s končnico .bak ne izvede kot PHP, ampak jo vrne kot besedilo, skupaj z gesli iz nastavitev. Še huje je razkrit repozitorij .git: iz njega napadalec obnovi vso kodo in zgodovino sprememb, tudi gesla, ki jih je razvijalec pozneje izbrisal. Izvozi baz razkrijejo podatke strank, datoteke .env in razvojne strani pa ključe API in notranje poti.
 
-Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je morda kdo že prebral. Konkretno pot preverimo s curl; ffuf in Gobuster pa iščeta poti po seznamu.
+Kako jih napadalec najde? Ne ugiba na slepo: seznami pogostih poti imajo na tisoče imen, kot so backup, .git ali .env, ffuf in Gobuster pa jih preizkusita v nekaj minutah. Pomagajo tudi iskalniki in Wayback Machine. Če datoteka ni povezana s strani ali je navedena v robots.txt, je zato ne skrije.
+
+Ukrep ima dva dela: datoteko odstranimo, razkrito geslo ali ključ pa zamenjamo, saj ga je morda kdo že prebral.
 
 ---
 
 ## Prijava: geslo in zaščita prenosa
 
-| Primer | Težava | Ukrep |
+| Zloraba | Kaj napadalec dobi | Ukrep |
 | --- | --- | --- |
-| Skrbniški vmesnik | Privzeti ali ponovno uporabljeni podatki | Ločene, ustrezno zaščitene prijave |
-| Notranji portal | HTTP Basic brez TLS | HTTPS in omejen dostop |
+| Privzeto geslo | Skrbniški dostop do vmesnika | Zamenjava ob namestitvi |
+| Geslo iz drugega vdora | Dostop do vseh storitev z istim geslom | Ločena gesla, MFA |
+| HTTP Basic brez TLS | Ime in geslo iz prestreženega prometa | HTTPS |
 
 ![Base64 pretvori ucenec:ucno v dWNlbmVjOnVjbm8= in nazaj brez skrivnega ključa](./images/encoding.svg)
 
@@ -552,7 +555,7 @@ Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je mo
 Note:
 *[primera ACME sta NAS in intranet (vaja 3.2); tu ju ne odpiraj]*
 
-Pri prijavah ločimo tri težave. Prva je privzeto geslo, ki ga nihče ni zamenjal. Druga je isto geslo na več mestih. Tretja je prenos brez šifriranja.
+Pri prijavah napadalec izkoristi tri slabosti. Prva je privzeto geslo, ki ga nihče ni zamenjal; seznami tovarniških gesel so javni. Druga je isto geslo na več mestih: gesla iz starih vdorov so prosto dostopna, napadalec pa jih samodejno preizkusi na drugih storitvah. Temu rečemo credential stuffing. Tretja je prenos brez šifriranja.
 
 Poglejmo tretjo. Pri HTTP Basic brskalnik pošlje uporabniško ime in geslo v glavi, zapisano v Base64. To ni šifriranje, ampak le drugačen zapis: v CyberChef ali v terminalu ga dekodiramo brez ključa. Brez HTTPS ga torej prebere vsak, ki vidi promet. Niz na prosojnici je izmišljen.
 
@@ -595,6 +598,8 @@ SELECT ... WHERE uporabnik = 'ana'-- ...
 
 **Napaka:** aplikacija podatke združi z navodili SQL.
 
+**Kaj napadalec dobi:** obhod prijave, branje celotne zbirke podatkov, včasih spreminjanje podatkov.
+
 **Ukrep:** parametrizirane poizvedbe ločijo podatke od kode.
 
 Note:
@@ -602,7 +607,7 @@ Note:
 
 SQL injection, po slovensko vrivanje SQL, je klasična napaka. Aplikacija sestavi poizvedbo tako, da vnos uporabnika preprosto prilepi med navodila SQL.
 
-Poglejmo poenostavljen primer. Če v polje za uporabnika vpišemo »ana«, narekovaj in dva vezaja, narekovaj zaključi vrednost, vezaja pa preostanek poizvedbe spremenita v komentar. Preverjanje gesla izgine in prijava uspe brez gesla.
+Poglejmo poenostavljen primer. Če v polje za uporabnika vpišemo »ana«, narekovaj in dva vezaja, narekovaj zaključi vrednost, vezaja pa preostanek poizvedbe spremenita v komentar. Preverjanje gesla izgine in prijava uspe brez gesla. Isti princip omogoča tudi branje drugih tabel, na primer vseh uporabnikov z zgoščenimi gesli.
 
 Rešitev ni filtriranje posebnih znakov, ampak parametrizirane poizvedbe, ki podatke ločijo od kode. Za ročno preverjanje uporabimo ZAP ali Burp, sqlmap pa avtomatizira preverjanje nekaterih vrst te napake.
 
@@ -626,6 +631,8 @@ rezultat.textContent = vnos;
 </div>
 
 **Napaka:** brskalnik vnos obravnava kot kodo.
+
+**Kaj napadalec dobi:** dejanja in podatke v imenu žrtve, včasih prevzem seje.
 
 **Ukrep:** varni vmesniki DOM (`textContent`) in kontekstno kodiranje izhoda.
 
@@ -653,6 +660,8 @@ Račun A → GET /api/kosarice/12  → košarica B
 </div>
 
 **IDOR / BOLA:** strežnik ne preveri pravice do zahtevanega objekta.
+
+**Kaj napadalec dobi:** podatke drugih uporabnikov, samo s spreminjanjem številke.
 
 **Ukrep:** pri vsaki zahtevi preverimo lastništvo in dovoljene pravice.
 
