@@ -62,7 +62,7 @@ In že zdaj povem: pošteno omejen sklep, na primer »oglašena različica je me
 Note:
 *[sklop skupaj ≈12 min, z naslovnico in okvirom]*
 
-Začnimo s sledmi, ki jih puščamo za sabo. OSINT pomeni zbiranje in povezovanje javno dostopnih informacij: spletnih strani, dokumentov, objav in javnih evidenc. Sorodno področje je digitalna forenzika, ki preiskuje podatke na napravah, v datotekah in v zajemih prometa. Področji se dopolnjujeta, meja pa je jasna: ko pregledujemo tuj disk ali pomnilnik, to ni več OSINT.
+Začnimo s sledmi, ki jih puščamo za sabo. OSINT, open source intelligence, je obveščevalna dejavnost iz javnih virov: zbiranje in povezovanje javno dostopnih informacij: spletnih strani, dokumentov, objav in javnih evidenc. Sorodno področje je digitalna forenzika, ki preiskuje podatke na napravah, v datotekah in v zajemih prometa. Področji se dopolnjujeta, meja pa je jasna: ko pregledujemo tuj disk ali pomnilnik, to ni več OSINT.
 
 Ogledali si bomo splošne vzorce in nekaj resničnih dogodkov.
 
@@ -81,14 +81,18 @@ Ime avtorja lahko povežemo z javnim seznamom zaposlenih.
 
 **Ujemanje imena še ne dokaže avtorstva.**
 
+**Ukrep:** pred objavo očistimo metapodatke dokumentov.
+
 Note:
 *[PDF ACME je v vaji 1.4; tu ga ne odpiraj]*
 
-Vsak dokument nosi tudi podatke o sebi, metapodatke: kdo naj bi ga napisal, s katerim programom in kdaj. Fotografije imajo pogosto še lokacijo GPS.
+Vsak dokument nosi tudi podatke o sebi, metapodatke: kdo naj bi ga napisal, s katerim programom in kdaj. Fotografije s telefona imajo pogosto še lokacijo GPS. Večina družbenih omrežij jo ob objavi odstrani, e-pošta, spletne strani in deljene datoteke pa ne.
 
 Na prosojnici so lastnosti dokumenta Word, kot jih pokaže Windows: avtor, kdo ga je zadnji shranil, program in datuma. Če na spletni strani podjetja najdemo osebo s tem imenom, se podatka ujemata. Ali je dokument res napisala ta oseba? Tega ne vemo. Ime lahko izvira iz predloge ali iz računalnika, ki ga je nekdo podedoval.
 
-Napadalcu so takšni podatki vseeno koristni: razkrijejo imena zaposlenih, stare različice programov ali notranje poti do datotek.
+Napadalcu so takšni podatki vseeno koristni: razkrijejo imena zaposlenih, stare različice programov ali notranje poti do datotek. Z imeni in vlogami zaposlenih sestavi prepričljivo ciljano sporočilo, phishing.
+
+Ukrep je preprost: dokument pred objavo očistimo, na primer z Wordovim pregledovalnikom dokumenta ali z `exiftool -all=`.
 
 ---
 
@@ -129,22 +133,26 @@ site:podjetje.example inurl:backup
 
 </div>
 
-[Wayback Machine](https://web.archive.org/) pokaže stare objave.
+[Wayback Machine](https://web.archive.org/) pokaže stare različice strani.
 
 [ctlogs.dev](https://ctlogs.dev/) in [crt.sh](https://crt.sh/) razkrijeta imena iz javnih certifikatov.
 
 Tudi DNS je javni vir: zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje.
+
+**Ukrep:** redno poiščemo lastne sledi; objavljeno ostane v arhivu, zato razkrite skrivnosti zamenjamo.
 
 Note:
 *[poizvedb ne izvajaj v živo; acme.lab ni javno indeksiran]*
 
 Kako takšne sledi iščemo? Iskalniki poznajo operatorje: `site` omeji iskanje na domeno, `filetype` na vrsto datoteke, `inurl` na del naslova. Tako hitro najdemo objavljene PDF-je ali pozabljene varnostne kopije.
 
-Wayback Machine hrani stare različice strani, tudi tiste, ki jih je podjetje že umaknilo. ctlogs.dev in crt.sh iščeta po javnih dnevnikih certifikatov, kjer se pojavijo imena strežnikov, na primer test ali vpn.
+Wayback Machine hrani stare različice strani, tudi tiste, ki jih je podjetje že umaknilo. ctlogs.dev in crt.sh iščeta po javnih dnevnikih certifikatov (Certificate Transparency), kjer se pojavijo imena strežnikov, na primer test ali vpn. Certifikat z nadomestnim imenom, na primer *.podjetje.example, posameznih imen ne razkrije.
 
 Javni vir je tudi DNS. Običajni zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje. Tehnično ozadje razložim v sklopu omrežij. Pri tem upoštevajte, da je poizvedba na strežnik že neposreden stik s tarčo, ne pasivno iskanje.
 
 Še dve opozorili. Noben vir ni popoln ali nujno aktualen, zato vedno zapišemo, od kod je podatek in iz katerega dne. In robots.txt je samo prošnja iskalnikom, naj nečesa ne indeksirajo, ne pa zaklepanje.
+
+Za obrambo je ukrep isti kot za napad: svoje sledi poiščemo sami in redno. Umaknjena stran ostane v arhivu, zato razkrito geslo ali ključ vedno zamenjamo, ne le skrijemo.
 
 ---
 
@@ -156,6 +164,8 @@ Preberemo storitev, odziv in čas zadnjega opažanja.
 
 **Oznaka CVE je namig za preverjanje.**
 
+**Ukrep:** isti vir uporabimo za popis lastne zunanje izpostavljenosti.
+
 Note:
 *[posnetek: iskanje country:SI, 20. 10. 2026; poizvedb ne izvajaj v živo]*
 
@@ -165,7 +175,9 @@ Tukaj smo iskali vse, kar je Shodan zaznal v Sloveniji. Levo je povzetek: mesta,
 
 Preberimo enega. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz baze naslovov, ne fizični naslov naprave. Pod tem je odziv storitve, na primer pozdrav poštnega strežnika Dovecot ali SSH z različico OpenSSH. Ključen je čas zgoraj desno: pove, kdaj je bilo zaznano, ne kakšno je stanje zdaj.
 
-Če Shodan ob zadetku pokaže oznako CVE, je to namig za preverjanje, ne dokaz ranljivosti.
+Če Shodan ob zadetku pokaže oznako CVE, javno oznako znane ranljivosti, je to namig za preverjanje, ne dokaz ranljivosti.
+
+Shodan ni le orodje napadalca. Podjetje lahko z istim iskanjem preveri, katere njegove storitve so vidne z interneta, in jih primerja s svojim popisom.
 
 ---
 
@@ -177,7 +189,7 @@ Preberimo enega. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz
 | Javno objavljene naslove in imena | [theHarvester](https://github.com/laramies/theHarvester) |
 | Povezave med podatki | [Maltego](https://www.maltego.com/), [SpiderFoot](https://github.com/smicallef/spiderfoot) |
 | Rekurzivno odkrivanje domen in storitev | [BBOT](https://github.com/blacklanternsecurity/bbot) |
-| Metapodatke in nosilce | [ExifTool](https://exiftool.org/), [Autopsy](https://www.autopsy.com/) |
+| Metapodatke in nosilce podatkov | [ExifTool](https://exiftool.org/), [Autopsy](https://www.autopsy.com/) |
 | Zajeme delovnega pomnilnika | [Volatility](https://volatilityfoundation.org/) |
 
 Note:
@@ -199,7 +211,7 @@ Da ne bo pomote: ne trdim, da so bila ta orodja uporabljena v primerih, ki smo j
 | --- | --- | --- |
 | Javni strežniki | Spletna stran, pošta | Kaj mora biti dosegljivo od zunaj? |
 | Notranji sistemi | Dokumenti, zbirke podatkov | Kdo jih potrebuje za delo? |
-| Naprave in upravljanje | Kamera, klima, skrbniški vmesnik | Od kod je dostop upravičen? |
+| Naprave in upravljanje | Kamera, klimatska naprava, skrbniški vmesnik | Od kod je dostop upravičen? |
 
 
 Note:
@@ -236,9 +248,9 @@ PORT    STATE  SERVICE  VERSION
 Note:
 *[ukaz izvedejo v vajah 2.1 in 2.3; v živo ni obvezen]*
 
-Najbolj znano orodje za pregled omrežja je Nmap. Na izpisu iščemo odgovore na tri vprašanja: ali naprava obstaja, katera vrata so dosegljiva in katera storitev na njih teče.
+Najbolj znano orodje za pregled omrežja je Nmap. Na izpisu iščemo odgovore na tri vprašanja: ali naprava odgovarja, katera vrata so dosegljiva in katera storitev na njih teče.
 
-V ukazu `-Pn` preskoči preverjanje prisotnosti, `-sT` vzpostavi povezavo TCP, `-p` izbere vrata, `-sV` pa storitev vpraša, kaj je. Brez `-sV` Nmap ime storitve le ugiba po številki vrat.
+V ukazu `-Pn` preskoči preverjanje prisotnosti, ker ga požarni zidovi pogosto blokirajo, `-sT` vzpostavi povezavo TCP, `-p` izbere vrata, `-sV` pa storitev vpraša, kaj je. Brez `-sV` Nmap ime storitve le ugiba po številki vrat.
 
 Izpis pravi: na vratih 80 teče Apache 2.4.49. To potrdi, da je storitev dosegljiva. Ali je ranljiva, je drugo vprašanje. Odprta vrata sama po sebi tudi niso napaka.
 
@@ -261,12 +273,12 @@ cam01.podjetje.example.     A  10.10.30.10
 
 **Napaka:** prenos območja je dovoljen vsakomur.
 
-**Ukrep:** omejimo AXFR in ločimo notranje podatke DNS.
+**Ukrep:** omejimo AXFR, notranja imena pa hranimo v ločenem, notranjem DNS.
 
 Note:
 *[izpis je sintetičen, 192.0.2.53 ni tarča; preizkus je vaja 1.3]*
 
-DNS je imenik interneta: imena prevaja v naslove. Strežniki si celotno območje izmenjujejo s prenosom AXFR, kar je med glavnim in rezervnim strežnikom povsem normalno.
+DNS je imenik interneta: imena prevaja v naslove. Strežniki si celotno območje izmenjujejo s prenosom AXFR, kar je med primarnim in sekundarnim strežnikom povsem normalno.
 
 Težava nastane, ko strežnik prenos dovoli komurkoli. Takrat napadalec z enim ukazom dobi seznam vseh imen, tudi notranjih: datotečni strežnik, intranet, kamero. To je zemljevid infrastrukture.
 
@@ -276,10 +288,10 @@ Ime v DNS pa še ne pomeni, da storitev lahko dosežemo; o tem odloča požarni 
 
 ## SMB: kdo lahko bere deljene datoteke?
 
-| Opažanje | Kaj dokazuje? | Česa še ne vem? |
+| Opažanje | Kaj dokazuje? | Česa še ne vemo? |
 | --- | --- | --- |
-| Vidim ime mape | Mapa obstaja | Ali jo lahko odprem |
-| Brez prijave preberem datoteko | Gost lahko bere | Ali so podatki občutljivi |
+| Vidimo ime mape | Mapa obstaja | Ali jo lahko odpremo |
+| Brez prijave preberemo datoteko | Gost lahko bere | Ali so podatki občutljivi |
 | Prodaja bere mapo kadrovske | Pravice so širše od vloge | Kdo vse še ima dostop |
 
 **Javna mapa sama ni napaka; težava je, kaj je v njej.**
@@ -289,7 +301,7 @@ Ime v DNS pa še ne pomeni, da storitev lahko dosežemo; o tem odloča požarni 
 Note:
 *[ukazi so pri vaji 2.2; tu jih ne izvajaj]*
 
-Deljene mape so v podjetjih eden najpogostejših virov preširokega dostopa. Na prosojnici so tri opažanja, ki dokazujejo različne stvari, in pri vsakem nekaj še manjka. Če vidim ime mape, vem le, da obstaja, ne pa, ali jo lahko odprem. Če datoteko preberem brez prijave, ima gost pravico branja, ne vem pa še, ali je vsebina občutljiva. Če račun iz prodaje bere mapo kadrovske službe, so pravice širše od vloge, odprto pa ostane, kdo vse ima še tak dostop.
+Deljene mape prek protokola SMB, ki ga uporablja Windows, so v podjetjih eden najpogostejših virov preširokega dostopa. Na prosojnici so tri opažanja, ki dokazujejo različne stvari, in pri vsakem nekaj še manjka. Če vidimo ime mape, vemo le, da obstaja, ne pa, ali jo lahko odpremo. Če datoteko preberemo brez prijave, ima gost pravico branja, ne vemo pa še, ali je vsebina občutljiva. Če račun iz prodaje bere mapo kadrovske službe, so pravice širše od vloge, odprto pa ostane, kdo vse ima še tak dostop.
 
 Javna mapa ni nujno napaka, če so v njej res javni podatki. Težava nastane, ko vanjo nekdo odloži seznam naprav, izvoz baze ali kopijo pogodbe.
 
@@ -301,20 +313,20 @@ Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng.
 
 ![Isti prenosnik iz vtičnice v sejni sobi: v segmentiranem omrežju kamera in klima nista dosegljivi, v omrežju brez omejitev pa postaneta dosegljivi](./images/segmentation-compare.svg)
 
-**Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.**
+**Segmentacija omeji dovoljene poti in s tem, kam seže napadalec iz prevzetega sistema.**
 
-Za razpravo: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ?
+Za razpravo: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ, ločenem segmentu za javne storitve?
 
 Note:
 *[≈3 min · osrednji prikaz delavnice]*
 
-Zdaj osrednji prikaz današnje delavnice. Segmentacija pomeni, da omrežje razdelimo po vlogah in s pravili določimo, kateri promet med deli je dovoljen. Ločen VLAN brez pravil še ni segmentacija.
+Zdaj osrednji prikaz današnje delavnice. Segmentacija pomeni, da omrežje razdelimo po vlogah in s pravili določimo, kateri promet med deli je dovoljen. VLAN, navidezno ločeno omrežje na istih stikalih, še ni segmentacija, če usmerjevalnik med njimi prepušča ves promet.
 
 Predstavljajte si, da ste obiskovalec v podjetju in prenosnik priključite v vtičnico v sejni sobi. Z istega mesta poženemo isti ukaz proti krmilniku klime. V segmentiranem omrežju so vrata filtrirana. Ko segmentacijo izklopimo, sta odprta spletni vmesnik in Modbus, protokol za krmiljenje naprav, ki ne pozna prijave.
 
 Na krmilniku se ni spremenilo nič, spremenila so se le pravila poti. Segmentacija ne prepreči vdora, omeji pa, kam pride nekdo, ki je že notri.
 
-In vprašanje za vas: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ? Odgovor pustimo za naslednjo prosojnico.
+In vprašanje za vas: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ? DMZ je ločen del omrežja za javne storitve, kot sta spletna stran in pošta. Odgovor pustimo za naslednjo prosojnico.
 
 *Izvedba:* `./infra/lab.sh scenario flat`, z istega Kalija ponovi ukaz (nova povezava), nato takoj `./infra/lab.sh scenario visitor` in preveri status. Preklop velja za vse, zato ga izvedi samo med predstavitvijo, nikoli med vajami. Brez laboratorija uporabi izpis s prosojnice. `nmap -sn` lahko v visitor napravo IoT pokaže kot dosegljivo; šteje rezultat vrat.
 
@@ -372,7 +384,7 @@ Nauk za nas: popravki zmanjšajo možnost okužbe, omejene omrežne poti pa omej
 | --- | --- | --- |
 | Kamera | HTTP, RTSP 554/tcp | Izpostavljenost vmesnika |
 | Tiskalnik | SNMP 161/udp | Podatke s skupnostjo `public` |
-| Klima | Modbus 502/tcp | Dosegljivost krmilnika |
+| Klimatska naprava | Modbus 502/tcp | Dosegljivost krmilnika |
 
 <div class="example">
 <div class="example-label">VZOREC UKAZA · SNMP</div>
@@ -388,13 +400,13 @@ snmpwalk -v2c -c public [IP-tiskalnika] 1.3.6.1.2.1.1
 Note:
 *[uporabi izsek s prosojnice, povezav ne vzpostavljaj]*
 
-Pri napravah IoT je težava pogosto v tem, da jih nihče ne šteje za računalnike. Kamera ima spletni vmesnik in video tok RTSP. Tiskalnik prek protokola SNMP s privzeto skupnostjo public izda lokacijo in kontakt. Krmilnik klime uporablja Modbus, ki ne preverja, kdo pošilja ukaze.
+Pri napravah IoT, internetu stvari, je težava pogosto v tem, da jih nihče ne šteje za računalnike. Kamera ima spletni vmesnik in video tok RTSP. Tiskalnik prek protokola SNMP s privzeto skupnostjo public izda lokacijo in kontakt. Krmilnik klime uporablja Modbus, ki ne preverja, kdo pošilja ukaze.
 
 Na prosojnici je primer ukaza, ki iz tiskalnika prebere osnovne podatke. Dosegljiva vrata pa še ne pomenijo, da lahko spremenimo nastavitve.
 
 Ukrep je enak kot pri segmentaciji: dostop do naprav omejimo na mesta, od koder jih upravljamo.
 
-*Izvedba:* ukaz ima nadomestni naslov. SNMP v živo (tiskalnik 172.20.30.11) izvedi samo skupaj s prikazom segmentacije v flat, nato vrni visitor. Če kdo vpraša za Wireshark: vidi le promet, ki doseže naš vmesnik, ne vsega prometa v preklopljenem omrežju.
+*Izvedba:* ukaz ima nadomestni naslov. SNMP v živo (tiskalnik 172.20.30.11) izvedi samo skupaj s prikazom segmentacije v flat, nato vrni visitor. Če kdo vpraša za Wireshark: vidi le promet, ki doseže naš vmesnik, ne vsega prometa v omrežju s stikali.
 
 ---
 
@@ -420,7 +432,7 @@ Metasploit pomaga pri nadzorovanem preverjanju znanih ranljivosti, a sam obstoj 
 | V poročilu | Vprašanje za preizkuševalca |
 | --- | --- |
 | Tarča, storitev in dokaz | Kaj je pregledovalnik dejansko izmeril? |
-| Resnost (CVSS) | Kakšne so lahko posledice? |
+| Resnost (CVSS) | Kako resna je ranljivost sama po sebi? |
 | Zanesljivost zaznave | Ali temelji le na različici ali na preizkusu? |
 | Predlog odprave | Kaj spremenimo in kako preverimo popravek? |
 
@@ -431,7 +443,7 @@ Note:
 
 Pregledovalniki ranljivosti, kot sta OpenVAS iz paketa Greenbone in Nessus, za veliko naprav hkrati naredijo to, kar smo pravkar opisali: prepoznajo storitve in jih primerjajo z bazo znanih ranljivosti. Poročila so dolga, zato se naučimo brati eno ugotovitev.
 
-Pri vsaki pogledamo štiri stvari. Najprej tarčo, storitev in dokaz, torej izpis, iz katerega je orodje sklepalo. Nato resnost, običajno po lestvici CVSS, ki pove možne posledice, ne pa verjetnosti napada; za to nekatera orodja dodajo oceno, kot je EPSS. Tretja je zanesljivost zaznave: OpenVAS jo izrazi kot Quality of Detection, pri Nessusu pa iz opisa vtičnika razberemo, ali je preveril le različico ali dejansko vedenje. In na koncu predlog odprave, skupaj s tem, kako bomo popravek preverili.
+Pri vsaki pogledamo štiri stvari. Najprej tarčo, storitev in dokaz, torej izpis, iz katerega je orodje sklepalo. Nato resnost, običajno po lestvici CVSS, ki oceni tehnično resnost ranljivosti, ne pa tveganja v našem okolju ali verjetnosti napada; za verjetnost izrabe nekatera orodja dodajo oceno, kot je EPSS. Tretja je zanesljivost zaznave: OpenVAS jo izrazi kot Quality of Detection, pri Nessusu pa iz opisa vtičnika razberemo, ali je preveril le različico ali dejansko vedenje. In na koncu predlog odprave, skupaj s tem, kako bomo popravek preverili.
 
 Še dve omejitvi. Pregled brez prijave vidi le, kar storitev pokaže navzven; pregled s prijavo v sistem pozna nameščene pakete in je zato natančnejši. In pregledovalnik ne najde ničesar na napravi, ki je ni v obsegu pregleda. Zato je inventar temelj vsega.
 
@@ -444,7 +456,7 @@ Pri vsaki pogledamo štiri stvari. Najprej tarčo, storitev in dokaz, torej izpi
 | Odkrijemo storitve in izpostavljenost | [Nmap](https://nmap.org/), [Masscan](https://github.com/robertdavidgraham/masscan) |
 | Preverimo deljene mape | [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html), [enum4linux-ng](https://github.com/cddmp/enum4linux-ng) |
 | Razumemo omrežni promet | [Wireshark](https://www.wireshark.org/docs/), [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html) |
-| Poiščemo znane težave | [Greenbone](https://greenbone.github.io/docs/latest/), [Nessus](https://www.tenable.com/products/nessus) |
+| Poiščemo znane težave | [OpenVAS (Greenbone)](https://greenbone.github.io/docs/latest/), [Nessus](https://www.tenable.com/products/nessus) |
 | Preverimo izbrano znano ranljivost | [Metasploit](https://www.rapid7.com/products/metasploit/) |
 | Spremljamo dogajanje in opozorila | [Zeek](https://zeek.org/), [Suricata](https://suricata.io/), [Wazuh](https://wazuh.com/platform/overview/) |
 
@@ -453,7 +465,7 @@ Pri vsaki pogledamo štiri stvari. Najprej tarčo, storitev in dokaz, torej izpi
 Note:
 *[pregled področja, orodij ne zaganjaj]*
 
-Še pogled na širše področje. Nmap in Masscan odkrivata storitve; Masscan je zelo hiter, a storitve prepozna manj natančno. Wireshark in tcpdump zajemata promet, ki ga vidimo. Greenbone in Nessus iščeta znane težave, Metasploit pa preverja izbrane znane ranljivosti.
+Še pogled na širše področje. Nmap in Masscan odkrivata storitve; Masscan je zelo hiter, a storitve prepozna manj natančno. Wireshark in tcpdump zajemata promet, ki ga vidimo. OpenVAS in Nessus iščeta znane težave, Metasploit pa preverja izbrane znane ranljivosti.
 
 Spodnja vrstica je druga stran, obramba. Zeek iz prometa izdela zapise o dogodkih, Suricata zaznava sumljiv promet in opozarja, Wazuh pa zbira dnevnike sistemov, spremlja spremembe datotek in povezuje dogodke.
 
@@ -467,7 +479,7 @@ Pregled, izraba in zaznava niso isto. Enkraten pregled pove, kakšno je stanje d
 
 ![Brskalnik pošlje zahtevo HTTP strežniku, ta jo obdela in vrne odgovor s statusom in vsebino](./images/http.svg)
 
-Primer: `GET /api/izdelki?q=jabolko` → strežnik vrne `200 OK` z JSON. Metoda in pot → podatki → obdelava → odgovor.
+Primer: `GET /api/izdelki?q=jabolko` → strežnik vrne `200 OK` s podatki JSON. Metoda in pot → podatki → obdelava → odgovor.
 
 Note:
 *[sklop skupaj ≈14 min, s sklepno prosojnico]*
@@ -530,7 +542,7 @@ Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je mo
 
 | Primer | Težava | Ukrep |
 | --- | --- | --- |
-| Upravljavski vmesnik | Privzeti ali ponovno uporabljeni podatki | Ločene, ustrezno zaščitene prijave |
+| Skrbniški vmesnik | Privzeti ali ponovno uporabljeni podatki | Ločene, ustrezno zaščitene prijave |
 | Notranji portal | HTTP Basic brez TLS | HTTPS in omejen dostop |
 
 ![Base64 pretvori ucenec:ucno v dWNlbmVjOnVjbm8= in nazaj brez skrivnega ključa](./images/encoding.svg)
@@ -544,7 +556,7 @@ Pri prijavah ločimo tri težave. Prva je privzeto geslo, ki ga nihče ni zamenj
 
 Poglejmo tretjo. Pri HTTP Basic brskalnik pošlje uporabniško ime in geslo v glavi, zapisano v Base64. To ni šifriranje, ampak le drugačen zapis: v CyberChef ali v terminalu ga dekodiramo brez ključa. Brez HTTPS ga torej prebere vsak, ki vidi promet. Niz na prosojnici je izmišljen.
 
-Še dve pojasnili. Vaš brskalnik podatke vidi tudi pri HTTPS, saj jih šifrira šele ob pošiljanju. MFA zmanjša tveganje prevzema računa, ne nadomesti pa preverjanja, do česa ima prijavljeni uporabnik pravico.
+Še dve pojasnili. Vaš brskalnik podatke vidi tudi pri HTTPS, saj jih šifrira šele ob pošiljanju. MFA, večstopenjsko preverjanje prijave, zmanjša tveganje prevzema računa, ne nadomesti pa preverjanja, do česa ima prijavljeni uporabnik pravico.
 
 ---
 
@@ -588,7 +600,7 @@ SELECT ... WHERE uporabnik = 'ana'-- ...
 Note:
 *[postopek na Juice Shop je v vaji 3.4]*
 
-SQL injection je klasična napaka. Aplikacija sestavi poizvedbo tako, da vnos uporabnika preprosto prilepi med navodila SQL.
+SQL injection, po slovensko vrivanje SQL, je klasična napaka. Aplikacija sestavi poizvedbo tako, da vnos uporabnika preprosto prilepi med navodila SQL.
 
 Poglejmo poenostavljen primer. Če v polje za uporabnika vpišemo »ana«, narekovaj in dva vezaja, narekovaj zaključi vrednost, vezaja pa preostanek poizvedbe spremenita v komentar. Preverjanje gesla izgine in prijava uspe brez gesla.
 
@@ -615,16 +627,16 @@ rezultat.textContent = vnos;
 
 **Napaka:** brskalnik vnos obravnava kot kodo.
 
-**Ukrep:** varen DOM in kontekstu primerna obdelava izhoda.
+**Ukrep:** varni vmesniki DOM (`textContent`) in kontekstno kodiranje izhoda.
 
 Note:
 *[neobvezen prikaz samo na lokalnem učnem primeru, nikoli shranjenega XSS na skupni tarči]*
 
-XSS, cross-site scripting, je sorodna napaka, le da se ne zgodi v bazi, ampak v brskalniku. Aplikacija vstavi v stran vnos, ki mu ne bi smela zaupati, brskalnik pa ga izvede kot kodo.
+XSS, cross-site scripting ali skriptiranje med spletnimi mesti, je sorodna napaka, le da se ne zgodi v bazi, ampak v brskalniku. Aplikacija vstavi v stran vnos, ki mu ne bi smela zaupati, brskalnik pa ga izvede kot kodo.
 
-V primeru je razlika ena sama beseda. innerHTML vnos razume kot HTML, textContent pa kot navadno besedilo. Za prikaz besedila je textContent prava izbira; če moramo dovoliti HTML, ga je treba sanitizirati.
+V primeru je razlika ena sama beseda. innerHTML vnos razume kot HTML, textContent pa kot navadno besedilo. Za prikaz besedila je textContent prava izbira; če moramo dovoliti HTML, ga je treba prečistiti.
 
-Posledice so odvisne od konteksta: skripta lahko izvaja dejanja v imenu uporabnika ali bere podatke, ki jih ta vidi. Glavni ukrep je kontekstno kodiranje izhoda; politika CSP je dodatna obramba, ki omeji škodo, napake pa ne odpravi. DOM XSS lahko nastane v celoti v brskalniku, brez sledi v strežniškem odgovoru.
+Posledice so odvisne od konteksta: skripta lahko izvaja dejanja v imenu uporabnika ali bere podatke, ki jih ta vidi. Glavni ukrep je kontekstno kodiranje izhoda; politika CSP, Content Security Policy, je dodatna obramba, ki omeji škodo, napake pa ne odpravi. DOM XSS lahko nastane v celoti v brskalniku, brez sledi v strežniškem odgovoru.
 
 ---
 
@@ -649,7 +661,7 @@ Note:
 
 Zadnja napaka v tem sklopu je v sodobnih API-jih morda najpogostejša. Uporabnik A je pravilno prijavljen in odpre svojo košarico številka 7. Nato v zahtevi številko spremeni v 12 in dobi košarico uporabnika B.
 
-Strežnik je preveril, kdo je uporabnik, ni pa preveril, ali sme videti ta objekt. Temu rečemo IDOR, insecure direct object reference, ali BOLA, broken object level authorization.
+Strežnik je preveril, kdo je uporabnik, to je avtentikacija ali preverjanje istovetnosti. Ni pa preveril, ali sme videti ta objekt, to je avtorizacija ali preverjanje pooblastil. Temu rečemo IDOR, insecure direct object reference, ali BOLA, broken object level authorization. Na seznamu OWASP API Security Top 10 je BOLA na prvem mestu.
 
 Isto se lahko zgodi pri računih, naročilih, zdravstvenih dokumentih ali datotekah. Težje uganljiv ID ni rešitev; strežnik mora pri vsaki zahtevi preveriti lastništvo.
 
@@ -672,7 +684,7 @@ Note:
 
 Equifax, ena od treh velikih ameriških kreditnih agencij, leto 2017. Podjetje ni pravočasno namestilo popravka za znano ranljivost v spletnem ogrodju Apache Struts. Napadalci so vstopili prek nje, dostopali do drugih sistemov, razkriti pa so bili podatki približno 147 milijonov ljudi.
 
-Ameriški regulator FTC je ob poravnavi leta 2019 podjetju očital še neustrezno ločitev baz in prijavne podatke v nezaščiteni datoteki. To so očitki regulatorja, ne naša forenzična analiza.
+Ameriški regulator FTC je ob poravnavi leta 2019 podjetju očital še neustrezno ločitev baz in prijavne podatke v nezaščiteni datoteki. To so očitki regulatorja, ne naša forenzična analiza. Po poročilu kongresnega odbora iz leta 2018 je bil poleg tega potekel certifikat na napravi za pregled prometa, zato iztekanja podatkov dolgo niso zaznali. Tudi orodje za spremljanje je treba vzdrževati.
 
 Ta vzorec smo danes videli že večkrat: aplikacijska vstopna točka, razkrite skrivnosti in preširoki notranji dostopi. Ključna sta inventar komponent in preverjanje, ali je bil popravek res nameščen.
 
@@ -754,13 +766,45 @@ Rezultat vsakega orodja preverimo, preden ga zapišemo kot ugotovitev.
 
 ---
 
+## Od ugotovitve do ukrepa
+
+<div class="case-chain"><span>Sled na javni strani</span><b>→</b><span>Geslo v pozabljeni kopiji</span><b>→</b><span>Isto geslo odpre drugo storitev</span><b>→</b><span>Ukrep in ponovno preverjanje</span></div>
+
+<div class="example">
+<div class="example-label">ISTI OKVIR · IZMIŠLJEN PRIMER</div>
+
+```plaintext
+Opazili     /backup/config.php.bak na podjetje.example
+Dokaz       datoteka vrnjena brez prijave, 2026-10-20 10:42
+Ne vemo     ali jo je kdo že prenesel
+Omogoča     prijavo v drugo storitev z istim geslom
+Spremenimo  odstranimo kopijo, zamenjamo geslo, preverimo znova
+```
+
+</div>
+
+**Napaka zunaj laboratorija?** Ne preizkušajte naprej; sporočite jo lastniku (`security.txt`) ali [SI-CERT](https://www.cert.si/).
+
+**Poišči sled. Preveri dokaz. Predlagaj zaščito.**
+
+Note:
+*[≈1,5 min · sklepna prosojnica, nato ACME]*
+
+Za konec se vrnimo na okvir z začetka. Danes smo ga uporabili trikrat: pri sledeh smo spraševali, kaj o nas povedo javni podatki, pri omrežjih, kam lahko pridemo, pri aplikacijah pa, kaj se zgodi z vnosom. Napadalec teh vprašanj ne loči; poveže jih v verigo.
+
+Primer na prosojnici je izmišljen, a ga boste v podobni obliki srečali pri vajah. Opazili smo kopijo na javni strani. Dokaz je odgovor strežnika s časom. Ne vemo, ali jo je kdo že prenesel, zato geslo obravnavamo kot razkrito. Omogoča prijavo drugam, če je geslo ponovljeno. In ukrep ni končan, ko ga predlagamo: ponovno preverimo, da kopija ni več dosegljiva in da staro geslo ne deluje.
+
+Še zadnje, morda najpomembnejše. Če kaj podobnega opazite zunaj laboratorija, se ustavite pri dokazu. Ne preizkušajte, ali geslo deluje. Sporočite lastniku sistema; veliko organizacij ima kontakt na naslovu /.well-known/security.txt. Če lastnika ne najdete, pomaga nacionalni odzivni center SI-CERT.
+
+---
+
 ## ACME: izmišljeno podjetje za vaje
 
 ![Udeleženec prek požarnega zidu do treh segmentov ACME: DMZ, LAN in IoT](./images/acme.svg)
 
 <small>Javni naslovi 198.51.100.11–15 · DMZ 172.20.10.0/24 · LAN 172.20.20.0/24 · IoT 172.20.30.0/24</small>
 
-**Vaš položaj:** prenosnik v vtičnici sejne sobe. Dosežete javne naslove, LAN in storitve DMZ, IoT pa ne.
+**Vaš položaj:** prenosnik v vtičnici sejne sobe. Dosežete javne naslove, LAN in storitve DMZ, IoT pa ne. **Že dosegljiv LAN je ugotovitev.**
 
 Note:
 *[≈2 min]*
@@ -769,7 +813,7 @@ Zdaj pa k vajam. ACME je izmišljeno podjetje, ki obstaja samo v našem laborato
 
 Omrežje ima tri dele. V DMZ so javne storitve: spletna stran, trgovina, pošta, DNS in strežnik za oddaljeni dostop. V pisarniškem omrežju LAN so datotečni strežnik, intranet, NAS, delovna postaja in Metasploitable 2, star, nevzdrževan strežnik. V IoT so kamera, tiskalnik in klima.
 
-Ves čas ste v vlogi obiskovalca, ki je prenosnik priključil v sejni sobi. Dosežete javne naslove, pisarniško omrežje in storitve v DMZ, naprav IoT pa ne. Zakaj, smo videli pri segmentaciji.
+Ves čas ste v vlogi obiskovalca, ki je prenosnik priključil v sejni sobi. Dosežete javne naslove, pisarniško omrežje in storitve v DMZ, naprav IoT pa ne. Bodite pozorni: da iz sejne sobe sploh dosežete pisarniški LAN, je že prva ugotovitev, ki bi jo zapisali v poročilo. IoT je zaprt, ker zanj veljajo pravila, ki smo jih videli pri segmentaciji.
 
 Notranjih naslovov ACME ne iščite na javnem internetu.
 

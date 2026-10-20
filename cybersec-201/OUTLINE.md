@@ -20,46 +20,44 @@ Predstavitev odpre naslovna prosojnica po vzoru Cybersec-101, sledi ji prosojnic
 
 ## Prosojnice
 
-Predstavitev vsebuje 36 prosojnic: naslovno, okvir dela, osem za digitalne sledi, enajst za omrežja, dvanajst za aplikacije, sklepno ter dve za ACME in pravila vaj. Pet resničnih dogodkov ima vidne povezave do primarnih virov ter pojasnila v opombah. Izmišljeni izpisi, poti API in številke košaric so označeni kot ponazoritve.
+Predstavitev vsebuje 34 prosojnic: naslovno, okvir dela, šest za digitalne sledi, enajst za omrežja, dvanajst za aplikacije, sklepno ter dve za ACME in pravila vaj. Štirje resnični dogodki imajo vidne povezave do primarnih virov ter pojasnila v opombah. Izmišljeni izpisi, poti API in številke košaric so označeni kot ponazoritve.
 
 | Št. | Naslov | Namen |
 | --- | --- | --- |
 | 1 | OSINT, omrežna in aplikacijska varnost | Naslovnica z geslom, fotografijo, avtorjem in datumom po vzoru Cybersec-101. |
 | 2 | Od sledi do ukrepa | Okvir dela za vse ugotovitve; ustreza zapisu pri vajah. |
 | 3 | 1. sklop · Digitalne sledi | Splošen pogled na javne sledi ter razlikovanje OSINT in forenzike. |
-| 4 | Kaj razkrijejo stran in dokumenti? | Metapodatki, povezovanje podatkov in omejitve sklepa. |
+| 4 | Kaj razkrijejo stran in dokumenti? | Metapodatki, povezovanje podatkov, omejitve sklepa in čiščenje pred objavo. |
 | 5 | Philadelphia, 2020: majica poveže spletne sledi | Povezovanje posnetkov, spletne ocene in profilov z dodatno potrditvijo. |
-| 6 | Iskanje omejimo na uporabne sledi | Iskalni operatorji, arhivi in certifikati. |
-| 7 | Strava, 2018: vzorec gibanja razkrije lokacijo | Resnični primer sklepanja iz javnih lokacijskih vzorcev. |
-| 8 | Shodan: kaj je bilo zaznano in kdaj? | Storitev, odziv in čas opažanja. |
-| 9 | Orodja za sledi, povezave in forenziko | Zbiranje, povezovanje podatkov, pregled nosilcev in pomnilnika. |
-| 10 | Povežimo podatke, preverimo sklep | Razlika med podatkom in potrjenim sklepom. |
-| 11 | 2. sklop · Omrežja | Vloge sistemov in upravičene omrežne poti. |
-| 12 | Nmap: od vrat do storitve | Vrata, storitev in omejitve izpisa. |
-| 13 | DNS: kdo lahko prenese celotno območje? | Prenos območja in notranja imena. |
-| 14 | SMB: kdo lahko bere deljene datoteke? | Vidnost mape in pravica do vsebine. |
-| 15 | Kako segmentacija spremeni dostop? | Ista meritev ACME v visitor in flat; vprašanje o poti DMZ → IoT. |
-| 16 | Target, 2013: od dobavitelja do občutljivih sistemov | Dobaviteljev dostop in izolacija občutljivih sistemov. |
-| 17 | WannaCry, 2017: ko izpad IT prekine zdravstveno oskrbo | Operativne posledice napada in več plasti obrambe. |
-| 18 | IoT: dostop do naprav in njihovih podatkov | Upravljanje naprav, SNMP in Modbus. |
-| 19 | Zastarela storitev: kaj pove različica? | Od prepoznave različice do preverjanja vedenja. |
-| 20 | Pregledovalniki ranljivosti: kako beremo ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep; pregled s prijavo in brez nje. |
-| 21 | Omrežna orodja: pregled, preizkus in zaznava | Pregled, zajem prometa, preverjanje in stalno spremljanje. |
-| 22 | 3. sklop · Aplikacije | HTTP na generični zahtevi in odgovoru. |
-| 23 | ZAP: zahtevo spremenimo in ponovimo | Ogled, sprememba in ponovitev zahteve. |
-| 24 | Razkrite datoteke: kopija na javni strani | Kopije, dnevniki, nastavitve in posledice razkritja. |
-| 25 | Prijava: geslo in zaščita prenosa | Privzeta gesla, ponovna uporaba in zaščita prenosa. |
-| 26 | Eno razkritje, več vrat | Veriga razkritje → ponovna uporaba gesla → dostop; priprava na vajo 3.3. |
-| 27 | SQL injection: vnos spremeni poizvedbo | Mešanje podatkov in navodil SQL. |
-| 28 | XSS: vnos postane skripta v brskalniku | Nezaupanja vreden vnos postane izvajalna vsebina. |
-| 29 | Prijava še ne pomeni pravice do vseh podatkov | Pravice do posameznega objekta: IDOR/BOLA. |
-| 30 | Equifax, 2017: znana ranljivost, veliko razkritje | Resnični primer povezave komponent, skrivnosti in dostopov. |
-| 31 | Zastarele komponente: preverimo pogoje | Različica, pogoji in preverjanje konfiguracije. |
-| 32 | Varnost preverjamo tudi pred objavo | Pregled kode, odvisnosti, slik in nastavitev. |
-| 33 | Katero orodje uporabimo? | Ročni preizkusi, pregled strežnika in preizkusi po predlogah. |
-| 34 | Od ugotovitve do ukrepa | Povezava ugotovitve, ukrepa in ponovnega preverjanja; vrnitev na okvir. |
-| 35 | ACME: izmišljeno podjetje za vaje | Segmenti, naslovi in položaj udeleženca v scenariju visitor. |
-| 36 | Pravila in potek vaj | Dostop, dovoljene tarče, pravni okvir, potek krogov in podatki za vaje. |
+| 6 | Iskanje omejimo na uporabne sledi | Iskalni operatorji, arhivi, certifikati in iskanje lastnih sledi. |
+| 7 | Shodan: kaj je bilo zaznano in kdaj? | Storitev, odziv, čas opažanja in popis lastne izpostavljenosti. |
+| 8 | Orodja za sledi, povezave in forenziko | Zbiranje, povezovanje podatkov, pregled nosilcev in pomnilnika. |
+| 9 | 2. sklop · Omrežja | Vloge sistemov in upravičene omrežne poti. |
+| 10 | Nmap: od vrat do storitve | Vrata, storitev in omejitve izpisa. |
+| 11 | DNS: kdo lahko prenese celotno območje? | Prenos območja in notranja imena. |
+| 12 | SMB: kdo lahko bere deljene datoteke? | Vidnost mape in pravica do vsebine. |
+| 13 | Kako segmentacija spremeni dostop? | Ista meritev ACME v visitor in flat; vprašanje o poti DMZ → IoT. |
+| 14 | Target, 2013: od dobavitelja do občutljivih sistemov | Dobaviteljev dostop in izolacija občutljivih sistemov. |
+| 15 | WannaCry, 2017: ko izpad IT prekine zdravstveno oskrbo | Operativne posledice napada in več plasti obrambe. |
+| 16 | IoT: dostop do naprav in njihovih podatkov | Upravljanje naprav, SNMP in Modbus. |
+| 17 | Zastarela storitev: kaj pove različica? | Od prepoznave različice do preverjanja vedenja. |
+| 18 | Pregledovalniki ranljivosti: kako beremo ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep; pregled s prijavo in brez nje. |
+| 19 | Omrežna orodja: pregled, preizkus in zaznava | Pregled, zajem prometa, preverjanje in stalno spremljanje. |
+| 20 | 3. sklop · Aplikacije | HTTP na generični zahtevi in odgovoru. |
+| 21 | ZAP: zahtevo spremenimo in ponovimo | Ogled, sprememba in ponovitev zahteve. |
+| 22 | Razkrite datoteke: kopija na javni strani | Kopije, dnevniki, nastavitve in posledice razkritja. |
+| 23 | Prijava: geslo in zaščita prenosa | Privzeta gesla, ponovna uporaba in zaščita prenosa. |
+| 24 | Eno razkritje, več vrat | Veriga razkritje → ponovna uporaba gesla → dostop; priprava na vajo 3.3. |
+| 25 | SQL injection: vnos spremeni poizvedbo | Mešanje podatkov in navodil SQL. |
+| 26 | XSS: vnos postane skripta v brskalniku | Vnos, ki ni zaupanja vreden, brskalnik izvede kot kodo. |
+| 27 | Prijava še ne pomeni pravice do vseh podatkov | Avtentikacija in avtorizacija; pravice do posameznega objekta: IDOR/BOLA. |
+| 28 | Equifax, 2017: znana ranljivost, veliko razkritje | Resnični primer povezave komponent, skrivnosti in dostopov. |
+| 29 | Zastarele komponente: preverimo pogoje | Različica, pogoji in preverjanje konfiguracije. |
+| 30 | Varnost preverjamo tudi med razvojem programske opreme | Pregled kode, odvisnosti, slik in nastavitev. |
+| 31 | Katero orodje uporabimo? | Ročni preizkusi, pregled strežnika in preizkusi po predlogah. |
+| 32 | Od ugotovitve do ukrepa | Okvir na eni verigi, ponovno preverjanje ukrepa in prijava napake zunaj laboratorija. |
+| 33 | ACME: izmišljeno podjetje za vaje | Segmenti, naslovi in položaj udeleženca v scenariju visitor; dosegljiv LAN kot prva ugotovitev. |
+| 34 | Pravila in potek vaj | Dostop, dovoljene tarče, pravni okvir, potek krogov in podatki za vaje. |
 
 Vsak resnični dogodek dobi približno minuto. Podrobni ukazi so pri vajah; Shodan pojasnimo s pripravljenim posnetkom, pregledovalnike ranljivosti pa splošno, brez izseka poročila. Prikaz segmentacije (približno tri minute) je priporočen v živo, z rezervo na prosojnici; dodatni kratek prikaz IDOR je neobvezen. S tem ostane predstavitev v okviru 45 minut, čas za praktično delo pa se ne spremeni.
 
