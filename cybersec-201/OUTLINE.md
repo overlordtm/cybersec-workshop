@@ -43,7 +43,7 @@ Predstavitev vsebuje 36 prosojnic: naslovno, okvir dela, osem za digitalne sledi
 | 17 | WannaCry, 2017: ko izpad IT prekine zdravstveno oskrbo | Operativne posledice napada in več plasti obrambe. |
 | 18 | IoT: dostop do naprav in njihovih podatkov | Upravljanje naprav, SNMP in Modbus. |
 | 19 | Zastarela storitev: kaj pove različica? | Od prepoznave različice do preverjanja vedenja. |
-| 20 | Greenbone: preverimo eno ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep. |
+| 20 | Pregledovalniki ranljivosti: kako beremo ugotovitev | Dokaz, resnost, zanesljivost zaznave in ukrep; pregled s prijavo in brez nje. |
 | 21 | Omrežna orodja: pregled, preizkus in zaznava | Pregled, zajem prometa, preverjanje in stalno spremljanje. |
 | 22 | 3. sklop · Aplikacije | HTTP na generični zahtevi in odgovoru. |
 | 23 | ZAP: zahtevo spremenimo in ponovimo | Ogled, sprememba in ponovitev zahteve. |
@@ -61,7 +61,7 @@ Predstavitev vsebuje 36 prosojnic: naslovno, okvir dela, osem za digitalne sledi
 | 35 | ACME: izmišljeno podjetje za vaje | Segmenti, naslovi in položaj udeleženca v scenariju visitor. |
 | 36 | Pravila in potek vaj | Dostop, dovoljene tarče, pravni okvir, potek krogov in podatki za vaje. |
 
-Vsak resnični dogodek dobi približno minuto. Podrobni ukazi so pri vajah; Shodan in Greenbone pojasnimo s pripravljenim izsekom. Prikaz segmentacije (približno tri minute) je priporočen v živo, z rezervo na prosojnici; dodatni kratek prikaz IDOR je neobvezen. S tem ostane predstavitev v okviru 45 minut, čas za praktično delo pa se ne spremeni.
+Vsak resnični dogodek dobi približno minuto. Podrobni ukazi so pri vajah; Shodan pojasnimo s pripravljenim posnetkom, pregledovalnike ranljivosti pa splošno, brez izseka poročila. Prikaz segmentacije (približno tri minute) je priporočen v živo, z rezervo na prosojnici; dodatni kratek prikaz IDOR je neobvezen. S tem ostane predstavitev v okviru 45 minut, čas za praktično delo pa se ne spremeni.
 
 Pri Targetu ohranimo negotovosti zgodnje analize. Pri WannaCry notranjo segmentacijo predstavimo kot splošen nauk, ne kot edini vzrok iz poročila. Pri Equifaxu navedbe pripišemo FTC ob poravnavi. Pri primeru iz Philadelphie ločimo javne vire od uradnih evidenc in podatkov, pridobljenih s sodnim pozivom.
 

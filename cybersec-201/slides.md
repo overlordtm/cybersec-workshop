@@ -23,17 +23,17 @@ Geslo današnjega dne je na prosojnici: poišči sled, preveri dokaz, predlagaj 
 
 **Pri vsaki ugotovitvi danes odgovorimo na isto zaporedje vprašanj.**
 
-<div class="case-chain"><span>Kaj sem opazil?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vem?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
+<div class="case-chain"><span>Kaj smo opazili?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vemo?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
 
 <div class="example">
 <div class="example-label">PRIMER · IZMIŠLJENA DOMENA</div>
 
 ```plaintext
-Opazil      ime test.podjetje.example v javnem certifikatu
+Opazili     ime test.podjetje.example v javnem certifikatu
 Dokaz       zapis v crt.sh, certifikat izdan 2026-03-12
-Ne vem      ali strežnik še obstaja in kaj teče na njem
+Ne vemo     ali strežnik še obstaja in kaj teče na njem
 Omogoča     morda pozabljen testni sistem, dosegljiv od zunaj
-Spremenimo  popis sistemov; testno okolje umakni ali zapri
+Spremenimo  popis sistemov; umik ali zaprtje testnega okolja
 ```
 
 </div>
@@ -47,7 +47,7 @@ Preden začnemo, en okvir, ki nas bo spremljal ves dan. Ko nekaj najdemo, se naj
 
 Primer. V javnem dnevniku certifikatov opazimo ime test.podjetje.example. Dokaz je zapis v crt.sh z datumom izdaje. Ne vemo pa, ali strežnik še obstaja in kaj na njem teče, zato ne trdimo, da je odprt. Omogoča lahko marsikaj, če gre za pozabljen testni sistem, dosegljiv z interneta. Predlog je preprost: popis sistemov in umik ali zaprtje testnega okolja.
 
-In že zdaj povem: pošteno omejen sklep, na primer »različica je ranljiva, izrabe nisem potrdil«, je povsem dober rezultat.
+In že zdaj povem: pošteno omejen sklep, na primer »oglašena različica je med prizadetimi, izrabe nisem potrdil«, je povsem dober rezultat.
 
 ---
 
@@ -159,7 +159,7 @@ Preberemo storitev, odziv in čas zadnjega opažanja.
 Note:
 *[posnetek: iskanje country:SI, 20. 10. 2026; poizvedb ne izvajaj v živo]*
 
-Shodan in podobni Censys neprestano pregledujeta internet in shranjujeta, kaj odgovarja na posameznih naslovih. Ko gledamo zadetek, torej ne pregledujemo sami, ampak beremo njihov zapis.
+Shodan in podobna storitev Censys neprestano pregledujeta internet in shranjujeta, kaj se odziva na posameznih naslovih. Ko gledamo zadetek, torej ne pregledujemo sami, ampak beremo njihov zapis.
 
 Tukaj smo iskali vse, kar je Shodan zaznal v Sloveniji. Levo je povzetek: mesta, odprta vrata, organizacije in produkti. Desno so posamezni zadetki.
 
@@ -178,20 +178,18 @@ Preberimo enega. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz
 | Povezave med podatki | [Maltego](https://www.maltego.com/), [SpiderFoot](https://github.com/smicallef/spiderfoot) |
 | Rekurzivno odkrivanje domen in storitev | [BBOT](https://github.com/blacklanternsecurity/bbot) |
 | Metapodatke in nosilce | [ExifTool](https://exiftool.org/), [Autopsy](https://www.autopsy.com/) |
-| Zajem delovnega pomnilnika | [Volatility](https://volatilityfoundation.org/) |
-
+| Zajeme delovnega pomnilnika | [Volatility](https://volatilityfoundation.org/) |
 
 Note:
 *[orientacija, orodij ne zaganjaj]*
 
 Za vse to obstajajo orodja. Ta tabela je zemljevid, ne seznam za namestitev. Shodan, Censys, ctlogs.dev in crt.sh že poznamo. theHarvester zbira e-poštne naslove in imena iz javnih virov. Maltego in SpiderFoot povezujeta podatke iz več virov in jih prikažeta kot graf. BBOT rekurzivno odkriva domene in storitve; glede na izbrane module uporablja pasivne vire ali pa že aktivno poizveduje.
 
-Spodnji vrstici sta forenzika. ExifTool bere metapodatke, Autopsy preiskuje diske, Volatility pa zajeme pomnilnika. To niso javni viri, zato jih ne mešamo z OSINT.
+Spodnji vrstici sodita večinoma v forenziko. ExifTool bere metapodatke, Autopsy preiskuje diske, Volatility pa analizira zajeme pomnilnika. Pri ExifToolu odloča vir: metapodatki javno objavljenega dokumenta so OSINT, datoteke z zaseženega diska pa forenzika. Diski in pomnilnik niso javni viri, zato jih ne mešamo z OSINT.
 
 Da ne bo pomote: ne trdim, da so bila ta orodja uporabljena v primerih, ki smo jih pravkar videli.
 
 ---
-
 
 ## 2. sklop · Omrežja
 
@@ -233,7 +231,7 @@ PORT    STATE  SERVICE  VERSION
 
 `-p` izbere vrata · `-sV` preveri vrsto in različico storitve.
 
-**Odprta vrata potrdijo dostop. Ranljivost preverimo posebej.**
+**Odprta vrata potrdijo dosegljivost. Ranljivost preverimo posebej.**
 
 Note:
 *[ukaz izvedejo v vajah 2.1 in 2.3; v živo ni obvezen]*
@@ -303,7 +301,7 @@ Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng.
 
 ![Isti prenosnik iz vtičnice v sejni sobi: v segmentiranem omrežju kamera in klima nista dosegljivi, v omrežju brez omejitev pa postaneta dosegljivi](./images/segmentation-compare.svg)
 
-**Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.** Ista meritev proti krmilniku klime (`172.20.30.12`): v `visitor` sta 80 in 502 filtrirana, v `flat` odprta.
+**Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.**
 
 Za razpravo: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ?
 
@@ -318,13 +316,13 @@ Na krmilniku se ni spremenilo nič, spremenila so se le pravila poti. Segmentaci
 
 In vprašanje za vas: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ? Odgovor pustimo za naslednjo prosojnico.
 
-*Izvedba:* `./infra/lab.sh scenario flat`, z istega Kali ponovi ukaz (nova povezava), nato takoj `./infra/lab.sh scenario visitor` in preveri status. Preklop velja za vse, zato ga izvedi samo med predstavitvijo, nikoli med vajami. Brez laboratorija uporabi izpis s prosojnice. `nmap -sn` lahko v visitor napravo IoT pokaže kot dosegljivo; šteje rezultat vrat.
+*Izvedba:* `./infra/lab.sh scenario flat`, z istega Kalija ponovi ukaz (nova povezava), nato takoj `./infra/lab.sh scenario visitor` in preveri status. Preklop velja za vse, zato ga izvedi samo med predstavitvijo, nikoli med vajami. Brez laboratorija uporabi izpis s prosojnice. `nmap -sn` lahko v visitor napravo IoT pokaže kot dosegljivo; šteje rezultat vrat.
 
 ---
 
 ## Target, 2013: od dobavitelja do občutljivih sistemov
 
-<p class="case-tag">RESNIČEN PRIMER · ANALIZA AMERIŠKEGA SENATA IZ 2014</p>
+<p class="case-tag">RESNIČEN PRIMER · ANALIZA AMERIŠKEGA SENATA IZ LETA 2014</p>
 
 <div class="case-chain"><span>Zlorabljen dostop dobavitelja</span><b>→</b><span>Premik med notranjimi sistemi</span><b>→</b><span>Podatki plačilnih kartic</span></div>
 
@@ -349,11 +347,11 @@ Zdaj pa odgovor na vprašanje od prej. Če pravila dovoljujejo pot iz DMZ v IoT,
 
 <p class="case-tag">RESNIČEN PRIMER · NHS V ANGLIJI</p>
 
-Napad je povzročil odpovedi pregledov in operacij ter preusmerjanje pacientov.
+<div class="case-chain"><span>Neposodobljeni sistemi Windows</span><b>→</b><span>Samodejno širjenje po omrežju</span><b>→</b><span>Odpovedane operacije in preusmerjeni pacienti</span></div>
 
 NAO je pri okuženih organizacijah izpostavil neposodobljene ali nepodprte sisteme Windows.
 
-**Varnostni nauk:** popravki zmanjšajo možnost okužbe; omejene omrežne poti omejijo širjenje in posledice.
+**Nauk:** popravki zmanjšajo možnost okužbe; omejene omrežne poti omejijo širjenje in posledice.
 
 <small>Vir: [National Audit Office, poročilo o WannaCry in NHS](https://www.nao.org.uk/reports/investigation-wannacry-cyber%20attack-and-the-nhs/)</small>
 
@@ -364,7 +362,7 @@ WannaCry, maj 2017. Izsiljevalski program se je samodejno širil med računalnik
 
 Britanski državni revizor, National Audit Office, je pri prizadetih organizacijah izpostavil neposodobljene in nepodprte sisteme. Motnje pa niso bile omejene na okužene naprave: nekateri sistemi so bili od okuženih odvisni, druge so preventivno izklopili.
 
-Nauk za nas: popravki zmanjšajo možnost okužbe, omejene omrežne poti pa omejijo širjenje. Notranja segmentacija je naš splošni nauk, ne ugotovitev poročila o edinem vzroku. Popravkov in načrta obnovitve pa ne nadomesti.
+Nauk za nas: popravki zmanjšajo možnost okužbe, omejene omrežne poti pa omejijo širjenje. Segmentacijo dodajam kot splošni nauk; poročilo je ne navaja kot vzrok. Popravkov in načrta obnovitve ne nadomesti.
 
 ---
 
@@ -407,6 +405,8 @@ Ukrep je enak kot pri segmentaciji: dostop do naprav omejimo na mesta, od koder 
 **Nmap prepozna storitev. Naslednji preizkus preveri konkreten pogoj.**
 
 Note:
+*[≈1 min]*
+
 Recimo, da Nmap pokaže staro različico. Kaj to pomeni? Najprej le to, da jo je vredno preveriti in načrtovati nadgradnjo.
 
 Na sliki so trije ločeni koraki. Različica pove, kaj storitev oglašuje, in oglas lahko zavaja: distribucije pogosto vgradijo varnostne popravke, ne da bi spremenile številko različice. Pogoje ranljivosti preberemo v obvestilu proizvajalca. Šele preizkus, na primer izbrana skripta Nmap, pokaže, kaj storitev res omogoča.
@@ -415,25 +415,25 @@ Metasploit pomaga pri nadzorovanem preverjanju znanih ranljivosti, a sam obstoj 
 
 ---
 
-## Greenbone: preverimo eno ugotovitev
+## Pregledovalniki ranljivosti: kako beremo ugotovitev
 
 | V poročilu | Vprašanje za preizkuševalca |
 | --- | --- |
-| Tarča in dokaz | Kaj je bilo izmerjeno? |
-| Resnost | Kakšne so lahko posledice? |
-| Quality of Detection | Kako zanesljiva je metoda zaznave? |
+| Tarča, storitev in dokaz | Kaj je pregledovalnik dejansko izmeril? |
+| Resnost (CVSS) | Kakšne so lahko posledice? |
+| Zanesljivost zaznave | Ali temelji le na različici ali na preizkusu? |
 | Predlog odprave | Kaj spremenimo in kako preverimo popravek? |
 
-**Opozorilo pregledovalnika povežemo z odzivom storitve.**
+**Ugotovitev pregledovalnika je hipoteza, dokler je ne potrdi odziv storitve.**
 
 Note:
-*[razloži pripravljen izsek poročila; podrobno v vaji 2.5]*
+*[splošen pregled, orodij ne zaganjaj]*
 
-Pregledovalniki ranljivosti, kot sta Greenbone ali Nessus, ta postopek avtomatizirajo za veliko naprav hkrati. Poročila so dolga, zato se naučimo brati eno ugotovitev.
+Pregledovalniki ranljivosti, kot sta OpenVAS iz paketa Greenbone in Nessus, za veliko naprav hkrati naredijo to, kar smo pravkar opisali: prepoznajo storitve in jih primerjajo z bazo znanih ranljivosti. Poročila so dolga, zato se naučimo brati eno ugotovitev.
 
-Pri vsaki pogledamo štiri stvari. Kaj je bilo izmerjeno in na kateri tarči. Resnost, ki pove možne posledice, ne pa verjetnosti napada. Quality of Detection, ki pove, kako zanesljiva je metoda zaznave, na primer ali temelji samo na različici. In predlog odprave, skupaj s tem, kako bomo popravek preverili.
+Pri vsaki pogledamo štiri stvari. Najprej tarčo, storitev in dokaz, torej izpis, iz katerega je orodje sklepalo. Nato resnost, običajno po lestvici CVSS, ki pove možne posledice, ne pa verjetnosti napada; za to nekatera orodja dodajo oceno, kot je EPSS. Tretja je zanesljivost zaznave: OpenVAS jo izrazi kot Quality of Detection, pri Nessusu pa iz opisa vtičnika razberemo, ali je preveril le različico ali dejansko vedenje. In na koncu predlog odprave, skupaj s tem, kako bomo popravek preverili.
 
-Pregledovalnik ne najde ničesar na napravi, ki je ni v obsegu pregleda. Zato je inventar temelj vsega.
+Še dve omejitvi. Pregled brez prijave vidi le, kar storitev pokaže navzven; pregled s prijavo v sistem pozna nameščene pakete in je zato natančnejši. In pregledovalnik ne najde ničesar na napravi, ki je ni v obsegu pregleda. Zato je inventar temelj vsega.
 
 ---
 
@@ -457,7 +457,7 @@ Note:
 
 Spodnja vrstica je druga stran, obramba. Zeek iz prometa izdela zapise o dogodkih, Suricata zaznava sumljiv promet in opozarja, Wazuh pa zbira dnevnike sistemov, spremlja spremembe datotek in povezuje dogodke.
 
-Pregled, izraba in zaznava niso isto. Enkraten pregled pove, kakšno je stanje danes, stalno spremljanje pa, kdaj se nekaj spremeni. Vsa ta orodja niso del vaj.
+Pregled, izraba in zaznava niso isto. Enkraten pregled pove, kakšno je stanje danes, stalno spremljanje pa, kdaj se nekaj spremeni. Niso vsa ta orodja del vaj.
 
 ---
 
@@ -520,9 +520,9 @@ Note:
 
 Ena najpogostejših napak je zelo preprosta: na javnem strežniku ostane kopija, ki tja ne sodi. To so varnostne kopije, izvozi baz, dnevniki, datoteke z nastavitvami ali kar cel repozitorij .git.
 
-Primer na prosojnici je izmišljen: datoteko config.php.bak strežnik ne izvede, ampak jo vrne kot besedilo, skupaj z notranjim imenom in geslom. Dokaz je, da vsebino dobimo brez prijave. Če datoteka ni povezana s strani ali je navedena v robots.txt, to še ne pomeni, da je zaščitena.
+Primer na prosojnici je izmišljen: datoteke config.php.bak strežnik ne izvede, ampak jo vrne kot besedilo, skupaj z notranjim imenom in geslom. Dokaz je, da vsebino dobimo brez prijave. Če datoteka ni povezana s strani ali je navedena v robots.txt, to še ne pomeni, da je zaščitena.
 
-Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je morda kdo že prebral. Konkretno pot preverimo s curl, ffuf ali Gobuster pa poti iščeta po seznamu.
+Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je morda kdo že prebral. Konkretno pot preverimo s curl; ffuf in Gobuster pa iščeta poti po seznamu.
 
 ---
 
@@ -544,7 +544,7 @@ Pri prijavah ločimo tri težave. Prva je privzeto geslo, ki ga nihče ni zamenj
 
 Poglejmo tretjo. Pri HTTP Basic brskalnik pošlje uporabniško ime in geslo v glavi, zapisano v Base64. To ni šifriranje, ampak le drugačen zapis: v CyberChef ali v terminalu ga dekodiramo brez ključa. Brez HTTPS ga torej prebere vsak, ki vidi promet. Niz na prosojnici je izmišljen.
 
-Še dve pojasnili. Vaš brskalnik podatke vidi tudi pri HTTPS, saj jih šifrira šele ob pošiljanju. MFA pa zmanjša tveganje kraje računa, ne nadomesti pa preverjanja, do česa ima prijavljeni uporabnik pravico.
+Še dve pojasnili. Vaš brskalnik podatke vidi tudi pri HTTPS, saj jih šifrira šele ob pošiljanju. MFA zmanjša tveganje prevzema računa, ne nadomesti pa preverjanja, do česa ima prijavljeni uporabnik pravico.
 
 ---
 
@@ -572,7 +572,7 @@ Povezava med dvema ugotovitvama je pogosto pomembnejša od vsake posebej.
 
 ```plaintext
 SELECT ... WHERE uporabnik = '[vnos]'
-             AND password = ...
+             AND geslo = ...
 
 Vnos: ana'--
 
@@ -590,9 +590,11 @@ Note:
 
 SQL injection je klasična napaka. Aplikacija sestavi poizvedbo tako, da vnos uporabnika preprosto prilepi med navodila SQL.
 
-Poglejmo poenostavljen primer. Če v polje za uporabnika vpišemo »ana«, narekovaj in dva pomišljaja, narekovaj zaključi vrednost, pomišljaja pa preostanek poizvedbe spremenita v komentar. Preverjanje gesla izgine in prijava uspe brez gesla.
+Poglejmo poenostavljen primer. Če v polje za uporabnika vpišemo »ana«, narekovaj in dva vezaja, narekovaj zaključi vrednost, vezaja pa preostanek poizvedbe spremenita v komentar. Preverjanje gesla izgine in prijava uspe brez gesla.
 
 Rešitev ni filtriranje posebnih znakov, ampak parametrizirane poizvedbe, ki podatke ločijo od kode. Za ročno preverjanje uporabimo ZAP ali Burp, sqlmap pa avtomatizira preverjanje nekaterih vrst te napake.
+
+*Če kdo vpraša: v MySQL mora za dvema vezajema stati presledek; Juice Shop uporablja SQLite, kjer ni potreben.*
 
 ---
 
@@ -602,7 +604,7 @@ Rešitev ni filtriranje posebnih znakov, ampak parametrizirane poizvedbe, ki pod
 <div class="example-label">POENOSTAVLJEN PRIMER KODE V BRSKALNIKU</div>
 
 ```javascript
-// Nevarno, če vnos vsebuje nezaupanja vreden HTML:
+// Nevarno, če vnos ni zaupanja vreden:
 rezultat.innerHTML = vnos;
 
 // Za prikaz navadnega besedila:
@@ -611,25 +613,25 @@ rezultat.textContent = vnos;
 
 </div>
 
-**Napaka:** brskalnik vnos obravnava kot izvajalno vsebino.
+**Napaka:** brskalnik vnos obravnava kot kodo.
 
 **Ukrep:** varen DOM in kontekstu primerna obdelava izhoda.
 
 Note:
-*[neobvezen prikaz samo na lokalnem učnem primeru, nikoli shranjeni XSS na skupni tarči]*
+*[neobvezen prikaz samo na lokalnem učnem primeru, nikoli shranjenega XSS na skupni tarči]*
 
 XSS, cross-site scripting, je sorodna napaka, le da se ne zgodi v bazi, ampak v brskalniku. Aplikacija vstavi v stran vnos, ki mu ne bi smela zaupati, brskalnik pa ga izvede kot kodo.
 
 V primeru je razlika ena sama beseda. innerHTML vnos razume kot HTML, textContent pa kot navadno besedilo. Za prikaz besedila je textContent prava izbira; če moramo dovoliti HTML, ga je treba sanitizirati.
 
-Posledice so odvisne od konteksta: skripta lahko izvaja dejanja v imenu uporabnika ali bere podatke, ki jih ta vidi. Ukrepa sta kontekstno kodiranje izhoda in politika CSP, ki sta dve različni stvari. DOM XSS se lahko zgodi samo v brskalniku, brez sledi v strežniškem odgovoru.
+Posledice so odvisne od konteksta: skripta lahko izvaja dejanja v imenu uporabnika ali bere podatke, ki jih ta vidi. Glavni ukrep je kontekstno kodiranje izhoda; politika CSP je dodatna obramba, ki omeji škodo, napake pa ne odpravi. DOM XSS lahko nastane v celoti v brskalniku, brez sledi v strežniškem odgovoru.
 
 ---
 
 ## Prijava še ne pomeni pravice do vseh podatkov
 
 <div class="example">
-<div class="example-label">PONAZORITEV ID-JEV · PRIJAVNI ŽETON OSTAJA OD A</div>
+<div class="example-label">PONAZORITEV ID-JEV · VES ČAS ŽETON RAČUNA A</div>
 
 ```plaintext
 Račun A → GET /api/kosarice/7   → košarica A
@@ -668,7 +670,7 @@ FTC je očital tudi neustrezno segmentacijo in prijavne podatke v nezaščiteni 
 Note:
 *[≈1 min · navedbe so očitki FTC, ne sodna ugotovitev]*
 
-Equifax, ena od velikih ameriških bonitetnih hiš, leto 2017. Podjetje ni pravočasno namestilo popravka za znano ranljivost v spletnem ogrodju Apache Struts. Napadalci so vstopili prek nje, dostopali do drugih sistemov, razkriti pa so bili podatki približno 147 milijonov ljudi.
+Equifax, ena od treh velikih ameriških kreditnih agencij, leto 2017. Podjetje ni pravočasno namestilo popravka za znano ranljivost v spletnem ogrodju Apache Struts. Napadalci so vstopili prek nje, dostopali do drugih sistemov, razkriti pa so bili podatki približno 147 milijonov ljudi.
 
 Ameriški regulator FTC je ob poravnavi leta 2019 podjetju očital še neustrezno ločitev baz in prijavne podatke v nezaščiteni datoteki. To so očitki regulatorja, ne naša forenzična analiza.
 
@@ -682,9 +684,9 @@ Ta vzorec smo danes videli že večkrat: aplikacijska vstopna točka, razkrite s
 <div class="example-label">APACHE 2.4.49 · CVE-2021-41773</div>
 
 ```plaintext
-Prizadeta različica       namig za preverjanje
-Dovoljenja do datotek     pogoj za razkritje
-Omogočeni CGI             dodaten pogoj za izvajanje kode
+Prizadeta različica         namig za preverjanje
+Dovoljen dostop do datotek  pogoj za razkritje
+Omogočen CGI                dodaten pogoj za izvajanje kode
 ```
 
 </div>
@@ -706,12 +708,12 @@ Negativen preizkus ene poti pa ne pomeni, da je strežnik varen. Ukrep ostaja en
 
 ## Varnost preverjamo tudi med razvojem programske opreme
 
-| Področje | Primeri orodij | Namen |
+| Kaj pregledamo? | Primeri orodij | Kaj iščemo? |
 | --- | --- | --- |
 | Izvorno kodo | [Semgrep](https://semgrep.dev/docs/) | Nevarne vzorce v kodi |
 | Knjižnice | [Dependency-Check](https://owasp.org/www-project-dependency-check/), [Trivy](https://trivy.dev/) | Znane ranljivosti komponent |
 | Slike zabojnikov in nastavitve | [Trivy](https://trivy.dev/) | Ranljive pakete, skrivnosti, napačne nastavitve |
-| Posodobitve knjižnic | [Renovate](https://github.com/renovatebot/renovate) | Samodejni predlogi posodobitev |
+| Različice knjižnic | [Renovate](https://github.com/renovatebot/renovate) | Nove različice, s samodejnimi predlogi posodobitev |
 
 **Pregled kode in komponent dopolni preizkus delujoče aplikacije.**
 
@@ -720,7 +722,7 @@ Note:
 
 Do zdaj smo aplikacije preizkušali od zunaj. Veliko napak pa lahko ujamemo že prej, med razvojem.
 
-Semgrep v izvorni kodi išče nevarne vzorce, na primer sestavljanje poizvedbe SQL iz vnosa. OWASP Dependency-Check in Trivy preverjata, ali uporabljene knjižnice vsebujejo znane ranljivosti; Trivy pregleda tudi slike zabojnikov, skrivnosti in nastavitve. Najdena skrivnost pa še ne pomeni, da ključ še velja.
+Semgrep v izvorni kodi išče nevarne vzorce, na primer sestavljanje poizvedbe SQL iz vnosa. OWASP Dependency-Check in Trivy preverjata, ali uporabljene knjižnice vsebujejo znane ranljivosti; Trivy pregleda tudi slike zabojnikov, skrivnosti in nastavitve. Najdena skrivnost ne pomeni nujno, da ključ še velja.
 
 Renovate poskrbi za drugo polovico, redno vzdrževanje: samodejno predlaga posodobitve knjižnic, mi pa jih preverimo s testi in pregledom sprememb.
 
@@ -752,7 +754,6 @@ Rezultat vsakega orodja preverimo, preden ga zapišemo kot ugotovitev.
 
 ---
 
-
 ## ACME: izmišljeno podjetje za vaje
 
 ![Udeleženec prek požarnega zidu do treh segmentov ACME: DMZ, LAN in IoT](./images/acme.svg)
@@ -781,7 +782,7 @@ Notranjih naslovov ACME ne iščite na javnem internetu.
 
 ### Dostop
 
-S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuard-a.
+S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuarda.
 
 </div>
 <div class="card">
@@ -795,7 +796,7 @@ Samo navedene tarče ACME. Ničesar ne spreminjamo. Javne vire samo beremo.
 
 ### Potek
 
-Trije krogi: 25, 40 in 40 minut. 
+Trije krogi: 25, 40 in 40 minut, nato 10 minut skupnega pogovora.
 
 </div>
 </div>
@@ -805,9 +806,9 @@ Trije krogi: 25, 40 in 40 minut.
 Note:
 *[≈2 min, nato začni prvi krog]*
 
-Še pravila in potek. Dostop dobite s svojo osebno kodo na strani za prevzem. Večina bo uporabljala Kali v brskalniku; kdor ima svoj Kali, se lahko poveže prek WireGuard.
+Še pravila in potek. Dostop dobite s svojo osebno kodo na strani za prevzem. Večina bo uporabljala Kali v brskalniku; kdor ima svoj Kali, se lahko poveže prek WireGuarda.
 
-Aktivno preverjamo samo navedene tarče ACME in ničesar ne spreminjamo, ne datotek, ne gesel, ne košaric, saj si tarče delimo. Shodan in ctlogs.dev odpirate v svojem običajnem brskalniku in samo berete; najdenih javnih naslovov ne pregledujte z Nmap. In resno: nepooblaščen vstop v tuj informacijski sistem je po kazenskem zakoniku kaznivo dejanje. Tukaj smemo, ker je laboratorij naš.
+Aktivno preverjamo samo navedene tarče ACME in ničesar ne spreminjamo, ne datotek, ne gesel, ne košaric, saj si tarče delimo. Shodan in ctlogs.dev odpirate v svojem običajnem brskalniku in samo berete; najdenih javnih naslovov ne pregledujte z Nmap. In resno: nepooblaščen vstop v tuj informacijski sistem je po kazenskem zakoniku (KZ-1, 221. člen) kaznivo dejanje. Tukaj smemo, ker je laboratorij naš.
 
 Potek: trije krogi, 25 minut za sledi in po 40 minut za omrežja in aplikacije. V vsakem izberete eno od prvih treh vaj glede na izkušnje, nato nadaljujete z drugo vajo ali dodatnim izzivom. Če se zataknete, odprite namig in nato postopek. Ugotovitve zapišite po okviru z začetka. Na koncu imamo deset minut za skupni pogovor.
 
