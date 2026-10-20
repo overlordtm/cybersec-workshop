@@ -25,12 +25,27 @@ Geslo današnjega dne je na prosojnici: poišči sled, preveri dokaz, predlagaj 
 
 <div class="case-chain"><span>Kaj sem opazil?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vem?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
 
+<div class="example">
+<div class="example-label">PRIMER · IZMIŠLJENA DOMENA</div>
+
+```plaintext
+Opazil      ime test.podjetje.example v javnem certifikatu
+Dokaz       zapis v crt.sh, certifikat izdan 2026-03-12
+Ne vem      ali strežnik še obstaja in kaj teče na njem
+Omogoča     morda pozabljen testni sistem, dosegljiv od zunaj
+Spremenimo  popis sistemov; testno okolje umakni ali zapri
+```
+
+</div>
+
 **Poišči sled. Preveri dokaz. Predlagaj zaščito.**
 
 Note:
-*[≈1 min]*
+*[≈1,5 min]*
 
 Preden začnemo, en okvir, ki nas bo spremljal ves dan. Ko nekaj najdemo, se najprej vprašamo, kaj smo dejansko opazili. Nato, kakšen je dokaz in kdaj je nastal. Tretje vprašanje je najpomembnejše in ga najraje preskočimo: česa še ne vemo? Šele potem razmišljamo, kaj ugotovitev omogoča napadalcu, in na koncu, kaj bi spremenili.
+
+Primer. V javnem dnevniku certifikatov opazimo ime test.podjetje.example. Dokaz je zapis v crt.sh z datumom izdaje. Ne vemo pa, ali strežnik še obstaja in kaj na njem teče, zato ne trdimo, da je odprt. Omogoča lahko marsikaj, če gre za pozabljen testni sistem, dosegljiv z interneta. Predlog je preprost: popis sistemov in umik ali zaprtje testnega okolja.
 
 In že zdaj povem: pošteno omejen sklep, na primer »različica je ranljiva, izrabe nisem potrdil«, je povsem dober rezultat.
 
@@ -105,7 +120,7 @@ Sama majica ali uporabniško ime nista dokaz identitete. Sklep utemelji šele ve
 ## Iskanje omejimo na uporabne sledi
 
 <div class="example">
-<div class="example-label">PRIMER SINTAKSE · IZMIŠLJENA DOMENA</div>
+<div class="example-label">PRIMER SINTAKSE</div>
 
 ```plaintext
 site:podjetje.example filetype:pdf
@@ -120,8 +135,6 @@ site:podjetje.example inurl:backup
 
 Tudi DNS je javni vir: zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje.
 
-**Čas objave in izvor podatka sta del ugotovitve.**
-
 Note:
 *[poizvedb ne izvajaj v živo; acme.lab ni javno indeksiran]*
 
@@ -135,52 +148,22 @@ Javni vir je tudi DNS. Običajni zapisi razkrivajo imena, napačno nastavljen st
 
 ---
 
-## Strava, 2018: vzorec gibanja razkrije lokacijo
-
-<p class="case-tag">RESNIČEN PRIMER · JAVNO OBJAVLJENI PODATKI</p>
-
-<div class="case-chain"><span>Športne aktivnosti</span><b>→</b><span>Javni zemljevid gostote</span><b>→</b><span>Razvidne vojaške lokacije</span></div>
-
-Običajen podatek dobi nov pomen, ko ga povežemo s krajem in ponavljanjem.
-
-**Nauk:** presojamo tudi posledice skupne objave številnih posameznih sledi.
-
-<small>Vir: [ameriško obrambno ministrstvo, 29. 1. 2018](https://www.defense.gov/News/News-Stories/Article/Article/1426579/dod-studying-implications-of-wearable-devices-giving-too-much-info/)</small>
-
-Note:
-*[≈1 min]*
-
-Drug resničen primer: Strava, januar 2018. Aplikacija za tekače in kolesarje je objavila svetovni zemljevid gostote vseh aktivnosti svojih uporabnikov. Na območjih, kjer je bilo drugih uporabnikov malo, so se jasno izrisale poti okoli vojaških objektov. Ameriško obrambno ministrstvo je nato začelo preučevati, kaj pomenijo nosljive naprave za varnost.
-
-Nobena posamezna aktivnost ni bila skrivnost. Šele seštevek mnogih je pokazal vzorec. Ne trdimo, da so bile vse lokacije prej neznane ali da zemljevid razkrije posameznika. Nauk je, da presojamo tudi skupni učinek številnih drobnih objav.
-
----
-
 ## Shodan: kaj je bilo zaznano in kdaj?
 
-<div class="example">
-<div class="example-label">PONAZORITEV ZADETKA · DOKUMENTACIJSKI NASLOV, NI ŽIV REZULTAT</div>
-
-```plaintext
-IP             203.0.113.25
-Organizacija   Primer Gostovanje d.o.o.   ← podatek ponudnika
-Lokacija       Ljubljana, SI              ← ocena iz baze naslovov
-80/tcp         nginx 1.18.0               ← odziv ob opažanju
-Zadnjič        2026-09-30                 ← ne pomeni »zdaj«
-```
-
-</div>
+![Shodan, iskanje country:SI: 259.423 zadetkov z razčlenitvijo po mestih, vratih, organizacijah in produktih ter zadetki s ponudnikom, lokacijo, odzivom storitve in časom opažanja](./images/shodan.png)
 
 Preberemo storitev, odziv in čas zadnjega opažanja.
 
 **Oznaka CVE je namig za preverjanje.**
 
 Note:
-*[zadetek je sestavljen: 203.0.113.25 je dokumentacijski naslov; če lahko, pokaži datiran posnetek iz priprave za vajo 1.1]*
+*[posnetek: iskanje country:SI, 20. 10. 2026; poizvedb ne izvajaj v živo]*
 
 Shodan in podobni Censys neprestano pregledujeta internet in shranjujeta, kaj odgovarja na posameznih naslovih. Ko gledamo zadetek, torej ne pregledujemo sami, ampak beremo njihov zapis.
 
-Preberimo polja. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz baze naslovov, ne fizični naslov naprave. Pri vratih vidimo storitev in njen odziv, tukaj nginx z različico. Ključen je datum: »zadnjič opaženo« pomeni takrat, ne zdaj.
+Tukaj smo iskali vse, kar je Shodan zaznal v Sloveniji. Levo je povzetek: mesta, odprta vrata, organizacije in produkti. Desno so posamezni zadetki.
+
+Preberimo enega. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz baze naslovov, ne fizični naslov naprave. Pod tem je odziv storitve, na primer pozdrav poštnega strežnika Dovecot ali SSH z različico OpenSSH. Ključen je čas zgoraj desno: pove, kdaj je bilo zaznano, ne kakšno je stanje zdaj.
 
 Če Shodan ob zadetku pokaže oznako CVE, je to namig za preverjanje, ne dokaz ranljivosti.
 
@@ -197,7 +180,6 @@ Preberimo polja. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz
 | Metapodatke in nosilce | [ExifTool](https://exiftool.org/), [Autopsy](https://www.autopsy.com/) |
 | Zajem delovnega pomnilnika | [Volatility](https://volatilityfoundation.org/) |
 
-**Vir podatka določa, kaj lahko iz njega sklepamo.**
 
 Note:
 *[orientacija, orodij ne zaganjaj]*
@@ -210,24 +192,6 @@ Da ne bo pomote: ne trdim, da so bila ta orodja uporabljena v primerih, ki smo j
 
 ---
 
-## Povežimo podatke, preverimo sklep
-
-| Sled | Kaj izvemo? | Kaj še manjka? |
-| --- | --- | --- |
-| Ime v dokumentu | Navedeni avtor | Potrditev avtorstva |
-| Ime v certifikatu | Objavljeno domensko ime | Trenutno stanje storitve |
-| Zapis v Shodanu | Preteklo opažanje | Nova meritev |
-
-**Vir + čas + neodvisna potrditev → utemeljen sklep.**
-
-Note:
-*[zaključek 1. sklopa]*
-
-Za konec prvega sklopa vse povežimo. Ime v dokumentu pove, kdo je naveden kot avtor, ne pa, kdo ga je napisal. Ime v certifikatu pove, da je domena obstajala, ne pa, ali storitev še deluje. Zapis v Shodanu je preteklo opažanje, ki ga moramo potrditi z novo meritvijo.
-
-Enako ime na dveh straneh še ni ista oseba. Tudi lep graf povezav iz orodja ne nadomesti presoje, od kod podatek prihaja. Zato pravilo s prosojnice: vir, čas in neodvisna potrditev, šele potem sklep.
-
----
 
 ## 2. sklop · Omrežja
 
@@ -239,7 +203,6 @@ Enako ime na dveh straneh še ni ista oseba. Tudi lep graf povezav iz orodja ne 
 | Notranji sistemi | Dokumenti, zbirke podatkov | Kdo jih potrebuje za delo? |
 | Naprave in upravljanje | Kamera, klima, skrbniški vmesnik | Od kod je dostop upravičen? |
 
-IP določi naslov · vrata označijo storitev · TCP in UDP ločimo.
 
 Note:
 *[sklop skupaj ≈15 min, s prikazom segmentacije]*
@@ -315,20 +278,20 @@ Ime v DNS pa še ne pomeni, da storitev lahko dosežemo; o tem odloča požarni 
 
 ## SMB: kdo lahko bere deljene datoteke?
 
-| Opažanje | Kaj dokazuje? |
-| --- | --- |
-| Vidim ime deljene mape | Mapa je navedena v seznamu |
-| Brez prijave odprem datoteko | Gost ima pravico do branja |
-| Zaposleni vidi podatke drugega oddelka | Dovoljenja zahtevajo pregled |
+| Opažanje | Kaj dokazuje? | Česa še ne vem? |
+| --- | --- | --- |
+| Vidim ime mape | Mapa obstaja | Ali jo lahko odprem |
+| Brez prijave preberem datoteko | Gost lahko bere | Ali so podatki občutljivi |
+| Prodaja bere mapo kadrovske | Pravice so širše od vloge | Kdo vse še ima dostop |
 
-**smbclient** preveri dostop; **enum4linux-ng** zbere širši pregled.
+**Javna mapa sama ni napaka; težava je, kaj je v njej.**
 
 **Ukrep:** pravice uskladimo z vlogo uporabnika in namenom podatkov.
 
 Note:
 *[ukazi so pri vaji 2.2; tu jih ne izvajaj]*
 
-Deljene mape so v podjetjih eden najpogostejših virov preširokega dostopa. Na prosojnici so tri opažanja, ki dokazujejo različne stvari. Če vidim ime mape, vem le, da obstaja. Če datoteko odprem brez prijave, ima gost pravico branja. Če zaposleni vidi podatke drugega oddelka, je treba pregledati dovoljenja.
+Deljene mape so v podjetjih eden najpogostejših virov preširokega dostopa. Na prosojnici so tri opažanja, ki dokazujejo različne stvari, in pri vsakem nekaj še manjka. Če vidim ime mape, vem le, da obstaja, ne pa, ali jo lahko odprem. Če datoteko preberem brez prijave, ima gost pravico branja, ne vem pa še, ali je vsebina občutljiva. Če račun iz prodaje bere mapo kadrovske službe, so pravice širše od vloge, odprto pa ostane, kdo vse ima še tak dostop.
 
 Javna mapa ni nujno napaka, če so v njej res javni podatki. Težava nastane, ko vanjo nekdo odloži seznam naprav, izvoz baze ali kopijo pogodbe.
 
@@ -479,6 +442,7 @@ Pregledovalnik ne najde ničesar na napravi, ki je ni v obsegu pregleda. Zato je
 | Namen | Primeri orodij |
 | --- | --- |
 | Odkrijemo storitve in izpostavljenost | [Nmap](https://nmap.org/), [Masscan](https://github.com/robertdavidgraham/masscan) |
+| Preverimo deljene mape | [smbclient](https://www.samba.org/samba/docs/current/man-html/smbclient.1.html), [enum4linux-ng](https://github.com/cddmp/enum4linux-ng) |
 | Razumemo omrežni promet | [Wireshark](https://www.wireshark.org/docs/), [tcpdump](https://www.tcpdump.org/manpages/tcpdump.1.html) |
 | Poiščemo znane težave | [Greenbone](https://greenbone.github.io/docs/latest/), [Nessus](https://www.tenable.com/products/nessus) |
 | Preverimo izbrano znano ranljivost | [Metasploit](https://www.rapid7.com/products/metasploit/) |
@@ -740,7 +704,7 @@ Negativen preizkus ene poti pa ne pomeni, da je strežnik varen. Ukrep ostaja en
 
 ---
 
-## Varnost preverjamo tudi pred objavo
+## Varnost preverjamo tudi med razvojem programske opreme
 
 | Področje | Primeri orodij | Namen |
 | --- | --- | --- |
@@ -788,27 +752,6 @@ Rezultat vsakega orodja preverimo, preden ga zapišemo kot ugotovitev.
 
 ---
 
-## Od ugotovitve do ukrepa
-
-**Kaj smo opazili? → Kaj to omogoča? → Kaj spremenimo?**
-
-| Dokaz | Ukrep | Ponovno preverjanje |
-| --- | --- | --- |
-| Gost prebere interno datoteko | Uredimo dovoljenja | Gostujoče branje je zavrnjeno |
-| Račun A vidi košarico B | Preverimo lastništvo | Zahteva A za B je zavrnjena |
-
-**Ukrep je končan, ko ponovno preverjanje pokaže spremembo.**
-
-Note:
-*[zaključek vsebinskega dela]*
-
-Vrnimo se na okvir z začetka: dokaz, ukrep in nato še korak, ki ga radi pozabimo, ponovno preverjanje.
-
-Če gost prebere interno datoteko, uredimo dovoljenja in nato preverimo, da je gostujoče branje zavrnjeno. Če račun A vidi košarico B, dodamo preverjanje lastništva in preverimo, da je ista zahteva zdaj zavrnjena. Ukrep je končan šele, ko to pokaže nova meritev.
-
-Za razmislek: kaj bi pri Targetu, WannaCry ali Equifaxu prekinilo verigo in kako bi dokazali, da ukrep deluje?
-
----
 
 ## ACME: izmišljeno podjetje za vaje
 
@@ -816,7 +759,7 @@ Za razmislek: kaj bi pri Targetu, WannaCry ali Equifaxu prekinilo verigo in kako
 
 <small>Javni naslovi 198.51.100.11–15 · DMZ 172.20.10.0/24 · LAN 172.20.20.0/24 · IoT 172.20.30.0/24</small>
 
-**Vaš položaj (`visitor`):** prenosnik v vtičnici sejne sobe. Dosežete javne naslove, LAN in storitve DMZ, IoT pa ne.
+**Vaš položaj:** prenosnik v vtičnici sejne sobe. Dosežete javne naslove, LAN in storitve DMZ, IoT pa ne.
 
 Note:
 *[≈2 min]*
@@ -838,7 +781,7 @@ Notranjih naslovov ACME ne iščite na javnem internetu.
 
 ### Dostop
 
-S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuard. V Kali uporabljaš Firefox in Terminal.
+S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuard-a.
 
 </div>
 <div class="card">
@@ -852,12 +795,12 @@ Samo navedene tarče ACME. Ničesar ne spreminjamo. Javne vire samo beremo.
 
 ### Potek
 
-Trije krogi: 25, 40 in 40 minut. Izberi 1 od 3 vaj, nato dodatni izziv. Namig → postopek → zapis.
+Trije krogi: 25, 40 in 40 minut. 
 
 </div>
 </div>
 
-[Praktične vaje](./vaje/) · podatke za vaje 1.1, 1.5 in 3.5 poda izvajalec
+[Praktične vaje](./vaje/)
 
 Note:
 *[≈2 min, nato začni prvi krog]*
