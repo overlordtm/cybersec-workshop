@@ -451,7 +451,7 @@ JSON
 5. Primerjaj odgovora. Pri običajni prijavi pričakujemo zavrnitev, pri spremenjeni pa odgovor z objektom `authentication`, učnim administratorskim računom v `umail` in prijavnim žetonom. Status 200 sam ne zadostuje. Žetona ne vključuj v skupni zapis in ga ne uporabljaj za spreminjanje podatkov.
 6. Pojasni, da znak `'` zaključi vrednost e-poštnega naslova v sestavljeni poizvedbi, `-- ` pa preostanek spremeni v komentar. Parametrizirana poizvedba loči podatke od navodil SQL.
 
-**Pričakovano za pripravljeno različico v20.3.0:** obhod prijave. Primer uporablja privzeto domeno trgovine `juice-sh.op`; ob drugačni pripravi izvajalec poda ustrezen učni naslov.
+**Pričakovano za pripravljeno različico v20.3.0:** obhod prijave. Primer uporablja privzeto domeno trgovine `juice-sh.op`
 
 ## Vaja 3.5: Čigava je ta košarica? — dodatni izziv
 

@@ -523,7 +523,7 @@ Ločimo tri dejavnosti: opazovanje prometa, ročno preverjanje in samodejni akti
 | Izvoz baze (`.sql`) | Podatke strank | Izvozov ne hranimo na spletnem strežniku |
 | Datoteka `.env`, razvojna stran | Ključe API, notranje poti | Skrivnosti zunaj imenika, razvojne strani izklopljene |
 
-Napadalec jih najde s seznami pogostih poti (ffuf, Gobuster), v iskalnikih in v arhivu.
+Napadalec jih najde s seznami pogostih poti (ffuf, Gobuster), v iskalnikih in v spletnem arhivu Wayback Machine.
 
 **Razkrito skrivnost vedno zamenjamo, ne le odstranimo.**
 
@@ -668,7 +668,7 @@ Račun A → GET /api/kosarice/12  → košarica B
 Note:
 *[neobvezen kratek prikaz na Juice Shop: /rest/basket/:id, pripravljena računa, žeton A ostane; vaja 3.5]*
 
-Zadnja napaka v tem sklopu je v sodobnih API-jih morda najpogostejša. Uporabnik A je pravilno prijavljen in odpre svojo košarico številka 7. Nato v zahtevi številko spremeni v 12 in dobi košarico uporabnika B.
+Zadnja napaka v logiki aplikacije je v sodobnih API-jih morda najpogostejša. Uporabnik A je pravilno prijavljen in odpre svojo košarico številka 7. Nato v zahtevi številko spremeni v 12 in dobi košarico uporabnika B.
 
 Strežnik je preveril, kdo je uporabnik, to je avtentikacija ali preverjanje istovetnosti. Ni pa preveril, ali sme videti ta objekt, to je avtorizacija ali preverjanje pooblastil. Temu rečemo IDOR, insecure direct object reference, ali BOLA, broken object level authorization. Na seznamu OWASP API Security Top 10 je BOLA na prvem mestu.
 
@@ -691,7 +691,9 @@ FTC je očital tudi neustrezno segmentacijo in prijavne podatke v nezaščiteni 
 Note:
 *[≈1 min · navedbe so očitki FTC, ne sodna ugotovitev]*
 
-Equifax, ena od treh velikih ameriških kreditnih agencij, leto 2017. Podjetje ni pravočasno namestilo popravka za znano ranljivost v spletnem ogrodju Apache Struts. Napadalci so vstopili prek nje, dostopali do drugih sistemov, razkriti pa so bili podatki približno 147 milijonov ljudi.
+Doslej so bile napake v naši kodi. Pri Equifaxu je bila napaka v tuji knjižnici: prek glave zahteve je napadalec dosegel izvajanje ukazov. Popravek je obstajal, nameščen pa ni bil.
+
+Equifax, ena od treh velikih ameriških kreditnih agencij, leto 2017. Ranljivost je bila v spletnem ogrodju Apache Struts. Napadalci so vstopili prek nje, dostopali do drugih sistemov, razkriti pa so bili podatki približno 147 milijonov ljudi.
 
 Ameriški regulator FTC je ob poravnavi leta 2019 podjetju očital še neustrezno ločitev baz in prijavne podatke v nezaščiteni datoteki. To so očitki regulatorja, ne naša forenzična analiza. Po poročilu kongresnega odbora iz leta 2018 je bil poleg tega potekel certifikat na napravi za pregled prometa, zato iztekanja podatkov dolgo niso zaznali. Tudi orodje za spremljanje je treba vzdrževati.
 
