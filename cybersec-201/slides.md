@@ -26,7 +26,7 @@ Geslo današnjega dne je na prosojnici: poišči sled, preveri dokaz, predlagaj 
 <div class="case-chain"><span>Kaj smo opazili?</span><b>→</b><span>Kakšen je dokaz in kdaj je nastal?</span><b>→</b><span>Česa še ne vemo?</span><b>→</b><span>Kaj to omogoča?</span><b>→</b><span>Kaj spremenimo?</span></div>
 
 <div class="example">
-<div class="example-label">PRIMER · IZMIŠLJENA DOMENA</div>
+<div class="example-label">PRIMER</div>
 
 ```plaintext
 Opazili     ime test.podjetje.example v javnem certifikatu
@@ -259,7 +259,7 @@ Izpis pravi: na vratih 80 teče Apache 2.4.49. To potrdi, da je storitev doseglj
 ## DNS: kdo lahko prenese celotno območje?
 
 <div class="example">
-<div class="example-label">PONAZORITEV · IZMIŠLJENA DOMENA IN DOKUMENTACIJSKI NASLOV</div>
+<div class="example-label">PRIMER</div>
 
 ```plaintext
 dig @192.0.2.53 podjetje.example AXFR
