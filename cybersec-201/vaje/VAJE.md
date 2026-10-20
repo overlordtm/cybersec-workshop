@@ -16,13 +16,13 @@ Sledi deset minut skupnega pogovora. **Celoten praktični blok poteka v scenarij
 
 Vsaka vaja najprej pokaže nalogo. Če potrebuješ pomoč, izberi **Prikaži namig**. Nato lahko z gumbom **Pokaži postopek** odpreš predlagane korake, ukaze in razlago rezultata. Pomoč se odpira za vsako vajo posebej.
 
-Aktivno preverjamo samo navedene tarče ACME. Skupnih datotek, gesel in nastavitev ne spreminjamo. Za Shodan in javne certifikate pregledujemo že zbrane podatke; odkritih javnih naslovov ne pregledujemo z Nmap. Izjema pri pripravi učnih podatkov sta vnaprej dogovorjena računa in košarici za vajo 3.5, ki ju pripravi izvajalec.
+Aktivno preverjamo samo navedene tarče ACME. Skupnih datotek, gesel in nastavitev ne spreminjamo. Za Shodan in javne certifikate pregledujemo že zbrane podatke; odkritih javnih naslovov ne pregledujemo z Nmap.
 
 **Zapiši:** opažanje, dokaz in čas, omejitev sklepa, možen vpliv ter predlagan ukrep. Gesel in prijavnih žetonov ne vključuj v skupni zapis. Pri rezultatih loči dejansko meritev od pripravljenega primera. Ukaze kopiraj po eno vrstico; besedila v oglatih oklepajih zamenjaj z ustreznimi podatki.
 
 ## Vaja 1.1: Kaj o naslovu ve Shodan? — lahka
 
-**Potrebuješ:** običajni brskalnik in resničen javni IP, ki ga poda izvajalec.
+**Potrebuješ:** običajni brskalnik in resničen javni IP po želji.
 
 V Shodanu poišči organizacijo, lokacijo in zaznane storitve izbranega naslova. Zapiši čas opažanja ter po eno trditev, ki jo rezultat podpira in ki je ne moreš potrditi.
 
@@ -34,7 +34,7 @@ Pri vsaki storitvi poišči vrata, opis odziva in datum. Lokacija je podatek pon
 
 ### Postopek
 
-1. Odpri [Shodan](https://www.shodan.io/) in v iskalno polje vnesi IP, ki ga poda izvajalec. Naslovi ACME `198.51.100.x` niso primerni za javno iskanje.
+1. Odpri [Shodan](https://www.shodan.io/) in v iskalno polje vnesi IP. Naslovi ACME `198.51.100.x` niso primerni za javno iskanje.
 2. Zapiši organizacijo in državo oziroma kraj. Manjkajoče podatke označi kot manjkajoče.
 3. Izberi dve storitvi oziroma vse prikazane, če jih je manj. Zapiši vrata, opis in čas opažanja vsake storitve.
 4. Sestavi ugotovitev: »Shodan je dne [datum] na [IP:vrata] zaznal [storitev].«
@@ -106,7 +106,9 @@ dig @198.51.100.14 acme.lab AXFR
 
 ## Vaja 1.4: Kaj razkrije dokument? — dodatni izziv
 
-**Tarča:** PDF `http://www.acme.lab/dokumenti/cenik-2026.pdf`. **Orodje:** ExifTool v Kali.
+**Tarča:** PDF `http://www.acme.lab/dokumenti/cenik-2026.pdf`. 
+
+**Orodje:** ExifTool v Kali.
 
 Preglej metapodatke dokumenta in jih poveži s podatki o ekipi ACME. Loči informacije, vidne na strani dokumenta, od njegovih skritih lastnosti.
 
@@ -139,7 +141,7 @@ exiftool -Title -Author -Creator -Producer -CreateDate /tmp/acme-cenik-2026.pdf
 
 ## Vaja 1.5: Poddomene iz javnih certifikatov — dodatni izziv
 
-**Potrebuješ:** običajni brskalnik in resnično domeno, ki jo določi izvajalec.
+**Potrebuješ:** običajni brskalnik in resnično domeno.
 
 Iz javnih dnevnikov certifikatov sestavi seznam imen, ki bi lahko pripadala storitvam izbrane organizacije. Razvrsti jih po domnevnem namenu in označi zgodovinske podatke.
 
@@ -161,7 +163,9 @@ Brez prijave ctlogs.dev prikaže prvih 100 imen in ne prikaže certifikatov, ki 
 
 ## Vaja 2.1: Prepoznaj javne storitve — lahka
 
-**Tarče:** samo simulirani javni naslovi ACME `198.51.100.11–15`. **Orodje:** Nmap.
+**Tarče:** samo simulirani javni naslovi ACME `198.51.100.11–15`. 
+
+**Orodje:** Nmap.
 
 Na najmanj treh naslovih poišči odprta vrata in jih poveži z verjetnimi storitvami. Eno od spletnih storitev preveri tudi v brskalniku.
 
@@ -400,7 +404,7 @@ Spletna stran vsebuje namige do varnostne kopije. ACME uporablja obliko imen `im
 ssh peter.horvat@vpn.acme.lab
 ```
 
-3. Ob prvi povezavi primerjaj prstni odtis z odtisom izvajalca. Geslo vnesi ob pozivu. Če odjemalec zavrne stare algoritme, uporabi samo preverjeno izjemo za to tarčo, ki jo poda izvajalec.
+3. Ob prvi povezavi primerjaj prstni odtis z odtisom izvajalca. Geslo vnesi ob pozivu.
 4. Za dokaz izvedi:
 
 ```sh
@@ -451,11 +455,13 @@ JSON
 5. Primerjaj odgovora. Pri običajni prijavi pričakujemo zavrnitev, pri spremenjeni pa odgovor z objektom `authentication`, učnim administratorskim računom v `umail` in prijavnim žetonom. Status 200 sam ne zadostuje. Žetona ne vključuj v skupni zapis in ga ne uporabljaj za spreminjanje podatkov.
 6. Pojasni, da znak `'` zaključi vrednost e-poštnega naslova v sestavljeni poizvedbi, `-- ` pa preostanek spremeni v komentar. Parametrizirana poizvedba loči podatke od navodil SQL.
 
-**Pričakovano za pripravljeno različico v20.3.0:** obhod prijave. Primer uporablja privzeto domeno trgovine `juice-sh.op`
+**Pričakovano:** obhod prijave.
 
 ## Vaja 3.5: Čigava je ta košarica? — dodatni izziv
 
-**Tarča:** `http://shop.acme.lab/`, izziv »View Basket«. **Potrebuješ:** učna računa A in B ter ID njunih košaric, ki jih pripravi izvajalec.
+**Tarča:** `http://shop.acme.lab/`, izziv »View Basket«.
+
+**Potrebuješ:** učna računa A in B ter ID njunih košaric. Račune lahko narediš sam.
 
 Preveri, ali lahko račun A prebere pripravljeno košarico računa B. Ohrani identiteto A in spremeni samo identifikator zahtevanega vira.
 
@@ -470,7 +476,7 @@ V zgodovini zahtev poišči `GET /rest/basket/…`. ID košarice ni nujno enak I
 1. Z učnim računom A se prijavi prek brskalnika, odprtega iz ZAP, in odpri njegovo košarico. Za to vajo ne uporabljaj administratorske prijave iz vaje 3.4.
 2. Poišči uspešno zahtevo `GET /rest/basket/[ID_A]` in jo odpri za ponovno pošiljanje. Zapiši vsebino košarice A.
 3. Spremeni samo pot v `/rest/basket/[ID_B]`, kjer je `[ID_B]` identifikator pripravljene košarice B. Glavo `Authorization` z žetonom računa A ohrani.
-4. Pošlji zahtevo in primerjaj vsebino. Poišči izdelek, ki ga je izvajalec pripravil v košarici B. Običajni vmesnik lahko še vedno kaže košarico A; pomemben je odgovor na spremenjeno zahtevo.
+4. Pošlji zahtevo in primerjaj vsebino. Poišči izdelek v košarici B. Običajni vmesnik lahko še vedno kaže košarico A; pomemben je odgovor na spremenjeno zahtevo.
 5. Pomožna oblika zahteve je:
 
 ```http
