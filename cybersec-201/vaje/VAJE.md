@@ -24,7 +24,7 @@ Aktivno preverjamo samo navedene tarče ACME. Skupnih datotek, gesel in nastavit
 
 **Potrebuješ:** običajni brskalnik in resničen javni IP po želji.
 
-V Shodanu poišči organizacijo, lokacijo in zaznane storitve izbranega naslova. Zapiši čas opažanja ter po eno trditev, ki jo rezultat podpira in ki je ne moreš potrditi.
+V Shodanu poišči organizacijo, lokacijo in zaznane storitve izbranega naslova. Zapiši čas opažanja ter eno trditev, ki jo rezultat podpira, in eno, ki je ne moreš potrditi.
 
 **Cilj:** kratek profil naslova z virom in časom.
 
@@ -106,7 +106,7 @@ dig @198.51.100.14 acme.lab AXFR
 
 ## Vaja 1.4: Kaj razkrije dokument? — dodatni izziv
 
-**Tarča:** PDF `http://www.acme.lab/dokumenti/cenik-2026.pdf`. 
+**Tarča:** PDF `http://www.acme.lab/dokumenti/cenik-2026.pdf`.
 
 **Orodje:** ExifTool v Kali.
 
@@ -163,7 +163,7 @@ Brez prijave ctlogs.dev prikaže prvih 100 imen in ne prikaže certifikatov, ki 
 
 ## Vaja 2.1: Prepoznaj javne storitve — lahka
 
-**Tarče:** samo simulirani javni naslovi ACME `198.51.100.11–15`. 
+**Tarče:** samo simulirani javni naslovi ACME `198.51.100.11–15`.
 
 **Orodje:** Nmap.
 
@@ -259,7 +259,7 @@ curl --noproxy '*' --path-as-is -i 'http://198.51.100.11/cgi-bin/.%2e/.%2e/.%2e/
 4. Zapiši status in dejansko vsebino odgovora. Napaka ali zavrnitev ni prebrana datoteka. Drugih poti ne preizkušaj.
 5. Sklep oblikuj glede na dokaze: »Zaznana je prizadeta različica; izraba s tem preizkusom ni potrjena.« Če preizkusa ne izvedeš, napiši »izraba ni preverjena«.
 
-**Pričakovano:** privzeta konfiguracija učnega Apache preprečuje opisani dostop zunaj spletnega imenika. Negativen preizkus ne dokazuje, da strežnik nima drugih ranljivosti. Ukrep ostaja nadgradnja na podprto različico in pregled nastavitev.
+**Pričakovano:** privzeta konfiguracija učnega strežnika Apache preprečuje opisani dostop zunaj spletnega imenika. Negativen preizkus ne dokazuje, da strežnik nima drugih ranljivosti. Ukrep ostaja nadgradnja na podprto različico in pregled nastavitev.
 
 ## Vaja 2.4: Nmap zna več kot poiskati vrata — dodatni izziv
 
@@ -313,7 +313,7 @@ Poišči naslov tarče, vrata, opis zaznave in dokaz. Nato preveri, ali ugotovit
 ### Postopek
 
 1. V poročilu izberi eno ugotovitev, ki jo izvajalec označi za to vajo. Zapiši naslov, vrata, zaznano težavo in način zaznave.
-2. Pri sumu na ranljivost Apache ponovi prepoznavo različice:
+2. Pri sumu na ranljivost strežnika Apache ponovi prepoznavo različice:
 
 ```sh
 nmap -Pn -sT -sV -p 80 198.51.100.11
@@ -326,7 +326,7 @@ curl --noproxy '*' -I http://198.51.100.11/
 dig @198.51.100.14 acme.lab AXFR
 ```
 
-4. Primerjaj svoj rezultat z dokazom iz poročila. Pri Apache je ujemanje različice namig; pri uspešnem AXFR je vrnjeno območje neposreden dokaz nastavitve.
+4. Primerjaj svoj rezultat z dokazom iz poročila. Pri Apacheju je ujemanje različice namig; pri uspešnem AXFR je vrnjeno območje neposreden dokaz nastavitve.
 5. Zapiši vpliv in ukrep ter pojasni, s katerim preverjanjem bi po popravku potrdil izboljšavo. Ne izmišljaj številčne ocene resnosti ali zanesljivosti, če v izseku ni navedena.
 
 **Če dejansko poročilo ni na voljo:** uporabi učni primer »Pregledovalnik je na `198.51.100.11:80` iz odziva zaznal Apache 2.4.49 in navedel CVE-2021-41773«. To je ponazoritev za presojo, ne rezultat izvedenega pregleda. V zapisu izrecno označi, da si preverjal učni primer.
@@ -363,13 +363,13 @@ V lastni prijavni zahtevi poišči način zapisa prijavnih podatkov in ga dekodi
 
 ### Namig
 
-V glavah zahteve poišči `Authorization: Basic`. Dekodiraš samo niz za besedo `Basic`. V lokalnem CyberChef izberi `From Base64`; uporabiš lahko tudi orodje `base64` v terminalu.
+V glavah zahteve poišči `Authorization: Basic`. Dekodiraš samo niz za besedo `Basic`. V lokalnem CyberChefu izberi `From Base64`; uporabiš lahko tudi orodje `base64` v terminalu.
 
 ### Postopek
 
 1. V Firefoxu odpri `F12` → Network, nato odpri intranet in vnesi pripravljena učna podatka. Če si že prijavljen, osveži stran in izberi novo zahtevo.
 2. V surovih glavah zahteve poišči `Authorization: Basic …` in kopiraj samo kodirani del.
-3. V CyberChef uporabi `From Base64`. Druga možnost je ukaz, pri katerem niz prilepiš ob pozivu, da ne ostane v zgodovini ukazov:
+3. V CyberChefu uporabi `From Base64`. Druga možnost je ukaz, pri katerem niz prilepiš ob pozivu, da ne ostane v zgodovini ukazov:
 
 ```sh
 printf 'Prilepi učni niz Base64: '

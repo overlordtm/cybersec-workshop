@@ -62,7 +62,7 @@ In že zdaj povem: pošteno omejen sklep, na primer »oglašena različica je me
 Note:
 *[sklop skupaj ≈12 min, z naslovnico in okvirom]*
 
-Začnimo s sledmi, ki jih puščamo za sabo. OSINT, open source intelligence, je obveščevalna dejavnost iz javnih virov: zbiranje in povezovanje javno dostopnih informacij: spletnih strani, dokumentov, objav in javnih evidenc. Sorodno področje je digitalna forenzika, ki preiskuje podatke na napravah, v datotekah in v zajemih prometa. Področji se dopolnjujeta, meja pa je jasna: ko pregledujemo tuj disk ali pomnilnik, to ni več OSINT.
+Začnimo s sledmi, ki jih puščamo za sabo. OSINT, open source intelligence, je obveščevalna dejavnost iz javnih virov, torej zbiranje in povezovanje javno dostopnih informacij: spletnih strani, dokumentov, objav in javnih evidenc. Sorodno področje je digitalna forenzika, ki preiskuje podatke na napravah, v datotekah in v zajemih prometa. Področji se dopolnjujeta, meja pa je jasna: ko pregledujemo tuj disk ali pomnilnik, to ni več OSINT.
 
 Ogledali si bomo splošne vzorce in nekaj resničnih dogodkov.
 
@@ -119,8 +119,6 @@ Ime v metapodatkih je lahko tudi zavajajoče, na primer iz predloge ali podedova
 
 Ukrep je preprost: dokument pred objavo očistimo, na primer z Wordovim pregledovalnikom dokumenta ali z `exiftool -all=`.
 
-
-
 ---
 
 ## Iskanje omejimo na uporabne sledi
@@ -166,7 +164,7 @@ Za obrambo je ukrep isti kot za napad: svoje sledi poiščemo sami in redno. Uma
 
 **Oznaka CVE je namig za preverjanje.**
 
-*lahko ga uporabimo za popis lastne zunanje izpostavljenosti.*
+*Shodan lahko uporabimo tudi za popis lastne zunanje izpostavljenosti.*
 
 Note:
 *[posnetek: iskanje country:SI, 20. 10. 2026; poizvedb ne izvajaj v živo]*
@@ -266,7 +264,7 @@ Izpis pravi: na vratih 80 teče Apache 2.4.49. To potrdi, da je storitev doseglj
 | --- | --- | --- |
 | Prenos območja (AXFR) za vsakogar | Seznam vseh imen v območju | AXFR samo za sekundarne strežnike |
 | Notranja imena v javnem DNS | Zemljevid notranjih sistemov | Ločen notranji DNS |
-| Pozabljen zapis CNAME | Lastno vsebino na našem imenu | Zapis odstranimo skupaj s storitvijo |
+| Pozabljen zapis CNAME | Lastno vsebino pod našim imenom | Zapis odstranimo skupaj s storitvijo |
 | Odprt rekurzivni strežnik | Ojačevanje napadov DDoS na druge | Rekurzija samo za lastne odjemalce |
 
 **V javni DNS zapišemo le, kar mora biti javno.**
@@ -534,7 +532,7 @@ Ena najpogostejših napak je zelo preprosta: na javnem strežniku ostane datotek
 
 Varnostna kopija, na primer config.php.bak, je najbolj tipična. Strežnik datoteke s končnico .bak ne izvede kot PHP, ampak jo vrne kot besedilo, skupaj z gesli iz nastavitev. Še huje je razkrit repozitorij .git: iz njega napadalec obnovi vso kodo in zgodovino sprememb, tudi gesla, ki jih je razvijalec pozneje izbrisal. Izvozi baz razkrijejo podatke strank, datoteke .env in razvojne strani pa ključe API in notranje poti.
 
-Kako jih napadalec najde? Ne ugiba na slepo: seznami pogostih poti imajo na tisoče imen, kot so backup, .git ali .env, ffuf in Gobuster pa jih preizkusita v nekaj minutah. Pomagajo tudi iskalniki in Wayback Machine. Če datoteka ni povezana s strani ali je navedena v robots.txt, je zato ne skrije.
+Kako jih napadalec najde? Ne ugiba na slepo: seznami pogostih poti imajo na tisoče imen, kot so backup, .git ali .env, ffuf in Gobuster pa jih preizkusita v nekaj minutah. Pomagajo tudi iskalniki in Wayback Machine. To, da datoteka ni povezana s strani ali da je navedena v robots.txt, je ne skrije.
 
 Ukrep ima dva dela: datoteko odstranimo, razkrito geslo ali ključ pa zamenjamo, saj ga je morda kdo že prebral.
 
@@ -557,7 +555,7 @@ Note:
 
 Pri prijavah napadalec izkoristi tri slabosti. Prva je privzeto geslo, ki ga nihče ni zamenjal; seznami tovarniških gesel so javni. Druga je isto geslo na več mestih: gesla iz starih vdorov so prosto dostopna, napadalec pa jih samodejno preizkusi na drugih storitvah. Temu rečemo credential stuffing. Tretja je prenos brez šifriranja.
 
-Poglejmo tretjo. Pri HTTP Basic brskalnik pošlje uporabniško ime in geslo v glavi, zapisano v Base64. To ni šifriranje, ampak le drugačen zapis: v CyberChef ali v terminalu ga dekodiramo brez ključa. Brez HTTPS ga torej prebere vsak, ki vidi promet. Niz na prosojnici je izmišljen.
+Poglejmo tretjo. Pri HTTP Basic brskalnik pošlje uporabniško ime in geslo v glavi, zapisano v Base64. To ni šifriranje, ampak le drugačen zapis: v CyberChefu ali v terminalu ga dekodiramo brez ključa. Brez HTTPS ga torej prebere vsak, ki vidi promet. Niz na prosojnici je izmišljen.
 
 Še dve pojasnili. Vaš brskalnik podatke vidi tudi pri HTTPS, saj jih šifrira šele ob pošiljanju. MFA, večstopenjsko preverjanje prijave, zmanjša tveganje prevzema računa, ne nadomesti pa preverjanja, do česa ima prijavljeni uporabnik pravico.
 
@@ -820,7 +818,7 @@ Primer na prosojnici je izmišljen, a ga boste v podobni obliki srečali pri vaj
 Note:
 *[≈2 min]*
 
-Zdaj pa k vajam. ACME je izmišljeno podjetje, ki obstaja samo v našem laboratoriju. Javni naslovi 198.51.100 so dokumentacijski in delujejo samo tam, imena pod acme.lab pa razreši laboratorijski DNS.
+Zdaj pa k vajam. ACME je izmišljeno podjetje, ki obstaja samo v našem laboratoriju. Javni naslovi 198.51.100.x so dokumentacijski in delujejo samo tam, imena pod acme.lab pa razreši laboratorijski DNS.
 
 Omrežje ima tri dele. V DMZ so javne storitve: spletna stran, trgovina, pošta, DNS in strežnik za oddaljeni dostop. V pisarniškem omrežju LAN so datotečni strežnik, intranet, NAS, delovna postaja in Metasploitable 2, star, nevzdrževan strežnik. V IoT so kamera, tiskalnik in klima.
 
@@ -837,7 +835,7 @@ Notranjih naslovov ACME ne iščite na javnem internetu.
 
 ### Dostop
 
-S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuarda.
+S svojo kodo odprite [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj Kali prek WireGuarda.
 
 </div>
 <div class="card">
