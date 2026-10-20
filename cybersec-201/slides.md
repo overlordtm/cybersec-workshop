@@ -123,7 +123,7 @@ site:podjetje.example inurl:backup
 
 [Wayback Machine](https://web.archive.org/) pokaže stare objave.
 
-[crt.sh](https://crt.sh/) razkrije imena iz javnih certifikatov.
+[ctlogs.dev](https://ctlogs.dev/) in [crt.sh](https://crt.sh/) razkrijeta imena iz javnih certifikatov.
 
 Tudi DNS je javni vir: zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje.
 
@@ -134,7 +134,7 @@ Note:
 
 Kako takšne sledi iščemo? Iskalniki poznajo operatorje: `site` omeji iskanje na domeno, `filetype` na vrsto datoteke, `inurl` na del naslova. Tako hitro najdemo objavljene PDF-je ali pozabljene varnostne kopije.
 
-Wayback Machine hrani stare različice strani, tudi tiste, ki jih je podjetje že umaknilo. crt.sh išče po javnih dnevnikih certifikatov, kjer se pojavijo imena strežnikov, na primer test ali vpn.
+Wayback Machine hrani stare različice strani, tudi tiste, ki jih je podjetje že umaknilo. ctlogs.dev in crt.sh iščeta po javnih dnevnikih certifikatov, kjer se pojavijo imena strežnikov, na primer test ali vpn.
 
 Javni vir je tudi DNS. Običajni zapisi razkrivajo imena, napačno nastavljen strežnik pa celotno območje. To boste preizkusili v vaji 1.3, tehnično ozadje pa razložim v sklopu omrežij. Pri tem upoštevajte, da je poizvedba na strežnik že neposreden stik s tarčo, ne pasivno iskanje.
 
@@ -197,7 +197,7 @@ Preberimo polja. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz
 
 | Kaj raziskujemo? | Primeri orodij |
 | --- | --- |
-| Spletne storitve in domene | [Shodan](https://www.shodan.io/), [Censys](https://censys.com/), [crt.sh](https://crt.sh/) |
+| Spletne storitve in domene | [Shodan](https://www.shodan.io/), [Censys](https://censys.com/), [ctlogs.dev](https://ctlogs.dev/), [crt.sh](https://crt.sh/) |
 | Javno objavljene naslove in imena | [theHarvester](https://github.com/laramies/theHarvester) |
 | Povezave med podatki | [Maltego](https://www.maltego.com/), [SpiderFoot](https://github.com/smicallef/spiderfoot) |
 | Rekurzivno odkrivanje domen in storitev | [BBOT](https://github.com/blacklanternsecurity/bbot) |
@@ -209,7 +209,7 @@ Preberimo polja. Organizacija in lokacija sta podatek ponudnika oziroma ocena iz
 Note:
 *[orientacija, orodij ne zaganjaj]*
 
-Za vse to obstajajo orodja. Ta tabela je zemljevid, ne seznam za namestitev. Shodan, Censys in crt.sh že poznamo. theHarvester zbira e-poštne naslove in imena iz javnih virov. Maltego in SpiderFoot povezujeta podatke iz več virov in jih prikažeta kot graf. BBOT rekurzivno odkriva domene in storitve; glede na izbrane module uporablja pasivne vire ali pa že aktivno poizveduje.
+Za vse to obstajajo orodja. Ta tabela je zemljevid, ne seznam za namestitev. Shodan, Censys, ctlogs.dev in crt.sh že poznamo. theHarvester zbira e-poštne naslove in imena iz javnih virov. Maltego in SpiderFoot povezujeta podatke iz več virov in jih prikažeta kot graf. BBOT rekurzivno odkriva domene in storitve; glede na izbrane module uporablja pasivne vire ali pa že aktivno poizveduje.
 
 Spodnji vrstici sta forenzika. ExifTool bere metapodatke, Autopsy preiskuje diske, Volatility pa zajeme pomnilnika. To niso javni viri, zato jih ne mešamo z OSINT.
 
@@ -345,20 +345,9 @@ Dostop preverimo s smbclient, širši pregled pa naredi enum4linux-ng. V vaji 2.
 
 ## Kako segmentacija spremeni dostop?
 
-<div class="example">
-<div class="example-label">ACME · ISTA MERITEV IZ VTIČNICE V SEJNI SOBI, DVA SCENARIJA</div>
+![Isti prenosnik iz vtičnice v sejni sobi: v segmentiranem omrežju kamera in klima nista dosegljivi, v omrežju brez omejitev pa postaneta dosegljivi](./images/segmentation-compare.svg)
 
-```plaintext
-nmap -Pn -sT -p 80,502 172.20.30.12        # krmilnik klime
-
-visitor (segmentirano)     flat (brez segmentacije)
-80/tcp   filtered          80/tcp   open   http
-502/tcp  filtered          502/tcp  open   mbap (Modbus)
-```
-
-</div>
-
-**Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.**
+**Segmentacija omeji dovoljene poti in s tem doseg napadenega sistema.** Ista meritev proti krmilniku klime (`172.20.30.12`): v `visitor` sta 80 in 502 filtrirana, v `flat` odprta.
 
 Za razpravo: kam lahko pride nekdo, ki prevzame spletni strežnik v DMZ?
 
@@ -519,22 +508,9 @@ Pregled, izraba in zaznava niso isto. Enkraten pregled pove, kakšno je stanje d
 
 **Kaj se zgodi z našim vnosom?**
 
-<div class="example">
-<div class="example-label">POENOSTAVLJEN PRIMER SPLETNE APLIKACIJE</div>
+![Brskalnik pošlje zahtevo HTTP strežniku, ta jo obdela in vrne odgovor s statusom in vsebino](./images/http.svg)
 
-```plaintext
-GET /api/izdelki?q=jabolko HTTP/1.1
-Host: trgovina.example
-
-HTTP/1.1 200 OK
-Content-Type: application/json
-
-{"status":"success","data":[...]}
-```
-
-</div>
-
-Metoda in pot → podatki → obdelava → odgovor.
+Primer: `GET /api/izdelki?q=jabolko` → strežnik vrne `200 OK` z JSON. Metoda in pot → podatki → obdelava → odgovor.
 
 Note:
 *[sklop skupaj ≈14 min, s sklepno prosojnico]*
@@ -600,18 +576,9 @@ Ukrep ima dva dela: kopijo odstranimo, razkrito geslo pa zamenjamo, saj ga je mo
 | Upravljavski vmesnik | Privzeti ali ponovno uporabljeni podatki | Ločene, ustrezno zaščitene prijave |
 | Notranji portal | HTTP Basic brez TLS | HTTPS in omejen dostop |
 
-<div class="example">
-<div class="example-label">IZMIŠLJENA UČNA PODATKA</div>
+![Base64 pretvori ucenec:ucno v dWNlbmVjOnVjbm8= in nazaj brez skrivnega ključa](./images/encoding.svg)
 
-```plaintext
-Authorization: Basic dWNlbmVjOnVjbm8=
-                       ↓ From Base64
-                    ucenec:ucno
-```
-
-</div>
-
-**Base64 je kodiranje. HTTPS zaščiti prenos.**
+**Base64 je kodiranje, ne šifriranje.** Glavo `Authorization: Basic …` dekodira vsak brez ključa; prenos zaščiti šele HTTPS.
 
 Note:
 *[primera ACME sta NAS in intranet (vaja 3.2); tu ju ne odpiraj]*
@@ -885,7 +852,7 @@ S svojo kodo odpri [prevzem dostopa](./vaje/dostop/). Kali v brskalniku ali svoj
 
 ### Kaj smemo
 
-Samo navedene tarče ACME. Ničesar ne spreminjamo. Javne vire samo beremo. Napad na tuje sisteme je kaznivo dejanje.
+Samo navedene tarče ACME. Ničesar ne spreminjamo. Javne vire samo beremo.
 
 </div>
 <div class="card">
@@ -904,7 +871,7 @@ Note:
 
 Še pravila in potek. Dostop dobite s svojo osebno kodo na strani za prevzem. Večina bo uporabljala Kali v brskalniku; kdor ima svoj Kali, se lahko poveže prek WireGuard.
 
-Aktivno preverjamo samo navedene tarče ACME in ničesar ne spreminjamo, ne datotek, ne gesel, ne košaric, saj si tarče delimo. Shodan in crt.sh odpirate v svojem običajnem brskalniku in samo berete; najdenih javnih naslovov ne pregledujte z Nmap. In resno: nepooblaščen vstop v tuj informacijski sistem je po kazenskem zakoniku kaznivo dejanje. Tukaj smemo, ker je laboratorij naš.
+Aktivno preverjamo samo navedene tarče ACME in ničesar ne spreminjamo, ne datotek, ne gesel, ne košaric, saj si tarče delimo. Shodan in ctlogs.dev odpirate v svojem običajnem brskalniku in samo berete; najdenih javnih naslovov ne pregledujte z Nmap. In resno: nepooblaščen vstop v tuj informacijski sistem je po kazenskem zakoniku kaznivo dejanje. Tukaj smemo, ker je laboratorij naš.
 
 Potek: trije krogi, 25 minut za sledi in po 40 minut za omrežja in aplikacije. V vsakem izberete eno od prvih treh vaj glede na izkušnje, nato nadaljujete z drugo vajo ali dodatnim izzivom. Če se zataknete, odprite namig in nato postopek. Ugotovitve zapišite po okviru z začetka. Na koncu imamo deset minut za skupni pogovor.
 

@@ -147,17 +147,17 @@ Iz javnih dnevnikov certifikatov sestavi seznam imen, ki bi lahko pripadala stor
 
 ### Namig
 
-V crt.sh išči tudi poddomene. Certifikat lahko navaja več imen in je lahko že potekel. Nadomestni zapis `*.domena` ni seznam vseh dejanskih poddomen.
+Pri iskanju v dnevnikih certifikatov vključi tudi poddomene. Certifikat lahko navaja več imen in je lahko že potekel. Nadomestni zapis `*.domena` ni seznam vseh dejanskih poddomen.
 
 ### Postopek
 
-1. V običajnem brskalniku odpri [crt.sh](https://crt.sh/).
-2. Vnesi `%.` in dodeljeno domeno, na primer `%.izbrana-domena.si`. To je vzorec za iskanje; nadomesti ga z domeno izvajalca. Učna domena `acme.lab` za to ni primerna.
-3. Zapiši do pet različnih imen in pri vsakem datum izdaje oziroma veljavnosti certifikata. Če jih je manj, zapiši vsa.
-4. Združi ponovljene zapise za isto ime. Imena razvrsti po domnevnem namenu, denimo pošta, trgovina ali razvojno okolje.
+1. V običajnem brskalniku odpri [ctlogs.dev](https://ctlogs.dev/subdomains) in izberi iskanje poddomen (*subdomain finder*).
+2. Vnesi dodeljeno domeno, na primer `izbrana-domena.si`. To je primer; nadomesti ga z domeno izvajalca. Učna domena `acme.lab` za to ni primerna.
+3. Zapiši do pet različnih imen in pri vsakem datum prvega in zadnjega pojava v certifikatu (*First seen*, *Last seen*). Če jih je manj, zapiši vsa.
+4. Imena razvrsti po domnevnem namenu, denimo pošta, trgovina ali razvojno okolje. Označi imena, ki se že dolgo niso pojavila v novem certifikatu.
 5. Pojasni, zakaj certifikat ne potrjuje trenutne dosegljivosti, lastništva infrastrukture ali ranljivosti storitve.
 
-Ob nedosegljivosti uporabi datiran izvoz izvajalca. Odkritih imen ne preverjaj z Nmap ali poskusi prijave.
+Brez prijave ctlogs.dev prikaže prvih 100 imen in ne prikaže certifikatov, ki so potekli pred več kot 90 dnevi; za to vajo to zadošča. Če stran ni dosegljiva, poskusi [crt.sh](https://crt.sh/) z vzorcem `%.izbrana-domena.si` ali uporabi datiran izvoz izvajalca. Odkritih imen ne preverjaj z Nmap ali poskusi prijave.
 
 ## Vaja 2.1: Prepoznaj javne storitve — lahka
 

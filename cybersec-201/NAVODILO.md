@@ -9,7 +9,7 @@ Za delavnico potrebujete prenosni računalnik, sodoben spletni brskalnik in inte
 3. Sledite povezavi do laboratorija ter se prijavite z dodeljenim računom.
 4. Na oddaljenem namizju Kali preverite zagon Firefoxa in Terminala.
 
-Prijavo uredimo pred začetkom predstavitve. Osebne kode in prijavnih podatkov ne delite z drugimi. Za javne iskalnike, kot sta Shodan in crt.sh, boste uporabljali svoj običajni brskalnik. Nakup naročnine ni potreben; izvajalec pripravi rezervne posnetke.
+Prijavo uredimo pred začetkom predstavitve. Osebne kode in prijavnih podatkov ne delite z drugimi. Za javne iskalnike, kot sta Shodan in ctlogs.dev, boste uporabljali svoj običajni brskalnik. Nakup naročnine ni potreben; izvajalec pripravi rezervne posnetke.
 
 ## Če želite uporabljati svoj Kali
 
